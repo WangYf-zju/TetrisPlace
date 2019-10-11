@@ -179,13 +179,16 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="SerialDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TetrisPlace.h" />
     <ClInclude Include="TetrisPlaceDlg.h" />
+    <ClInclude Include="WzSerialPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="SerialDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -194,6 +197,7 @@
     </ClCompile>
     <ClCompile Include="TetrisPlace.cpp" />
     <ClCompile Include="TetrisPlaceDlg.cpp" />
+    <ClCompile Include="WzSerialPort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TetrisPlace.rc" />

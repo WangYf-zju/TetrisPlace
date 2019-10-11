@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "SerialDlg.h"
 
 // CTetrisPlaceDlg 对话框
 class CTetrisPlaceDlg : public CDialogEx

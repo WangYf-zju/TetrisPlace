@@ -7,6 +7,7 @@
 #include "TetrisPlaceDlg.h"
 #include "afxdialogex.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -103,7 +104,10 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	ShowWindow(SW_MINIMIZE);
 
 	// TODO: 在此添加额外的初始化代码
-
+	CSerialDlg * pSerialDlg = new CSerialDlg;
+	pSerialDlg->Create(IDD_DIALOG_SERIAL, this);
+	pSerialDlg->MoveWindow(0, 0, 500, 500);
+	pSerialDlg->ShowWindow(SW_SHOW);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 

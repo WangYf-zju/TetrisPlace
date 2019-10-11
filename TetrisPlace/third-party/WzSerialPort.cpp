@@ -1,11 +1,10 @@
-﻿
+﻿#include "stdafx.h"
+
 #include "WzSerialPort.h"
 
 #include <stdio.h>
 #include <string.h>
 
-#include <WinSock2.h>
-#include <windows.h>
 
 WzSerialPort::WzSerialPort()
 {
@@ -154,7 +153,7 @@ int WzSerialPort::send(const void *buf,int len)
 
 		//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
 		memset(&m_osWrite, 0, sizeof(m_osWrite));
-		m_osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, "WriteEvent");
+		m_osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, L"WriteEvent");
 
 		ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
 		BOOL bWriteStat = WriteFile(hCom, //串口句柄
@@ -208,7 +207,7 @@ int WzSerialPort::receive(void *buf,int maxlen)
 
 		//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
 		memset(&m_osRead, 0, sizeof(m_osRead));
-		m_osRead.hEvent = CreateEvent(NULL, TRUE, FALSE, "ReadEvent");
+		m_osRead.hEvent = CreateEvent(NULL, TRUE, FALSE, L"ReadEvent");
 
 		ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
 		if (!comStat.cbInQue)return 0; //如果输入缓冲区字节数为0，则返回false
