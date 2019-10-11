@@ -6,7 +6,7 @@
 #include "SerialDlg.h"
 #include "afxdialogex.h"
 
-#include "WzSerialPort.h"
+#include "third-party/WzSerialPort.h"
 
 
 // CSerialDlg 对话框
