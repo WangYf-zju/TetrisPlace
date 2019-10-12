@@ -1,10 +1,11 @@
 ﻿#include "stdafx.h"
-
 #include "WzSerialPort.h"
 
 #include <stdio.h>
 #include <string.h>
 
+#include <WinSock2.h>
+#include <windows.h>
 
 WzSerialPort::WzSerialPort()
 {
@@ -16,7 +17,7 @@ WzSerialPort::~WzSerialPort()
 
 }
 
-bool WzSerialPort::open(const char* portname,
+bool WzSerialPort::open(int portNo,
 						int baudrate,
 						char parity,
 						char databit,
@@ -25,6 +26,15 @@ bool WzSerialPort::open(const char* portname,
 {
 	this->synchronizeflag = synchronizeflag;
 	HANDLE hCom = NULL;
+	char portname[50] = { 0 };
+	if (portNo < 10)
+	{
+		sprintf_s(portname, "COM%d", portNo);
+	}
+	else
+	{
+		sprintf_s(portname, "\\\\.\\COM%d", portNo);
+	}
 	if (this->synchronizeflag)
 	{
 		//同步方式

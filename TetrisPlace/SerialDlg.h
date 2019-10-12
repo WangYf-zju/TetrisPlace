@@ -25,4 +25,6 @@ public:
 	CComboBox m_com;
 private:
 	void GetConnectedPort();
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

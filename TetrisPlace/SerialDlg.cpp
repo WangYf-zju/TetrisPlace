@@ -51,50 +51,65 @@ BOOL CSerialDlg::OnInitDialog()
 void CSerialDlg::GetConnectedPort()
 {
 	// TODO: 在此处添加实现代码.
-	WzSerialPort w;
-	if (w.open("COM1", 9600, 0, 8, 1))
+	//WzSerialPort w;
+	//if (w.open("COM1", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM1"));
+	//}
+	//if (w.open("COM2", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM2"));
+	//}
+	//if (w.open("COM3", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM3"));
+	//}
+	//if (w.open("COM4", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM4"));
+	//}
+	//if (w.open("COM5", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM5"));
+	//}
+	//if (w.open("COM6", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM6"));
+	//}
+	//if (w.open("COM7", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM7"));
+	//}
+	//if (w.open("COM8", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM8"));
+	//}
+	//if (w.open("COM9", 9600, 0, 8, 1))
+	//{
+	//	w.close();
+	//	m_com.AddString(_T("COM9"));
+	//}
+}
+
+
+BOOL CSerialDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN)
 	{
-		w.close();
-		m_com.AddString(_T("COM1"));
+		return TRUE;
 	}
-	if (w.open("COM2", 9600, 0, 8, 1))
+	else if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE)
 	{
-		w.close();
-		m_com.AddString(_T("COM2"));
+		return TRUE;
 	}
-	if (w.open("COM3", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM3"));
-	}
-	if (w.open("COM4", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM4"));
-	}
-	if (w.open("COM5", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM5"));
-	}
-	if (w.open("COM6", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM6"));
-	}
-	if (w.open("COM7", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM7"));
-	}
-	if (w.open("COM8", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM8"));
-	}
-	if (w.open("COM9", 9600, 0, 8, 1))
-	{
-		w.close();
-		m_com.AddString(_T("COM9"));
-	}
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

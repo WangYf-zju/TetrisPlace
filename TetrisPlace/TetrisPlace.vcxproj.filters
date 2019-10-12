@@ -30,10 +30,25 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="WzSerialPort.h">
+    <ClInclude Include="SerialDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SerialDlg.h">
+    <ClInclude Include="third-party\WzSerialPort.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Arm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisAI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NextBlockDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BoardDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ArmControlDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,10 +62,25 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="WzSerialPort.cpp">
+    <ClCompile Include="SerialDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SerialDlg.cpp">
+    <ClCompile Include="third-party\WzSerialPort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Arm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TetrisAI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NextBlockDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BoardDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmControlDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

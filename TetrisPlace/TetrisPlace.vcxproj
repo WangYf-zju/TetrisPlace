@@ -179,15 +179,24 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Arm.h" />
+    <ClInclude Include="ArmControlDlg.h" />
+    <ClInclude Include="BoardDlg.h" />
+    <ClInclude Include="NextBlockDlg.h" />
     <ClInclude Include="SerialDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TetrisAI.h" />
     <ClInclude Include="TetrisPlace.h" />
     <ClInclude Include="TetrisPlaceDlg.h" />
-    <ClInclude Include="WzSerialPort.h" />
+    <ClInclude Include="third-party\WzSerialPort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Arm.cpp" />
+    <ClCompile Include="ArmControlDlg.cpp" />
+    <ClCompile Include="BoardDlg.cpp" />
+    <ClCompile Include="NextBlockDlg.cpp" />
     <ClCompile Include="SerialDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -195,9 +204,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TetrisAI.cpp" />
     <ClCompile Include="TetrisPlace.cpp" />
     <ClCompile Include="TetrisPlaceDlg.cpp" />
-    <ClCompile Include="WzSerialPort.cpp" />
+    <ClCompile Include="third-party\WzSerialPort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TetrisPlace.rc" />

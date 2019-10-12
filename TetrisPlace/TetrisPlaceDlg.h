@@ -5,6 +5,11 @@
 #pragma once
 
 #include "SerialDlg.h"
+#include "ArmControlDlg.h"
+#include "NextBlockDlg.h"
+#include "BoardDlg.h"
+#include "third-party/WzSerialPort.h"
+#include "Arm.h"
 
 // CTetrisPlaceDlg 对话框
 class CTetrisPlaceDlg : public CDialogEx
@@ -32,4 +37,15 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+public:
+	CNextBlockDlg * pNextBlockDlg;
+	CSerialDlg * pSerialDlg;
+	CArmControlDlg *pArmCtrlDlg;
+	CBoardDlg * pBoardDlg;
+	WzSerialPort m_w;
+	Arm m_a;
+
+public:
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
