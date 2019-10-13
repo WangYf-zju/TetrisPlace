@@ -16,8 +16,7 @@
 #define IDC_BUTTON_OPENPORT             1001
 #define IDC_EDIT_RX                     1002
 #define IDC_EDIT_TX                     1003
-#define IDC_BUTTON1                     1004
-#define IDC_BUTTON2                     1005
+#define IDC_BUTTON_SEND                 1005
 #define IDC_BUTTON_NEXTOK               1007
 #define IDC_EDIT_NEXT                   1008
 #define IDC_BUTTON_AUTONEXT             1009
@@ -28,6 +27,7 @@
 #define IDC_STATIC_Y                    1014
 #define IDC_EDIT_Y                      1015
 #define IDC_STATIC_X3                   1016
+#define IDC_STATIC_Z                    1016
 #define IDC_EDIT_Z                      1017
 #define IDC_BUTTON_COORGO               1018
 #define IDC_GPUMP                       1019
@@ -37,11 +37,14 @@
 #define IDC_BUTTON_STEERGO              1023
 #define IDC_EDIT_STEER                  1024
 #define IDC_STATIC_X2                   1025
+#define IDC_STATIC_AX                   1025
 #define IDC_GANGLE                      1026
 #define IDC_EDIT_ANGLEX                 1027
 #define IDC_STATIC_Y2                   1028
+#define IDC_STATIC_AY                   1028
 #define IDC_EDIT_ANGLEY                 1029
 #define IDC_STATIC_X4                   1030
+#define IDC_STATIC_AZ                   1030
 #define IDC_EDIT_ANGLEZ                 1031
 #define IDC_BUTTON_GOANGLE              1032
 #define IDC_BUTTON_UNLOCK               1033
@@ -60,11 +63,12 @@
 #define IDC_STATIC_MOVEY                1046
 #define IDC_EDIT_MOVEY                  1047
 #define IDC_STATIC_ToX                  1048
-#define IDC_EDIT_MOVEX2                 1049
+#define IDC_EDIT_MOVEToX                1049
 #define IDC_STATIC_ToY                  1050
-#define IDC_EDIT_MOVEY2                 1051
+#define IDC_EDIT_MOVEToY                1051
 #define IDC_BUTTON_MOVE                 1052
 #define IDC_STATIC_R                    1053
+#define IDC_BUTTON_REFRESH              1053
 #define IDC_EDIT_MOVER                  1054
 #define IDC_BUTTON_SEGGO                1055
 
@@ -74,7 +78,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1053
+#define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

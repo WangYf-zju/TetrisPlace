@@ -111,7 +111,7 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	pArmCtrlDlg->ShowWindow(SW_SHOW);
 	pSerialDlg = new CSerialDlg;
 	pSerialDlg->Create(IDD_DIALOG_SERIAL, this);
-	pSerialDlg->MoveWindow(380, 20, 370, 320);
+	pSerialDlg->MoveWindow(380, 20, 370, 650);
 	pSerialDlg->ShowWindow(SW_SHOW);
 	pNextBlockDlg = new CNextBlockDlg;
 	pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);

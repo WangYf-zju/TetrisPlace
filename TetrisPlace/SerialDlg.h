@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "third-party/WzSerialPort.h"
 
 // CSerialDlg 对话框
 
@@ -22,9 +23,19 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void UpdateReceive();
+	afx_msg void OnBnClickedButtonSend();
+	afx_msg void OnBnClickedButtonOpenport();
+	afx_msg void OnBnClickedButtonRefresh();
 	CComboBox m_com;
 private:
 	void GetConnectedPort();
 public:
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	BOOL m_bOpen;
+	WzSerialPort * m_w;
+	CString m_receive;
+	CString m_send;
 };
+
+DWORD WINAPI SerialThreadProc(LPVOID lpParam);

@@ -23,7 +23,6 @@ Arm::Arm(WzSerialPort * w)
 	m_steerAngle = 0;
 	m_w = w;
 	InitAngle();
-	m_steerAngle = 0;
 
 	if (w != nullptr)
 	{
@@ -46,6 +45,8 @@ void Arm::BindSerialPort(WzSerialPort * w, BOOL bInit)
 
 void Arm::InitArm()
 {
+	InitAngle();
+	m_steerAngle = 0;
 	try
 	{
 		char initBuff[100] =

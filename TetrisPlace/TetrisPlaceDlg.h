@@ -11,6 +11,12 @@
 #include "third-party/WzSerialPort.h"
 #include "Arm.h"
 
+#define BAUDRATE	115200
+#define PARITY		0
+#define DATABIT		8
+#define STOPBIT		0
+#define SYNCHRONIZE	1
+
 // CTetrisPlaceDlg 对话框
 class CTetrisPlaceDlg : public CDialogEx
 {

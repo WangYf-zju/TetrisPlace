@@ -46,8 +46,8 @@ void CArmControlDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_STEER, m_steer);
 	DDX_Text(pDX, IDC_EDIT_MOVEX, m_moveX);
 	DDX_Text(pDX, IDC_EDIT_MOVEY, m_moveY);
-	DDX_Text(pDX, IDC_EDIT_MOVEX2, m_moveToX);
-	DDX_Text(pDX, IDC_EDIT_MOVEY2, m_moveToY);
+	DDX_Text(pDX, IDC_EDIT_MOVEToX, m_moveToX);
+	DDX_Text(pDX, IDC_EDIT_MOVEToY, m_moveToY);
 	DDX_Text(pDX, IDC_EDIT_MOVER, m_moveR);
 	DDX_Text(pDX, IDC_STATE, m_state);
 }

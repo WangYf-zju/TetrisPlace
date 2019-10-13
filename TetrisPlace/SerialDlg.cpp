@@ -5,8 +5,7 @@
 #include "TetrisPlace.h"
 #include "SerialDlg.h"
 #include "afxdialogex.h"
-
-#include "third-party/WzSerialPort.h"
+#include "TetrisPlaceDlg.h"
 
 
 // CSerialDlg 对话框
@@ -15,6 +14,8 @@ IMPLEMENT_DYNAMIC(CSerialDlg, CDialogEx)
 
 CSerialDlg::CSerialDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG_SERIAL, pParent)
+	, m_receive(_T(""))
+	, m_send(_T(""))
 {
 
 }
@@ -27,10 +28,15 @@ void CSerialDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO_COM, m_com);
+	DDX_Text(pDX, IDC_EDIT_RX, m_receive);
+	DDX_Text(pDX, IDC_EDIT_TX, m_send);
 }
 
 
 BEGIN_MESSAGE_MAP(CSerialDlg, CDialogEx)
+	ON_BN_CLICKED(IDC_BUTTON_SEND, &CSerialDlg::OnBnClickedButtonSend)
+	ON_BN_CLICKED(IDC_BUTTON_OPENPORT, &CSerialDlg::OnBnClickedButtonOpenport)
+	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CSerialDlg::OnBnClickedButtonRefresh)
 END_MESSAGE_MAP()
 
 
@@ -41,6 +47,8 @@ BOOL CSerialDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 	// TODO:  在此添加额外的初始化
+	BOOL m_bOpen = FALSE;
+	m_w = nullptr;
 	GetConnectedPort();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -51,52 +59,22 @@ BOOL CSerialDlg::OnInitDialog()
 void CSerialDlg::GetConnectedPort()
 {
 	// TODO: 在此处添加实现代码.
-	//WzSerialPort w;
-	//if (w.open("COM1", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM1"));
-	//}
-	//if (w.open("COM2", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM2"));
-	//}
-	//if (w.open("COM3", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM3"));
-	//}
-	//if (w.open("COM4", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM4"));
-	//}
-	//if (w.open("COM5", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM5"));
-	//}
-	//if (w.open("COM6", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM6"));
-	//}
-	//if (w.open("COM7", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM7"));
-	//}
-	//if (w.open("COM8", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM8"));
-	//}
-	//if (w.open("COM9", 9600, 0, 8, 1))
-	//{
-	//	w.close();
-	//	m_com.AddString(_T("COM9"));
-	//}
+	WzSerialPort w;
+	for (int i = 0; i < 20; i++)
+	{
+		if (w.open(i, 115200, 0, 8, 1, 1))
+		{
+			CString str;
+			str.Format(_T("COM"), i);
+			m_com.AddString(str);
+			w.close();
+		}
+	}
+}
+
+void CSerialDlg::UpdateReceive()
+{
+	GetDlgItem(IDC_EDIT_RX)->SetWindowTextW(m_receive);
 }
 
 
@@ -112,4 +90,80 @@ BOOL CSerialDlg::PreTranslateMessage(MSG* pMsg)
 		return TRUE;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CSerialDlg::OnBnClickedButtonSend()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (m_w != nullptr && m_bOpen)
+	{
+		UpdateData();
+		m_send += "\r\n";
+		m_w->send(m_send.GetBuffer(m_send.GetLength()), m_send.GetLength());
+	}
+}
+
+
+void CSerialDlg::OnBnClickedButtonOpenport()
+{
+	// TODO: 在此添加控件通知处理程序代码	
+	int iCurSel = m_com.GetCurSel();
+	if (iCurSel >= 0)
+	{
+		CString str;
+		m_com.GetLBText(m_com.GetCurSel(), str);
+		int portNo = str[3] - '0';
+		CTetrisPlaceDlg * parentDlg = (CTetrisPlaceDlg*)GetParent();
+		if (parentDlg->m_w.open(portNo, BAUDRATE, 
+			PARITY, DATABIT, STOPBIT, SYNCHRONIZE))
+		{
+			m_bOpen = TRUE;
+			m_w = &parentDlg->m_w;
+			if (MessageBox(_T("保留机械臂当前参数？"), _T("打开串口"),
+				MB_YESNO) == IDYES)
+			{
+				parentDlg->pArmCtrlDlg->BindSerialPort(m_w, FALSE);
+			}
+			else
+			{
+				parentDlg->pArmCtrlDlg->BindSerialPort(m_w, TRUE);
+			}
+		}
+		else
+		{
+			MessageBox(_T("串口连接失败"), _T("打开串口"));
+		}
+	}
+	else
+	{
+		MessageBox(_T("请选择一个串口"), _T("打开串口"));
+	}
+}
+
+
+void CSerialDlg::OnBnClickedButtonRefresh()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	GetConnectedPort();
+}
+
+DWORD WINAPI SerialThreadProc(LPVOID lpParam)
+{
+	CSerialDlg * dlg = (CSerialDlg*)lpParam;
+	char buff[1000];
+	while (1)
+	{
+		if (dlg->m_bOpen && dlg->m_w != nullptr)
+		{
+			int len = dlg->m_w->receive(buff, sizeof(buff)-2);
+			buff[len-1] = '\n';
+			buff[len] = 0;
+			CString str(buff);
+			dlg->m_receive += str;
+			dlg->UpdateReceive();
+
+		}
+	}
+	return 0;
 }
