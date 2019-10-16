@@ -56,7 +56,9 @@ BOOL CCameraDlg::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化
 	HWND hImgWnd = GetDlgItem(IDC_PICTURE)->m_hWnd;
-	OpenWindow(0, 0, 640, 480, (Hlong)hImgWnd, "visible", "", &hv_WindowHandle);
+	CRect rc;
+	GetDlgItem(IDC_PICTURE)->GetClientRect(&rc);
+	OpenWindow(0, 0, rc.Width(), rc.Height(), (Hlong)hImgWnd, "visible", "", &hv_WindowHandle);
 	CreateThread(NULL, 0, CameraThreadProc, this, 0, 0);
 	try
 	{
@@ -168,7 +170,7 @@ void CCameraDlg::Distinguish()
 				AffineTransContourXld(ho_ModelContours, &ho_TransContours, hv_HomMat2D);
 
 				SetColor(hv_WindowHandle, "green");
-				SetLineWidth(hv_WindowHandle, 3.5);
+				SetLineWidth(hv_WindowHandle, 2);
 
 				DispObj(ho_TransContours, hv_WindowHandle);
 			}

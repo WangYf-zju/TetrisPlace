@@ -116,17 +116,17 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	pNextBlockDlg = new CNextBlockDlg;
 	pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);
 	pNextBlockDlg->MoveWindow(760, 290, 250, 380);
-	//pNextBlockDlg->ShowWindow(SW_SHOW);
+	pNextBlockDlg->ShowWindow(SW_SHOW);
 	pBoardDlg = new CBoardDlg;
 	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
 	pBoardDlg->MoveWindow(1020, 290, 320, 380);
-	//pBoardDlg->ShowWindow(SW_SHOW);
+	pBoardDlg->ShowWindow(SW_SHOW);
 	pCameraDlg = new CCameraDlg;
 	pCameraDlg->Create(IDD_DIALOG_CAMERA, this);
-	//pCameraDlg->MoveWindow(760, 20, 340, 260);
-	//pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(10, 10, 320, 240);
-	pCameraDlg->MoveWindow(760, 20, 660, 500);
-	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(10, 10, 640, 480);
+	pCameraDlg->MoveWindow(760, 20, 440, 260);
+	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(10, 10, 420, 240);
+	//pCameraDlg->MoveWindow(760, 20, 660, 500);
+	//pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(10, 10, 640, 480);
 	pCameraDlg->ShowWindow(SW_SHOW);
 	if (!m_w.open(SERIAL_PORT, 115200, 0, 8, 1, 1))
 	{
