@@ -36,6 +36,7 @@ public:
 	WzSerialPort * m_w;
 	CString m_receive;
 	CString m_send;
+	HANDLE hThread;
 };
 
 DWORD WINAPI SerialThreadProc(LPVOID lpParam);

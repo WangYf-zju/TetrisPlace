@@ -72,7 +72,7 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r/*=0*/)
 	Calc_Angle(x, y, MOVE_Z);
 	double angleZ1 = m_tAngle[Z];
 	Calc_Angle(des_x, des_y, MOVE_Z);
-	double dAngleZ = m_tAngle[Z] - angleZ1;
+	double dAngleZ = angleZ1 - m_tAngle[Z] ;
 	double dSteerAngle = r - dAngleZ;
 	if (dSteerAngle > 180)dSteerAngle -= 360;
 	else if (dSteerAngle < -180)dSteerAngle += 360;
@@ -84,6 +84,7 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r/*=0*/)
 		Sleep((int)duration);
 	GoSegTo(x, y);
 	Grab();
+	GoSegTo(OFFSETX2, OFFSETY2);
 	Disgrab(des_x, des_y, dSteerAngle);
 }
 

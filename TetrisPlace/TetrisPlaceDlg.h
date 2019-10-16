@@ -8,6 +8,7 @@
 #include "ArmControlDlg.h"
 #include "NextBlockDlg.h"
 #include "BoardDlg.h"
+#include "CameraDlg.h"
 #include "third-party/WzSerialPort.h"
 #include "Arm.h"
 
@@ -16,6 +17,7 @@
 #define DATABIT		8
 #define STOPBIT		0
 #define SYNCHRONIZE	1
+
 
 // CTetrisPlaceDlg 对话框
 class CTetrisPlaceDlg : public CDialogEx
@@ -49,6 +51,7 @@ public:
 	CSerialDlg * pSerialDlg;
 	CArmControlDlg *pArmCtrlDlg;
 	CBoardDlg * pBoardDlg;
+	CCameraDlg * pCameraDlg;
 	WzSerialPort m_w;
 	Arm m_a;
 

@@ -182,6 +182,7 @@
     <ClInclude Include="Arm.h" />
     <ClInclude Include="ArmControlDlg.h" />
     <ClInclude Include="BoardDlg.h" />
+    <ClInclude Include="CameraDlg.h" />
     <ClInclude Include="NextBlockDlg.h" />
     <ClInclude Include="SerialDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Arm.cpp" />
     <ClCompile Include="ArmControlDlg.cpp" />
     <ClCompile Include="BoardDlg.cpp" />
+    <ClCompile Include="CameraDlg.cpp" />
     <ClCompile Include="NextBlockDlg.cpp" />
     <ClCompile Include="SerialDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
