@@ -27,6 +27,8 @@ TetrisAI::TetrisAI()
 	m_supPos->x = 0;
 	m_supPos->y = 0;
 	m_supPos->r = 0;
+	m_rank = -1e10;
+	FindSupremePos();
 }
 
 TetrisAI::TetrisAI(int type)
@@ -43,6 +45,8 @@ TetrisAI::TetrisAI(int type)
 	m_supPos->x = 0;
 	m_supPos->y = 0;
 	m_supPos->r = 0;
+	m_rank = -1e10;
+	FindSupremePos();
 }
 
 
@@ -54,30 +58,7 @@ TetrisAI::~TetrisAI()
 
 Position* TetrisAI::GetSupremePos()
 {	
-	BOOL canPlace = FALSE;
-	double max = -1e10;
-	for (int x = -1; x < COL; x++)
-	{
-		for (int y = -1; y < RAW; y++)
-		{
-			for (int r = 0; r < 4; r++)
-			{
-				if (CanPlaceTetris(x, y, r))
-				{
-					canPlace = TRUE;
-					double rank = Rank(x, y, r);
-					if (rank > max)
-					{
-						max = rank;
-						m_supPos->x = x;
-						m_supPos->y = y;
-						m_supPos->r = r;
-					}
-				}
-			}
-		}
-	}
-	if (!canPlace)
+	if (!m_canPlace)
 		return nullptr;
 	return m_supPos;
 }
@@ -91,6 +72,41 @@ Position* TetrisAI::PlaceToSupremePos()
 	return m_supPos;
 }
 
+double TetrisAI::GetSupremeRank()
+{
+	return m_rank;
+}
+
+
+BOOL TetrisAI::FindSupremePos()
+{
+	BOOL canPlace = FALSE;
+	double max = -1e10;
+	for (int x = -1; x < COL; x++)
+	{
+		for (int y = -1; y < ROW; y++)
+		{
+			for (int r = 0; r < 4; r++)
+			{
+				if (CanPlaceTetris(x, y, r))
+				{
+					canPlace = TRUE;
+					double rank = Rank(x, y, r);
+					if (rank > max)
+					{
+						max = rank;
+						m_rank = rank;
+						m_supPos->x = x;
+						m_supPos->y = y;
+						m_supPos->r = r;
+					}
+				}
+			}
+		}
+	}
+	m_canPlace = canPlace;
+	return canPlace;
+}
 
 BOOL TetrisAI::CanPlaceTetris(int x, int y, int r)
 {
@@ -108,7 +124,7 @@ BOOL TetrisAI::CanPlaceTetris(int x, int y, int r)
 
 BOOL TetrisAI::CanPlaceBlock(int x, int y)
 {
-	if (x < 0 || x >= COL || y < 0 || y >= RAW || (*m_pBoard)[y][x])
+	if (x < 0 || x >= COL || y < 0 || y >= ROW || (*m_pBoard)[y][x])
 		return FALSE;
 	return TRUE;
 }
@@ -125,7 +141,7 @@ double TetrisAI::Rank(int x, int y, int r)
 	int LH = CalcLandHeight(y, r);
 	int oldER = CalcEroded();
 	int oldHole = CalcHoles();
-	int oldRT = CalcRawTrans();
+	int oldRT = CalcRowTrans();
 	int oldCT = CalcColTrans();
 	CalcCR();
 	int oldCR1 = m_CRCount[0];
@@ -134,7 +150,7 @@ double TetrisAI::Rank(int x, int y, int r)
 	PlaceTetris(x, y, r);
 	int dER = CalcEroded() - oldER;
 	int dHole = CalcHoles() - oldHole;
-	int dRT = CalcRawTrans() - oldRT;
+	int dRT = CalcRowTrans() - oldRT;
 	int dCT = CalcColTrans() - oldCT;
 	CalcCR();
 	int dCR1 = m_CRCount[0] - oldCR1;
@@ -167,7 +183,7 @@ int TetrisAI::CalcEroded()
 {
 	BOOL flag;
 	int count = 0;
-	for (int y = 0; y < RAW; y++)
+	for (int y = 0; y < ROW; y++)
 	{
 		flag = TRUE;
 		for (int x = 0; x < COL; x++)
@@ -185,7 +201,7 @@ int TetrisAI::CalcHoles()
 {
 	BOOL flag;
 	int count = 0;
-	for (int x = 0; x < RAW; x++)
+	for (int x = 0; x < ROW; x++)
 	{
 		flag = FALSE;
 		for (int y = COL-1; y >= 0; y--)
@@ -232,10 +248,24 @@ void TetrisAI::RemoveTetris(int x, int y, int r)
 	}
 }
 
-int TetrisAI::CalcRawTrans()
+void TetrisAI::PlaceTetris(int type, Position * pos)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (TetrisShape[type][pos->r][4 * j + i])
+			{
+				(*m_pBoard)[pos->y + j][pos->x + i] = TRUE;
+			}
+		}
+	}
+}
+
+int TetrisAI::CalcRowTrans()
 {
 	int count = 0;
-	for (int y = 0; y < RAW; y++)
+	for (int y = 0; y < ROW; y++)
 	{
 		if (!(*m_pBoard)[0][y]) count++;
 		for (int x = 1; x < COL; x++)
@@ -255,12 +285,12 @@ int TetrisAI::CalcColTrans()
 	for (int x = 0; x < COL; x++)
 	{
 		if (!(*m_pBoard)[0][x]) count++;
-		for (int y = 1; y < RAW; y++)
+		for (int y = 1; y < ROW; y++)
 		{
 			if ((*m_pBoard)[y][x] != (*m_pBoard)[y - 1][x])
 				count++;
 		}
-		if (!(*m_pBoard)[RAW - 1][x]) count++;
+		if (!(*m_pBoard)[ROW - 1][x]) count++;
 	}
 	return count;
 }
@@ -278,12 +308,12 @@ void TetrisAI::CalcCR()
 	}
 	int order = 0;
 	int hOrder = 0;
-	int boardFlag[RAW][COL] = { 0 };
+	int boardFlag[ROW][COL] = { 0 };
 	int oldCRStart[5] = { -1,-1,-1,-1,-1 };
 	int oldCREnd[5] = { -1,-1,-1,-1,-1 };
 	int CRStart[5] = { -1,-1,-1,-1,-1 };
 	int CREnd[5] = { -1,-1,-1,-1,-1 };
-	for (int y = 0; y < RAW; y++)
+	for (int y = 0; y < ROW; y++)
 	{
 		for (int x = 0; x < COL + 1; x++)
 		{
@@ -350,7 +380,7 @@ void TetrisAI::CalcCR()
 		}
 		hOrder = 0;
 	}
-	for (int y = 0; y < RAW; y++)
+	for (int y = 0; y < ROW; y++)
 	{
 		for (int x = 0; x < COL; x++)
 		{

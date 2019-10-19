@@ -1,7 +1,7 @@
 #pragma once
-#define RAW 12
+#define ROW 12
 #define COL 10
-typedef BOOL BoardState[RAW][COL];
+typedef BOOL BoardState[ROW][COL];
 typedef int ConnectRegion[50];
 
 typedef struct {
@@ -18,6 +18,8 @@ public:
 	~TetrisAI();
 public:
 	int m_type;
+	double m_rank;
+	BOOL m_canPlace;
 	Position *m_supPos;
 	static const BOOL (*TetrisShape)[4][16];
 	static BoardState * m_pBoard;
@@ -28,18 +30,21 @@ private:
 public:
 	Position* GetSupremePos();
 	Position* PlaceToSupremePos();
+	double GetSupremeRank();
 	void BindBoard(BoardState * pBoard);
 	void PlaceTetris(int x, int y, int r);
 	void PlaceTetris(Position * pos);
 	void RemoveTetris(int x, int y, int r);
+	static void PlaceTetris(int type, Position * pos);
 private:
+	BOOL FindSupremePos();
 	BOOL CanPlaceTetris(int x, int y, int r);
 	BOOL CanPlaceBlock(int x, int y);
 	double Rank(int x, int y, int r);
 	int CalcLandHeight(int y, int r);
 	int CalcEroded();
 	int CalcHoles();
-	int CalcRawTrans();
+	int CalcRowTrans();
 	int CalcColTrans();
 	void CalcCR();
 };

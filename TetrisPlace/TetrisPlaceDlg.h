@@ -57,4 +57,5 @@ public:
 
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnBnClickedButtonDG();
 };

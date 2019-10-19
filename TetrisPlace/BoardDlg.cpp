@@ -85,7 +85,7 @@ void CBoardDlg::DrawBoard(CDC *pDC)
 {
 	for (int x = 0; x < COL; x++)
 	{
-		for (int y = 0; y < RAW; y++)
+		for (int y = 0; y < ROW; y++)
 		{
 			if ((*TetrisAI::m_pBoard)[y][x])
 			{

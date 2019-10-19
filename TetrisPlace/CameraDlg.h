@@ -1,7 +1,19 @@
 ﻿#pragma once
 #include "HalconCpp.h"
+#include "TetrisAI.h"
 using namespace HalconCpp;
 #define TYPE_COUNT 7
+
+typedef struct {
+	BOOL bExist;
+	double x;
+	double y;
+	double r;
+	double toX;
+	double toY;
+	double toR;
+	int rank;
+}TypeInfo;
 
 // CCameraDlg 对话框
 
@@ -26,8 +38,16 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnInitDialog();
 	void Distinguish();
+	void StartDistinguishAndGrabOnce();
 
+private:
+	int GetGridX(int type, int r, double col);
+	int GetGridY(int type, int r, double row);
+	int GetGridR(int type, double rot);
 public:
+	BOOL m_bDistinguish;
+	BOOL m_bGrab;
+	TypeInfo m_typeInfo[TYPE_COUNT];
 	HANDLE hThread;
 	HObject  ho_Image;//, ho_Region, ho_ConnectedRegions, ho_SelectedRegions;
 	HObject  ho_SelectedRegions;

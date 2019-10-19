@@ -92,7 +92,7 @@ void Arm::Disgrab()
 {
 	double duration = GoTo(m_cCoor[X], m_cCoor[Y], DISGRAB_Z);
 	if (duration > 0)
-		Sleep(duration);
+		Sleep((int)duration);
 	ClosePump();
 }
 
@@ -255,12 +255,12 @@ void Arm::InitAngle()
 	m_cAngle[Z] = m_tAngle[Z];
 }
 
-double Arm::RadToDeg(double rad)
+double Arm::ArmRadToDeg(double rad)
 {
 	return rad / PI * 180.0;
 }
 
-double Arm::DegToRad(double deg)
+double Arm::ArmDegToRad(double deg)
 {
 	return deg / 180.0 * PI;
 }
@@ -285,7 +285,7 @@ void Arm::Calc_Angle(double x, double y, double z)
 	double Xf = x + startX, Yf = y + startY, Zf = z + startZ;
 	const double OA = 30; const double BC = 30; const double AB = 135; const double OC = 135;
 	const double BD = 190; const double DE = 75; const double EF = 60;
-	m_tAngle[Z] = RadToDeg(atan(Yf / Xf));
+	m_tAngle[Z] = ArmRadToDeg(atan(Yf / Xf));
 	double Xd = Xf - DE * Xf / sqrt(Xf * Xf + Yf * Yf);
 	double Yd = Yf - DE * Yf / sqrt(Xf * Xf + Yf * Yf);
 	double Zd = Zf + EF;
@@ -298,11 +298,11 @@ void Arm::Calc_Angle(double x, double y, double z)
 	double ang_BOC = calc_rad_angle_in_triangle_by_cosine_law(OB, OC, BC);
 	double ang_DOX = atan(Zd / sqrt(Xd * Xd + Yd * Yd));
 	double ang_COX = ang_BOD + ang_DOX - ang_BOC;
-	m_tAngle[X] = RadToDeg(ang_COX);
+	m_tAngle[X] = ArmRadToDeg(ang_COX);
 
 	double ang_AOB = calc_rad_angle_in_triangle_by_cosine_law(OA, OB, AB);
 	double ang_AOX = ang_BOD + ang_DOX + ang_AOB;
-	m_tAngle[Y] = RadToDeg(ang_AOX);
+	m_tAngle[Y] = ArmRadToDeg(ang_AOX);
 }
 //        B
 //y^     / \
@@ -316,9 +316,9 @@ void Arm::Calc_Angle(double x, double y, double z)
 
 void Arm::Calc_Coor(double ax, double ay, double az)
 {
-	double ang_COX = DegToRad(ax);
-	double ang_AOX = DegToRad(ay);
-	double ang_Z = DegToRad(az);
+	double ang_COX = ArmDegToRad(ax);
+	double ang_AOX = ArmDegToRad(ay);
+	double ang_Z = ArmDegToRad(az);
 	const double OA = 30; const double BC = 30; const double AB = 135; const double OC = 135;
 	const double BD = 190; const double DE = 75; const double EF = 60;
 	double Xa = OA * cos(ang_AOX); double Ya = OA * sin(ang_AOX);

@@ -18,6 +18,7 @@
 #define IDC_EDIT_RX                     1002
 #define IDC_EDIT_TX                     1003
 #define IDC_BUTTON1                     1004
+#define IDC_BUTTON_D_G                  1004
 #define IDC_BUTTON2                     1005
 #define IDC_BUTTON_SEND                 1005
 #define IDC_BUTTON_NEXTOK               1007

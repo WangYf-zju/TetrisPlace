@@ -66,6 +66,7 @@ BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON_D_G, &CTetrisPlaceDlg::OnBnClickedButtonDG)
 END_MESSAGE_MAP()
 
 
@@ -200,4 +201,11 @@ BOOL CTetrisPlaceDlg::PreTranslateMessage(MSG* pMsg)
 	else if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_ESCAPE)
 		return TRUE;
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CTetrisPlaceDlg::OnBnClickedButtonDG()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	pCameraDlg->StartDistinguishAndGrabOnce();
 }

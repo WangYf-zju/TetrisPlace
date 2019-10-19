@@ -3,6 +3,7 @@
 #include "arm.h"
 #include <vector>
 #include <iterator>
+#include <mutex> 
 
 #define AM_GOTO			1
 #define AM_GRAB			2
@@ -17,6 +18,7 @@
 
 using std::vector;
 using std::iterator;
+using std::mutex;
 
 typedef struct ArmMsg{
 	int msg;
@@ -63,12 +65,13 @@ public:
 	BOOL m_bRelative;
 	BOOL m_bSettingMode;
 	BOOL m_bLock;
-	vector<ArmMsg> msgArray;
 	HANDLE hThread;
 
 
 private:
 	WzSerialPort * m_pW;
+	void PushMsg(ArmMsg & msg);
+
 public:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnBnClickedButtonCoorgo();

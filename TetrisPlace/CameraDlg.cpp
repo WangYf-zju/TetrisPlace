@@ -3,10 +3,34 @@
 
 #include "stdafx.h"
 #include "TetrisPlace.h"
+#include "TetrisPlaceDlg.h"
 #include "CameraDlg.h"
 #include "afxdialogex.h"
+#include "ArmControlDlg.h"
 #include <stdio.h>
 
+
+const int RowBoundary[11] = { 0,55,113,171,229,287,345,403,461,519,577 };
+const int ColumnBoundary[13] = { 92,150,208,266,324,382,440,498,556,614,672,730,788 };
+const int AngleOffset[TYPE_COUNT] = { 270,90,90,90,0,90,90 };
+const double PictureXOffset[TYPE_COUNT][4] = {
+	{9,0,-9,0},{9,0,-9,0},{-9,0,-9,0},{-9,0,-9,0},{-9,-9,-9,-9},{0,-9,0,-9},{9,0,-9,0}
+};
+const double PictureYOffset[TYPE_COUNT][4] = {
+	{0,9,0,-9},{0,9,0,-9},{0,-9,0,-9},{0,-9,0,-9},{-9,-9,-9,-9},{-9,0,-9,0},{0,9,0,-9}
+};
+const double GrabXGridOffset[TYPE_COUNT][4] = {
+	{0,0,0,0},{0,0,0,0},{0.5,0,0.5,0},{0.5,0,0.5,0},{0.5,0.5,0.5,0.5},{0,0.5,0,0.5},{0,0,0,0}
+};
+const double GrabYGridOffset[TYPE_COUNT][4] = {
+	{0,0,0,0},{0,0,0,0},{0,-0.5,0,-0.5},{0,-0.5,0,-0.5},{-0.5,-0.5,-0.5,-0.5},{-0.5,0,-0.5,0},{0,0,0,0}
+};
+const double ToXGridOffset[TYPE_COUNT][4] = {
+	{1,1,1,1},{1,1,1,1},{1,0.5,1,0.5},{1,1.5,1,1.5},{0.5,0.5,0.5,0.5},{1.5,1,1.5,1},{1,1,1,1}
+};
+const int ToYGridOffset[TYPE_COUNT][4] = {
+	{1,1,1,1},{1,1,1,1},{0.5,1,0.5,1},{0.5,1,0.5,1},{0.5,0.5,0.5,0.5},{1,1.5,1,1.5},{1,1,1,1}
+};
 
 // CCameraDlg 对话框
 
@@ -55,6 +79,8 @@ BOOL CCameraDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	m_bGrab = FALSE;
+	m_bDistinguish = FALSE;
 	HWND hImgWnd = GetDlgItem(IDC_PICTURE)->m_hWnd;
 	CRect rc;
 	GetDlgItem(IDC_PICTURE)->GetClientRect(&rc);
@@ -129,11 +155,52 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		SelectShape(ho_ConnectedRegions, &dlg->ho_SelectedRegions, "area", "and", 9000, 20000);
 		SetPart(dlg->hv_WindowHandle, 0, 0, height, width);
 		DispObj(dlg->ho_Image, dlg->hv_WindowHandle);
-		dlg->Distinguish();
+		if (dlg->m_bDistinguish)
+		{
+			dlg->Distinguish();
+		}
 		Sleep(1000);
 	}
 	return 0;
 }
+
+#define SCALE_PICTURE 58/18
+int CCameraDlg::GetGridX(int type, int r, double col)
+{
+	int x = (int)(col + PictureXOffset[type][r] * SCALE_PICTURE);
+	for (int i = 0; i < 12; i++)
+	{
+		if (x > ColumnBoundary[i] && x < ColumnBoundary[i + 1])
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+int CCameraDlg::GetGridY(int type, int r, double row)
+{
+	int y = (int)(row + PictureYOffset[type][r] * SCALE_PICTURE);
+	for (int i = 0; i < 10; i++)
+	{
+		if (y > RowBoundary[i] && y < RowBoundary[i + 1])
+		{
+			return 9 - i;
+		}
+	}
+	return -1;
+}
+
+int CCameraDlg::GetGridR(int type, double rot)
+{
+	int r = (int)(-rot*180/3.1415926 + AngleOffset[type]);
+	r += 45;
+	if (r < 0)r += 360;
+	else if (r > 360)r -= 360;
+	r /= 90;
+	return r;
+}
+
+
 
 void CCameraDlg::Distinguish()
 {
@@ -146,6 +213,9 @@ void CCameraDlg::Distinguish()
 
 	try
 	{
+		double max_rank = -10e3;
+		int supreme_type = -1;
+		Position pos;
 		for (int i = 0; i < TYPE_COUNT; i++)
 		{
 			FindScaledShapeModel(ho_Image, hv_ModelID[i], HTuple(0).TupleRad(), HTuple(360).TupleRad(),
@@ -153,12 +223,35 @@ void CCameraDlg::Distinguish()
 				"least_squares", (HTuple(5).Append(1)), Greediness[i],
 				&hv_Row[i], &hv_Column[i], &hv_Angle[i], &hv_Scale[i], &hv_Score[i]);
 
-#ifndef NONE_UI
-			if (hv_Row[i].Length() > 0)
+			int length = 0;
+			length = hv_Row[i].Length();
+			if (length <= 0)
 			{
+				m_typeInfo[i].bExist = FALSE;
+			}
+			else
+			{			
+				m_typeInfo[i].bExist = TRUE;
+				TetrisAI AI(i);
+				double rank = AI.GetSupremeRank();
+				if (max_rank < rank && AI.m_canPlace)
+				{
+					max_rank = rank;
+					supreme_type = i;
+					pos.x = AI.GetSupremePos()->x;
+					pos.y = AI.GetSupremePos()->y;
+					pos.r = AI.GetSupremePos()->r;
+				}
+							
+#ifndef NONE_UI
 				HTuple  hv_RefColumn, hv_HomMat2D, hv_TestImages, hv_T;
 				HObject  ho_TemplateImage, ho_ModelContours, ho_TransContours;
-
+				hv_Column[i][1];
+				CString str;
+				str.Format(_T("Row: %d; Column: %d; Angle: %f; Scale: %f\n"),
+					(int)(hv_Row[i])[0].D(), (int)(hv_Column[i])[0].D(),
+					180*(hv_Angle[i])[0].D()/3.1415926, (hv_Scale[i])[0].D());
+				//MessageBox(str);
 				GetShapeModelContours(&ho_ModelContours, hv_ModelID[i], 1);
 
 				HomMat2dIdentity(&hv_HomMat2D);
@@ -175,7 +268,32 @@ void CCameraDlg::Distinguish()
 				DispObj(ho_TransContours, hv_WindowHandle);
 			}
 #endif // !NONE_UI
-
+		}
+		if (supreme_type >= 0 && m_bGrab)
+		{
+			//((CTetrisPlaceDlg*)GetParent())->pNextBlockDlg->Invalidate(FALSE);
+			int r = GetGridR(supreme_type, (hv_Angle[supreme_type])[0].D());
+			int grid_x = GetGridX(supreme_type, r, (hv_Column[supreme_type])[0].D());
+			int grid_y = GetGridY(supreme_type, r, (hv_Row[supreme_type])[0].D());
+			int grid_toX = pos.x + ToXGridOffset[supreme_type][pos.r];
+			int grid_toY = pos.y + ToYGridOffset[supreme_type][pos.r];
+			int dr = pos.r - r;
+			dr -= 2;
+			if (dr < 0)dr += 4;
+			else if (dr > 4)dr -= 4;
+			if (supreme_type == 2 || supreme_type == 3 || supreme_type == 5)
+				dr %= 2;
+			else if (supreme_type == 4)
+				dr = 0;
+			double x = (grid_x+GrabXGridOffset[supreme_type][r]) * 18 + OFFSETX1;
+			double y = (grid_y+GrabYGridOffset[supreme_type][r]) * 18 + OFFSETY1;
+			double toX = -grid_toY * 18 + OFFSETX2;
+			double toY = -grid_toX * 18 + OFFSETY2 + 18 * 9;
+			((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0);
+			m_bGrab = FALSE;
+			//TetrisAI::PlaceTetris(supreme_type, &pos);
+			//((CTetrisPlaceDlg*)GetParent())->pNextBlockDlg->DrawNext(supreme_type,
+			//	((CTetrisPlaceDlg*)GetParent())->pNextBlockDlg->GetDC());
 		}
 	}
 	catch (HException & exception)
@@ -184,5 +302,11 @@ void CCameraDlg::Distinguish()
 			(const char*)exception.ProcName(),
 			(const char*)exception.ErrorMessage());
 	}
+}
+
+void CCameraDlg::StartDistinguishAndGrabOnce()
+{
+	m_bDistinguish = TRUE;
+	m_bGrab = TRUE;
 }
 

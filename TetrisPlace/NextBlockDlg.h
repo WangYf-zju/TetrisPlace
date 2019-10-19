@@ -23,13 +23,12 @@ protected:
 
 public:
 	int m_type;
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPaint();
 
-private:
-	void DrawNext(int type, CDC *pDC);
 public:
 	afx_msg void OnBnClickedButtonNextok();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnBnClickedButtonPlace();
+	virtual BOOL OnInitDialog();
+	afx_msg void OnPaint();
+	void DrawNext(int type, CDC *pDC);
 };

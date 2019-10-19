@@ -8,6 +8,8 @@
 
 
 // CArmControlDlg 对话框
+mutex m_lock;
+vector<ArmMsg> msgArray;
 
 IMPLEMENT_DYNAMIC(CArmControlDlg, CDialogEx)
 
@@ -96,6 +98,7 @@ BOOL CArmControlDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_pA = new Arm();
 	m_bRelative = TRUE;
+	//msgArray.reserve(10 * sizeof(ArmMsg));
 	((CButton*)GetDlgItem(IDC_RELATIVE))->SetCheck(1);
 	m_bSettingMode = FALSE;
 	m_bLock = FALSE;
@@ -151,7 +154,7 @@ void CArmControlDlg::OnBnClickedButtonGrab()
 	UpdateData();
 	ArmMsg msg;
 	msg.msg = AM_GRAB;
-	msgArray.push_back(msg);
+	PushMsg(msg);
 }
 
 
@@ -163,7 +166,7 @@ void CArmControlDlg::OnBnClickedButtonPlace()
 	UpdateData();
 	ArmMsg msg;
 	msg.msg = AM_PLACE;
-	msgArray.push_back(msg);
+	PushMsg(msg);
 }
 
 
@@ -188,8 +191,7 @@ void CArmControlDlg::OnBnClickedButtonGoangle()
 		msg.param.push_back(m_AX);
 		msg.param.push_back(m_AY);
 		msg.param.push_back(m_AZ);
-		msgArray.push_back(msg);
-
+		PushMsg(msg);
 	}
 }
 
@@ -217,25 +219,25 @@ void CArmControlDlg::OnBnClickedButtonSteergo()
 	ArmMsg msg;
 	msg.msg = AM_STEERTO;
 	msg.param.push_back(m_steer);
-	msgArray.push_back(msg);
+	PushMsg(msg);
 }
 
 
 void CArmControlDlg::OnBnClickedButtonUnlock()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if (m_bLock)
-	{
+	//if (m_bLock)
+	//{
 		m_pA->UnlockMotor();
 		m_bLock = FALSE;
-		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机锁定"));
-	}
-	else
-	{
-		m_pA->LockMotor();
-		m_bLock = TRUE;
+	//	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机锁定"));
+	//}
+	//else
+	//{
+		//m_pA->LockMotor();
+		//m_bLock = TRUE;
 		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
-	}
+	//}
 	UpdateState();
 }
 
@@ -290,7 +292,7 @@ void CArmControlDlg::Grab(double x, double y, double des_x, double des_y, double
 	msg.param.push_back(des_x);
 	msg.param.push_back(des_y);
 	msg.param.push_back(r);
-	msgArray.push_back(msg);
+	PushMsg(msg);
 }
 
 void CArmControlDlg::SetCoor(double x, double y, double z)
@@ -310,7 +312,7 @@ void CArmControlDlg::GoToR(int dx, int dy, int dz)
 	msg.param.push_back(dx);
 	msg.param.push_back(dy);
 	msg.param.push_back(dz);
-	msgArray.push_back(msg);
+	PushMsg(msg);
 }
 
 void CArmControlDlg::GoTo(int x, int y, int z)
@@ -320,7 +322,14 @@ void CArmControlDlg::GoTo(int x, int y, int z)
 	msg.param.push_back(x);
 	msg.param.push_back(y);
 	msg.param.push_back(z);
+	PushMsg(msg);
+}
+
+void CArmControlDlg::PushMsg(ArmMsg & msg)
+{
+	m_lock.lock();
 	msgArray.push_back(msg);
+	m_lock.unlock();
 }
 
 DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
@@ -329,8 +338,9 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 	vector<ArmMsg>::iterator itMsg;
 	while (1)
 	{
-		itMsg = dlg->msgArray.begin();
-		if (itMsg != dlg->msgArray.end())
+		m_lock.lock();
+		itMsg = msgArray.begin();
+		if (itMsg != msgArray.end())
 		{
 			switch (itMsg->msg)
 			{
@@ -366,11 +376,13 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 				break;
 			}
 			itMsg->param.clear();
-			itMsg = dlg->msgArray.erase(itMsg);
+			itMsg = msgArray.erase(itMsg);
 			dlg->UpdateState();
 		}
 		else
-			Sleep(10);
+			;
+		m_lock.unlock();
+		Sleep(10);
 	}
 	return 0;
 }
@@ -385,5 +397,5 @@ void CArmControlDlg::OnBnClickedButtonSeggo()
 	msg.param.push_back(m_X);
 	msg.param.push_back(m_Y);
 	msg.param.push_back(m_Z);
-	msgArray.push_back(msg);
+	PushMsg(msg);
 }
