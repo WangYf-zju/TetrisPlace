@@ -208,4 +208,5 @@ void CTetrisPlaceDlg::OnBnClickedButtonDG()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	pCameraDlg->StartDistinguishAndGrabOnce();
+	pNextBlockDlg->Invalidate(FALSE);
 }

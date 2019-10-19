@@ -47,10 +47,10 @@ BOOL CSerialDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 	// TODO:  在此添加额外的初始化
-	m_bOpen = FALSE;
-	m_w = nullptr;
-	GetConnectedPort();
-
+	m_bOpen = TRUE;
+	m_w = &((CTetrisPlaceDlg*)GetParent())->m_w;
+	//GetConnectedPort();
+	//hThread = CreateThread(NULL, 0, SerialThreadProc, this, 0, 0);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }

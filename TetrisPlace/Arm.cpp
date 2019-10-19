@@ -76,6 +76,10 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r/*=0*/)
 	double dSteerAngle = r - dAngleZ;
 	if (dSteerAngle > 180)dSteerAngle -= 360;
 	else if (dSteerAngle < -180)dSteerAngle += 360;
+	// revise steering engine
+	// TODO: 
+	if (dSteerAngle > 0)dSteerAngle += 10;
+	else if (dSteerAngle)dSteerAngle -= 10;
 
 	double duration = 0;
 	if (dSteerAngle < 0) duration = SteerEngineTo(180);
@@ -92,7 +96,7 @@ void Arm::Disgrab()
 {
 	double duration = GoTo(m_cCoor[X], m_cCoor[Y], DISGRAB_Z);
 	if (duration > 0)
-		Sleep((int)duration);
+		Sleep((int)duration+500);
 	ClosePump();
 }
 
@@ -170,6 +174,8 @@ double Arm::GoAngleTo(double x, double y, double z)
 	m_cAngle[Y] = y;
 	m_cAngle[Z] = z;
 	char buff[100] = { 0 };
+	m_w->send("G95\r\n", 5);
+	Sleep(100);
 	sprintf_s(buff, "G1 X%.6f Y%.6f Z%.6f\r\n",
 		m_dAngle[X], m_dAngle[Y], m_dAngle[Z]);
 	m_w->send(buff, strlen(buff));
@@ -272,7 +278,7 @@ double Arm::calc_rad_angle_in_triangle_by_cosine_law(double adj_side1, double ad
 }
 
 //        B
-//y^     / \
+//z^     / \
 // |    /   C
 // |   /   / \
 // |  /   /   D-----E
@@ -280,12 +286,18 @@ double Arm::calc_rad_angle_in_triangle_by_cosine_law(double adj_side1, double ad
 // |A   /           F
 // | \ /
 // ---O--------------------->X axis
+const double OA = 31; const double BC = 31; const double AB = 136; const double OC = 136;
+const double BD = 191; const double DE = 73; const double EF = 58;
 void Arm::Calc_Angle(double x, double y, double z)
 {
 	double Xf = x + startX, Yf = y + startY, Zf = z + startZ;
-	const double OA = 30; const double BC = 30; const double AB = 135; const double OC = 135;
-	const double BD = 190; const double DE = 75; const double EF = 60;
-	m_tAngle[Z] = ArmRadToDeg(atan(Yf / Xf));
+
+	// Quadrant 1,4
+	if (Xf >= 0 && Yf > 0 || Xf >= 0 && Yf <= 0)
+		m_tAngle[Z] = ArmRadToDeg(atan(Yf / Xf));
+	// Quadrant 2
+	else if (Xf <= 0 && Yf >= 0)
+		m_tAngle[Z] = ArmRadToDeg(atan(Yf / Xf)) + 180;
 	double Xd = Xf - DE * Xf / sqrt(Xf * Xf + Yf * Yf);
 	double Yd = Yf - DE * Yf / sqrt(Xf * Xf + Yf * Yf);
 	double Zd = Zf + EF;
@@ -305,7 +317,7 @@ void Arm::Calc_Angle(double x, double y, double z)
 	m_tAngle[Y] = ArmRadToDeg(ang_AOX);
 }
 //        B
-//y^     / \
+//z^     / \
 // |    /   C
 // |   /   / \
 // |  /   /   D-----E
@@ -319,8 +331,6 @@ void Arm::Calc_Coor(double ax, double ay, double az)
 	double ang_COX = ArmDegToRad(ax);
 	double ang_AOX = ArmDegToRad(ay);
 	double ang_Z = ArmDegToRad(az);
-	const double OA = 30; const double BC = 30; const double AB = 135; const double OC = 135;
-	const double BD = 190; const double DE = 75; const double EF = 60;
 	double Xa = OA * cos(ang_AOX); double Ya = OA * sin(ang_AOX);
 	double Xc = OC * cos(ang_COX); double Yc = OC * sin(ang_COX);
 	double Xb = Xa + Xc; double Yb = Ya + Yc;

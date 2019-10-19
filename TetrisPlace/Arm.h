@@ -10,8 +10,8 @@
 
 #define OFFSETX1	-13
 #define OFFSETY1	75
-#define OFFSETX2	-34
-#define OFFSETY2	267
+#define OFFSETX2	-33.5
+#define OFFSETY2	270
 
 class Arm
 {
