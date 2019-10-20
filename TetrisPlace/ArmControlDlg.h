@@ -87,7 +87,10 @@ public:
 	afx_msg void OnBnClickedSettingon();
 	afx_msg void OnBnClickedSettingoff();
 	afx_msg void OnBnClickedButtonMove();
-	void Grab(double x, double y, double des_x, double des_y, double r);
+
+	// symmetry: 0(asymmetry), 1(180 deg rotational symmetry), 2(90 deg rotational symmetry)
+	void Grab(double x, double y, double des_x, double des_y, double r, int symmetry = 0);
+
 	void SetCoor(double x, double y, double z);
 	void SetAngle(double x, double y, double z);
 	void GoToR(int dx, int dy, int dz);

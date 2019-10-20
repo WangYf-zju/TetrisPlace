@@ -10,8 +10,8 @@
 
 #define OFFSETX1	-13
 #define OFFSETY1	75
-#define OFFSETX2	-33.5
-#define OFFSETY2	270
+#define OFFSETX2	-34
+#define OFFSETY2	271
 
 class Arm
 {
@@ -21,7 +21,7 @@ public:
 	void BindSerialPort(WzSerialPort * w, BOOL bInit = FALSE);
 	void InitArm();
 	void Grab();
-	void Grab(double x, double y, double des_x, double des_y, double r = 0);
+	void Grab(double x, double y, double des_x, double des_y, double r = 0, int symmetry = 0);
 	void Disgrab();
 	void Disgrab(double x, double y, double r = 0);
 	double GoTo(double x, double y, double z = MOVE_Z);

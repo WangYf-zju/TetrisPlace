@@ -283,7 +283,7 @@ void CArmControlDlg::OnBnClickedButtonMove()
 	Grab(m_moveX, m_moveY, m_moveToX, m_moveToY, m_moveR);
 }
 
-void CArmControlDlg::Grab(double x, double y, double des_x, double des_y, double r)
+void CArmControlDlg::Grab(double x, double y, double des_x, double des_y, double r, int symmetry)
 {
 	ArmMsg msg;
 	msg.msg = AM_MOVETO;
@@ -292,6 +292,7 @@ void CArmControlDlg::Grab(double x, double y, double des_x, double des_y, double
 	msg.param.push_back(des_x);
 	msg.param.push_back(des_y);
 	msg.param.push_back(r);
+	msg.param.push_back((double)symmetry);
 	PushMsg(msg);
 }
 

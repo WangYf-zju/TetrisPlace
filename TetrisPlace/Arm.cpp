@@ -67,8 +67,11 @@ void Arm::Grab()
 	Sleep((int)duration);
 }
 
-void Arm::Grab(double x, double y, double des_x, double des_y, double r/*=0*/)
+void Arm::Grab(double x, double y, double des_x, double des_y, double r, int symmetry)
 {
+	double duration = 0;
+	duration = GoTo(m_cCoor[X], m_cCoor[Y]);
+	Sleep((int)duration);
 	Calc_Angle(x, y, MOVE_Z);
 	double angleZ1 = m_tAngle[Z];
 	Calc_Angle(des_x, des_y, MOVE_Z);
@@ -78,10 +81,10 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r/*=0*/)
 	else if (dSteerAngle < -180)dSteerAngle += 360;
 	// revise steering engine
 	// TODO: 
-	if (dSteerAngle > 0)dSteerAngle += 10;
-	else if (dSteerAngle)dSteerAngle -= 10;
+	//if (dSteerAngle > 0)dSteerAngle += 10;
+	//else if (dSteerAngle)dSteerAngle -= 10;
+	dSteerAngle *= 1.05;
 
-	double duration = 0;
 	if (dSteerAngle < 0) duration = SteerEngineTo(180);
 	else duration = SteerEngineTo(0);
 	if (duration > 0)
@@ -89,7 +92,19 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r/*=0*/)
 	GoSegTo(x, y);
 	Grab();
 	GoSegTo(OFFSETX2, OFFSETY2);
-	Disgrab(des_x, des_y, dSteerAngle);
+	int iSteerAngle = (int)dSteerAngle;
+	switch (symmetry)
+	{
+	case 0:
+		break;
+	case 1:
+		iSteerAngle %= 180;
+		break;
+	case 2:
+		iSteerAngle %= 90;
+		break;
+	}
+	Disgrab(des_x, des_y, (double)iSteerAngle);
 }
 
 void Arm::Disgrab()

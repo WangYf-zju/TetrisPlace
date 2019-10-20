@@ -282,15 +282,16 @@ void CCameraDlg::Distinguish()
 			dr -= 2;
 			if (dr < 0)dr += 4;
 			else if (dr > 4)dr -= 4;
+			int symmetry = 0;
 			if (supreme_type == 2 || supreme_type == 3 || supreme_type == 5)
-				dr %= 2;
+				symmetry  = 1;
 			else if (supreme_type == 4)
-				dr = 0;
+				symmetry = 2;
 			double x = (grid_x+GrabXGridOffset[supreme_type][r]) * 18 + OFFSETX1;
 			double y = (grid_y+GrabYGridOffset[supreme_type][r]) * 18 + OFFSETY1;
 			double toX = -grid_toY * 18 + OFFSETX2;
 			double toY = -grid_toX * 18 + OFFSETY2 + 18 * 9;
-			((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0 + r_revise);
+			((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0 + r_revise, symmetry);
 			m_bGrab = FALSE;
 			TetrisAI::PlaceTetris(supreme_type, &pos);
 			//((CTetrisPlaceDlg*)GetParent())->pNextBlockDlg->DrawNext(supreme_type,
