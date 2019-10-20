@@ -37,8 +37,10 @@ protected:
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnInitDialog();
+	void StartCamera(int iCamera);
 	void Distinguish();
 	void StartDistinguishAndGrabOnce();
+	void StartDistinguishAndGrabLoop();
 
 private:
 	int GetGridX(int type, int r, double col);
@@ -47,6 +49,9 @@ private:
 public:
 	BOOL m_bDistinguish;
 	BOOL m_bGrab;
+	BOOL m_bStart;
+	BOOL m_bLoop;
+	int m_cameraIndex;
 	TypeInfo m_typeInfo[TYPE_COUNT];
 	HANDLE hThread;
 	HObject  ho_Image;//, ho_Region, ho_ConnectedRegions, ho_SelectedRegions;

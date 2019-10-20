@@ -9,7 +9,7 @@
 
 WzSerialPort::WzSerialPort()
 {
-
+	m_bOpen = false;
 }
 
 WzSerialPort::~WzSerialPort()
@@ -59,13 +59,15 @@ bool WzSerialPort::open(int portNo,
 	}
 	
 	if(hCom == (HANDLE)-1)
-	{		
+	{
+		m_bOpen = false;
 		return false;
 	}
 
 	//配置缓冲区大小 
 	if(! SetupComm(hCom,1024, 1024))
 	{
+		m_bOpen = false;
 		return false;
 	}
 
@@ -125,124 +127,135 @@ bool WzSerialPort::open(int portNo,
 
 	memcpy(pHandle, &hCom, sizeof(hCom));// 保存句柄
 
+	m_bOpen = true;
 	return true;
 }
 
 void WzSerialPort::close()
 {
-	HANDLE hCom = *(HANDLE*)pHandle;
-	CloseHandle(hCom);
+	if (this && m_bOpen)
+	{
+		HANDLE hCom = *(HANDLE*)pHandle;
+		CloseHandle(hCom);
+		m_bOpen = false;
+	}
 }
 
 int WzSerialPort::send(const void *buf,int len)
 {
-	HANDLE hCom = *(HANDLE*)pHandle;
-
-	if (this->synchronizeflag)
+	if (this && m_bOpen)
 	{
-		// 同步方式
-		DWORD dwBytesWrite = len; //成功写入的数据字节数
-		BOOL bWriteStat = WriteFile(hCom, //串口句柄
-									buf, //数据首地址
-									dwBytesWrite, //要发送的数据字节数
-									&dwBytesWrite, //DWORD*，用来接收返回成功发送的数据字节数
-									NULL); //NULL为同步发送，OVERLAPPED*为异步发送
-		if (!bWriteStat)
-		{
-			return 0;
-		}
-		return dwBytesWrite;
-	}
-	else
-	{
-		//异步方式
-		DWORD dwBytesWrite = len; //成功写入的数据字节数
-		DWORD dwErrorFlags; //错误标志
-		COMSTAT comStat; //通讯状态
-		OVERLAPPED m_osWrite; //异步输入输出结构体
+		HANDLE hCom = *(HANDLE*)pHandle;
 
-		//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
-		memset(&m_osWrite, 0, sizeof(m_osWrite));
-		m_osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, L"WriteEvent");
-
-		ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
-		BOOL bWriteStat = WriteFile(hCom, //串口句柄
-			buf, //数据首地址
-			dwBytesWrite, //要发送的数据字节数
-			&dwBytesWrite, //DWORD*，用来接收返回成功发送的数据字节数
-			&m_osWrite); //NULL为同步发送，OVERLAPPED*为异步发送
-		if (!bWriteStat)
+		if (this->synchronizeflag)
 		{
-			if (GetLastError() == ERROR_IO_PENDING) //如果串口正在写入
+			// 同步方式
+			DWORD dwBytesWrite = len; //成功写入的数据字节数
+			BOOL bWriteStat = WriteFile(hCom, //串口句柄
+				buf, //数据首地址
+				dwBytesWrite, //要发送的数据字节数
+				&dwBytesWrite, //DWORD*，用来接收返回成功发送的数据字节数
+				NULL); //NULL为同步发送，OVERLAPPED*为异步发送
+			if (!bWriteStat)
 			{
-				WaitForSingleObject(m_osWrite.hEvent, 1000); //等待写入事件1秒钟
-			}
-			else
-			{
-				ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误
-				CloseHandle(m_osWrite.hEvent); //关闭并释放hEvent内存
 				return 0;
 			}
+			return dwBytesWrite;
 		}
-		return dwBytesWrite;
+		else
+		{
+			//异步方式
+			DWORD dwBytesWrite = len; //成功写入的数据字节数
+			DWORD dwErrorFlags; //错误标志
+			COMSTAT comStat; //通讯状态
+			OVERLAPPED m_osWrite; //异步输入输出结构体
+
+			//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
+			memset(&m_osWrite, 0, sizeof(m_osWrite));
+			m_osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, _T("WriteEvent"));
+
+			ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
+			BOOL bWriteStat = WriteFile(hCom, //串口句柄
+				buf, //数据首地址
+				dwBytesWrite, //要发送的数据字节数
+				&dwBytesWrite, //DWORD*，用来接收返回成功发送的数据字节数
+				&m_osWrite); //NULL为同步发送，OVERLAPPED*为异步发送
+			if (!bWriteStat)
+			{
+				if (GetLastError() == ERROR_IO_PENDING) //如果串口正在写入
+				{
+					WaitForSingleObject(m_osWrite.hEvent, 1000); //等待写入事件1秒钟
+				}
+				else
+				{
+					ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误
+					CloseHandle(m_osWrite.hEvent); //关闭并释放hEvent内存
+					return 0;
+				}
+			}
+			return dwBytesWrite;
+		}
 	}
 }
 
 int WzSerialPort::receive(void *buf,int maxlen)
 {
-	HANDLE hCom = *(HANDLE*)pHandle;
-
-	if (this->synchronizeflag)
+	if (this && m_bOpen)
 	{
-		//同步方式
-		DWORD wCount = maxlen; //成功读取的数据字节数
-		BOOL bReadStat = ReadFile(hCom, //串口句柄
-									buf, //数据首地址
-									wCount, //要读取的数据最大字节数
-									&wCount, //DWORD*,用来接收返回成功读取的数据字节数
-									NULL); //NULL为同步发送，OVERLAPPED*为异步发送
-		if (!bReadStat)
+		HANDLE hCom = *(HANDLE*)pHandle;
+
+		if (this->synchronizeflag)
 		{
-			return 0;
-		}
-		return wCount;
-	}
-	else
-	{
-		//异步方式
-		DWORD wCount = maxlen; //成功读取的数据字节数
-		DWORD dwErrorFlags; //错误标志
-		COMSTAT comStat; //通讯状态
-		OVERLAPPED m_osRead; //异步输入输出结构体
-
-		//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
-		memset(&m_osRead, 0, sizeof(m_osRead));
-		m_osRead.hEvent = CreateEvent(NULL, TRUE, FALSE, L"ReadEvent");
-
-		ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
-		if (!comStat.cbInQue)return 0; //如果输入缓冲区字节数为0，则返回false
-
-		BOOL bReadStat = ReadFile(hCom, //串口句柄
-			buf, //数据首地址
-			wCount, //要读取的数据最大字节数
-			&wCount, //DWORD*,用来接收返回成功读取的数据字节数
-			&m_osRead); //NULL为同步发送，OVERLAPPED*为异步发送
-		if (!bReadStat)
-		{
-			if (GetLastError() == ERROR_IO_PENDING) //如果串口正在读取中
+			//同步方式
+			DWORD wCount = maxlen; //成功读取的数据字节数
+			BOOL bReadStat = ReadFile(hCom, //串口句柄
+				buf, //数据首地址
+				wCount, //要读取的数据最大字节数
+				&wCount, //DWORD*,用来接收返回成功读取的数据字节数
+				NULL); //NULL为同步发送，OVERLAPPED*为异步发送
+			if (!bReadStat)
 			{
-				//GetOverlappedResult函数的最后一个参数设为TRUE
-				//函数会一直等待，直到读操作完成或由于错误而返回
-				GetOverlappedResult(hCom, &m_osRead, &wCount, TRUE);
-			}
-			else
-			{
-				ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误
-				CloseHandle(m_osRead.hEvent); //关闭并释放hEvent的内存
 				return 0;
 			}
+			return wCount;
 		}
-		return wCount;
+		else
+		{
+			//异步方式
+			DWORD wCount = maxlen; //成功读取的数据字节数
+			DWORD dwErrorFlags; //错误标志
+			COMSTAT comStat; //通讯状态
+			OVERLAPPED m_osRead; //异步输入输出结构体
+
+			//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
+			memset(&m_osRead, 0, sizeof(m_osRead));
+			m_osRead.hEvent = CreateEvent(NULL, TRUE, FALSE, _T("ReadEvent"));
+
+			ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
+			if (!comStat.cbInQue)return 0; //如果输入缓冲区字节数为0，则返回false
+
+			BOOL bReadStat = ReadFile(hCom, //串口句柄
+				buf, //数据首地址
+				wCount, //要读取的数据最大字节数
+				&wCount, //DWORD*,用来接收返回成功读取的数据字节数
+				&m_osRead); //NULL为同步发送，OVERLAPPED*为异步发送
+			if (!bReadStat)
+			{
+				if (GetLastError() == ERROR_IO_PENDING) //如果串口正在读取中
+				{
+					//GetOverlappedResult函数的最后一个参数设为TRUE
+					//函数会一直等待，直到读操作完成或由于错误而返回
+					GetOverlappedResult(hCom, &m_osRead, &wCount, TRUE);
+				}
+				else
+				{
+					ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误
+					CloseHandle(m_osRead.hEvent); //关闭并释放hEvent的内存
+					return 0;
+				}
+			}
+			return wCount;
+		}
 	}
 }
 

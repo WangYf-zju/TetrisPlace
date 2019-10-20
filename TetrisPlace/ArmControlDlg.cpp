@@ -10,6 +10,7 @@
 // CArmControlDlg 对话框
 mutex m_lock;
 vector<ArmMsg> msgArray;
+BOOL CArmControlDlg::bArmBusy = FALSE;
 
 IMPLEMENT_DYNAMIC(CArmControlDlg, CDialogEx)
 
@@ -98,6 +99,7 @@ BOOL CArmControlDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_pA = new Arm();
 	m_bRelative = TRUE;
+	bArmBusy = FALSE;
 	//msgArray.reserve(10 * sizeof(ArmMsg));
 	((CButton*)GetDlgItem(IDC_RELATIVE))->SetCheck(1);
 	m_bSettingMode = FALSE;
@@ -137,7 +139,7 @@ void CArmControlDlg::OnBnClickedButtonCoorgo()
 	else
 	{
 		m_bLock = TRUE;
-		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
+		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 		if (m_bRelative)
 			GoToR(m_X, m_Y, m_Z);
 		else
@@ -150,7 +152,7 @@ void CArmControlDlg::OnBnClickedButtonGrab()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_bLock = TRUE;
-	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
+	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 	UpdateData();
 	ArmMsg msg;
 	msg.msg = AM_GRAB;
@@ -162,7 +164,7 @@ void CArmControlDlg::OnBnClickedButtonPlace()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_bLock = TRUE;
-	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
+	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 	UpdateData();
 	ArmMsg msg;
 	msg.msg = AM_PLACE;
@@ -182,7 +184,7 @@ void CArmControlDlg::OnBnClickedButtonGoangle()
 	else
 	{
 		m_bLock = TRUE;
-		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
+		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 		ArmMsg msg;
 		if (m_bRelative)
 			msg.msg = AM_GOANGLETOR;
@@ -236,7 +238,7 @@ void CArmControlDlg::OnBnClickedButtonUnlock()
 	//{
 		//m_pA->LockMotor();
 		//m_bLock = TRUE;
-		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
+		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 	//}
 	UpdateState();
 }
@@ -260,8 +262,8 @@ void CArmControlDlg::OnBnClickedSettingon()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_bSettingMode = TRUE;
-	GetDlgItem(IDC_BUTTON_COORGO)->SetWindowTextW(_T("设定"));
-	GetDlgItem(IDC_BUTTON_GOANGLE)->SetWindowTextW(_T("设定"));
+	GetDlgItem(IDC_BUTTON_COORGO)->SetWindowText(_T("设定"));
+	GetDlgItem(IDC_BUTTON_GOANGLE)->SetWindowText(_T("设定"));
 }
 
 
@@ -269,8 +271,8 @@ void CArmControlDlg::OnBnClickedSettingoff()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_bSettingMode = FALSE;
-	GetDlgItem(IDC_BUTTON_COORGO)->SetWindowTextW(_T("GO"));
-	GetDlgItem(IDC_BUTTON_GOANGLE)->SetWindowTextW(_T("GO"));
+	GetDlgItem(IDC_BUTTON_COORGO)->SetWindowText(_T("GO"));
+	GetDlgItem(IDC_BUTTON_GOANGLE)->SetWindowText(_T("GO"));
 }
 
 
@@ -279,7 +281,7 @@ void CArmControlDlg::OnBnClickedButtonMove()
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData();
 	m_bLock = TRUE;
-	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机解锁"));
+	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 	Grab(m_moveX, m_moveY, m_moveToX, m_moveToY, m_moveR);
 }
 

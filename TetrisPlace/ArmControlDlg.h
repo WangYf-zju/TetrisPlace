@@ -66,7 +66,7 @@ public:
 	BOOL m_bSettingMode;
 	BOOL m_bLock;
 	HANDLE hThread;
-
+	static BOOL bArmBusy;
 
 private:
 	WzSerialPort * m_pW;

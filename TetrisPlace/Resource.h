@@ -12,6 +12,7 @@
 #define IDD_DIALOG_BOARD                134
 #define IDD_DIALOG_ARMCONTROL           136
 #define IDD_DIALOG_CAMERA               138
+#define IDD_DIALOG_CONNECT              140
 #define IDC_COMBO_SERIAL                1000
 #define IDC_COMBO_COM                   1000
 #define IDC_BUTTON_OPENPORT             1001
@@ -19,8 +20,11 @@
 #define IDC_EDIT_TX                     1003
 #define IDC_BUTTON1                     1004
 #define IDC_BUTTON_D_G                  1004
+#define IDC_BUTTON_RUN                  1004
 #define IDC_BUTTON2                     1005
 #define IDC_BUTTON_SEND                 1005
+#define IDC_BUTTON_REFRESH              1005
+#define IDC_BUTTON_CON                  1006
 #define IDC_BUTTON_NEXTOK               1007
 #define IDC_EDIT_NEXT                   1008
 #define IDC_BUTTON_AUTONEXT             1009
@@ -74,18 +78,24 @@
 #define IDC_EDIT_MOVEToY                1051
 #define IDC_BUTTON_MOVE                 1052
 #define IDC_STATIC_R                    1053
-#define IDC_BUTTON_REFRESH              1053
 #define IDC_EDIT_MOVER                  1054
 #define IDC_PICTURE                     1054
 #define IDC_BUTTON_SEGGO                1055
+#define IDC_COMBO_PORT                  1055
+#define IDC_STATIC_PORT                 1056
+#define IDC_COMBO_CAMERA                1057
+#define IDC_TAB_SERIAL                  1057
+#define IDC_STATIC_CAMERA               1058
+#define IDC_RADIO_LOOP                  1060
+#define IDC_RADIO_ONCE                  1061
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1055
+#define _APS_NEXT_CONTROL_VALUE         1061
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

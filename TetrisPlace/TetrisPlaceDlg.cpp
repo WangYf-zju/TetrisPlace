@@ -14,6 +14,7 @@
 
 #define SERIAL_PORT 3
 
+
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
 class CAboutDlg : public CDialogEx
@@ -60,13 +61,14 @@ CTetrisPlaceDlg::CTetrisPlaceDlg(CWnd* pParent /*=nullptr*/)
 void CTetrisPlaceDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TAB_SERIAL, m_tab);
 }
 
 BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON_D_G, &CTetrisPlaceDlg::OnBnClickedButtonDG)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_SERIAL, &CTetrisPlaceDlg::OnTcnSelchangeTabSerial)
 END_MESSAGE_MAP()
 
 
@@ -103,42 +105,38 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 
 	ShowWindow(SW_MAXIMIZE);
 
-	ShowWindow(SW_MINIMIZE);
+	m_tab.InsertItem(0, _T("电机控制"));
+	m_tab.InsertItem(1, _T("串口"));
+	m_tab.MoveWindow(20, 70, 370, 620);
+	pArmCtrlDlg = new CArmControlDlg;
+	pArmCtrlDlg->Create(IDD_DIALOG_ARMCONTROL, &m_tab);
+	pArmCtrlDlg->MoveWindow(10, 20, 350, 590);
+	pArmCtrlDlg->ShowWindow(SW_SHOW);
+	pSerialDlg = new CSerialDlg;
+	pSerialDlg->Create(IDD_DIALOG_SERIAL, &m_tab);
+	pSerialDlg->MoveWindow(10, 20, 350, 590);
+	pSerialDlg->ShowWindow(SW_HIDE);
+
 
 	// TODO: 在此添加额外的初始化代码
-	pSerialDlg = new CSerialDlg;
-	pSerialDlg->Create(IDD_DIALOG_SERIAL, this);
-	pSerialDlg->MoveWindow(20, 20, 370, 650);
-	pSerialDlg->ShowWindow(SW_SHOW);
-	pArmCtrlDlg = new CArmControlDlg;
-	pArmCtrlDlg->Create(IDD_DIALOG_ARMCONTROL, this);
-	pArmCtrlDlg->MoveWindow(400, 20, 350, 650);
-	pArmCtrlDlg->ShowWindow(SW_SHOW);
-	pNextBlockDlg = new CNextBlockDlg;
-	pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);
-	pNextBlockDlg->MoveWindow(760, 290, 250, 380);
-	pNextBlockDlg->ShowWindow(SW_SHOW);
-	pBoardDlg = new CBoardDlg;
-	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
-	pBoardDlg->MoveWindow(1020, 290, 320, 380);
-	pBoardDlg->ShowWindow(SW_SHOW);
+	pCntDlg = new CConnectDlg;
+	pCntDlg->Create(IDD_DIALOG_CONNECT, this);
+	pCntDlg->MoveWindow(20, 10, 1320, 50);
+	pCntDlg->ShowWindow(SW_SHOW);
 	pCameraDlg = new CCameraDlg;
 	pCameraDlg->Create(IDD_DIALOG_CAMERA, this);
-	pCameraDlg->MoveWindow(760, 20, 440, 260);
-	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(10, 10, 420, 240);
-	//pCameraDlg->MoveWindow(760, 20, 660, 500);
-	//pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(10, 10, 640, 480);
+	pCameraDlg->MoveWindow(400, 70, 610, 460);
+	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5, 600, 450);
 	pCameraDlg->ShowWindow(SW_SHOW);
-	if (!m_w.open(SERIAL_PORT, 115200, 0, 8, 1, 1))
-	{
-		MessageBox(_T("串口连接失败"));
-		pArmCtrlDlg->EnableWindow(FALSE);
-	}
-	else
-	{
-		pArmCtrlDlg->BindSerialPort(&m_w, TRUE);
-		pArmCtrlDlg->EnableWindow();
-	}
+	pBoardDlg = new CBoardDlg;
+	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
+	pBoardDlg->MoveWindow(1020, 70, 320, 380);
+	pBoardDlg->ShowWindow(SW_SHOW);
+	pNextBlockDlg = new CNextBlockDlg;
+	pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);
+	pNextBlockDlg->MoveWindow(1020, 460, 320, 230);
+	pNextBlockDlg->ShowWindow(SW_SHOW);
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -204,9 +202,19 @@ BOOL CTetrisPlaceDlg::PreTranslateMessage(MSG* pMsg)
 }
 
 
-void CTetrisPlaceDlg::OnBnClickedButtonDG()
+void CTetrisPlaceDlg::OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// TODO: 在此添加控件通知处理程序代码
-	pCameraDlg->StartDistinguishAndGrabOnce();
-	pNextBlockDlg->Invalidate(FALSE);
+	int curPage = m_tab.GetCurSel();
+	if (curPage == 0)
+	{
+		pArmCtrlDlg->ShowWindow(SW_SHOW);
+		pSerialDlg->ShowWindow(SW_HIDE);
+	}
+	else
+	{
+		pArmCtrlDlg->ShowWindow(SW_HIDE);
+		pSerialDlg->ShowWindow(SW_SHOW);
+	}
+	*pResult = 0;
 }

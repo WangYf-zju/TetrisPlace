@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "ConnectDlg.h"
 #include "SerialDlg.h"
 #include "ArmControlDlg.h"
 #include "NextBlockDlg.h"
@@ -47,6 +48,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	CConnectDlg * pCntDlg;
 	CNextBlockDlg * pNextBlockDlg;
 	CSerialDlg * pSerialDlg;
 	CArmControlDlg *pArmCtrlDlg;
@@ -57,5 +59,6 @@ public:
 
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	afx_msg void OnBnClickedButtonDG();
+	CTabCtrl m_tab;
+	afx_msg void OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult);
 };

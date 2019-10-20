@@ -38,6 +38,7 @@ public:
 private:
 	int pHandle[16];
 	char synchronizeflag;
+	bool m_bOpen;
 };
 
 #endif

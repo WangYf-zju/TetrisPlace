@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Arm.h"
+#include "ArmControlDlg.h"
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
@@ -69,6 +70,7 @@ void Arm::Grab()
 
 void Arm::Grab(double x, double y, double des_x, double des_y, double r, int symmetry)
 {
+	CArmControlDlg::bArmBusy = TRUE;
 	double duration = 0;
 	duration = GoTo(m_cCoor[X], m_cCoor[Y]);
 	Sleep((int)duration);
@@ -105,6 +107,7 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 		break;
 	}
 	Disgrab(des_x, des_y, (double)iSteerAngle);
+	CArmControlDlg::bArmBusy = FALSE;
 }
 
 void Arm::Disgrab()
