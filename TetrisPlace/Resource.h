@@ -83,6 +83,7 @@
 #define IDC_BUTTON_SEGGO                1055
 #define IDC_COMBO_PORT                  1055
 #define IDC_STATIC_PORT                 1056
+#define IDC_BUTTON_SETZERO              1056
 #define IDC_COMBO_CAMERA                1057
 #define IDC_TAB_SERIAL                  1057
 #define IDC_STATIC_CAMERA               1058

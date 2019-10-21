@@ -93,7 +93,7 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 		Sleep((int)duration);
 	GoSegTo(x, y);
 	Grab();
-	GoSegTo(OFFSETX2, OFFSETY2);
+	//GoSegTo(OFFSETX2, OFFSETY2);
 	int iSteerAngle = (int)dSteerAngle;
 	switch (symmetry)
 	{

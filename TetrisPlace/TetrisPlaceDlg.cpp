@@ -104,37 +104,44 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	ShowWindow(SW_MAXIMIZE);
+	CRect cRC;
+	GetClientRect(&cRC);
+	int margin = 10;
 
 	m_tab.InsertItem(0, _T("电机控制"));
 	m_tab.InsertItem(1, _T("串口"));
-	m_tab.MoveWindow(20, 70, 370, 620);
+	m_tab.MoveWindow(20, cRC.Height()*0.1, cRC.Width()*0.27, cRC.Height()*0.9);
 	pArmCtrlDlg = new CArmControlDlg;
 	pArmCtrlDlg->Create(IDD_DIALOG_ARMCONTROL, &m_tab);
-	pArmCtrlDlg->MoveWindow(10, 20, 350, 590);
+	pArmCtrlDlg->MoveWindow(10, 20, cRC.Width()*0.27 - 20, cRC.Height()*0.9 - 30);
 	pArmCtrlDlg->ShowWindow(SW_SHOW);
 	pSerialDlg = new CSerialDlg;
 	pSerialDlg->Create(IDD_DIALOG_SERIAL, &m_tab);
-	pSerialDlg->MoveWindow(10, 20, 350, 590);
+	pSerialDlg->MoveWindow(10, 20, cRC.Width()*0.27 - 20, cRC.Height()*0.9 - 30);
 	pSerialDlg->ShowWindow(SW_HIDE);
 
 
 	// TODO: 在此添加额外的初始化代码
 	pCntDlg = new CConnectDlg;
 	pCntDlg->Create(IDD_DIALOG_CONNECT, this);
-	pCntDlg->MoveWindow(20, 10, 1320, 50);
+	pCntDlg->MoveWindow(20, 10, cRC.Width() - 40, cRC.Height()*0.073);
 	pCntDlg->ShowWindow(SW_SHOW);
 	pCameraDlg = new CCameraDlg;
 	pCameraDlg->Create(IDD_DIALOG_CAMERA, this);
-	pCameraDlg->MoveWindow(400, 70, 610, 460);
-	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5, 600, 450);
+	pCameraDlg->MoveWindow(cRC.Width()*0.3, cRC.Height()*0.1, 
+		cRC.Width()*0.45, cRC.Height()*0.67);
+	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5,
+		cRC.Width()*0.45 - 10, cRC.Height()*0.67 - 10);
 	pCameraDlg->ShowWindow(SW_SHOW);
 	pBoardDlg = new CBoardDlg;
 	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
-	pBoardDlg->MoveWindow(1020, 70, 320, 380);
+	pBoardDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.1, 
+		cRC.Width()*0.24, cRC.Height()*0.55);
 	pBoardDlg->ShowWindow(SW_SHOW);
 	pNextBlockDlg = new CNextBlockDlg;
 	pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);
-	pNextBlockDlg->MoveWindow(1020, 460, 320, 230);
+	pNextBlockDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.67,
+		cRC.Width()*0.24, cRC.Height()*0.33);
 	pNextBlockDlg->ShowWindow(SW_SHOW);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE

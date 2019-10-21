@@ -96,6 +96,7 @@ public:
 	void GoToR(int dx, int dy, int dz);
 	void GoTo(int x, int y, int z);
 	afx_msg void OnBnClickedButtonSeggo();
+	afx_msg void OnBnClickedButtonSetzero();
 };
 
 DWORD  WINAPI ArmCtrlThreadProc(LPVOID lpParam);

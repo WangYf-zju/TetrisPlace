@@ -5,10 +5,10 @@
 #include "TetrisPlace.h"
 #include "ArmControlDlg.h"
 #include "afxdialogex.h"
-
+#include "TetrisPlaceDlg.h"
 
 // CArmControlDlg 对话框
-mutex m_lock;
+mutex msgArrayLock;
 vector<ArmMsg> msgArray;
 BOOL CArmControlDlg::bArmBusy = FALSE;
 
@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CArmControlDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SETTINGOFF, &CArmControlDlg::OnBnClickedSettingoff)
 	ON_BN_CLICKED(IDC_BUTTON_MOVE, &CArmControlDlg::OnBnClickedButtonMove)
 	ON_BN_CLICKED(IDC_BUTTON_SEGGO, &CArmControlDlg::OnBnClickedButtonSeggo)
+	ON_BN_CLICKED(IDC_BUTTON_SETZERO, &CArmControlDlg::OnBnClickedButtonSetzero)
 END_MESSAGE_MAP()
 
 
@@ -285,6 +286,13 @@ void CArmControlDlg::OnBnClickedButtonMove()
 	Grab(m_moveX, m_moveY, m_moveToX, m_moveToY, m_moveR);
 }
 
+void CArmControlDlg::OnBnClickedButtonSetzero()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	SetCoor(0, 0, 0);
+	UpdateState();
+}
+
 void CArmControlDlg::Grab(double x, double y, double des_x, double des_y, double r, int symmetry)
 {
 	ArmMsg msg;
@@ -328,11 +336,23 @@ void CArmControlDlg::GoTo(int x, int y, int z)
 	PushMsg(msg);
 }
 
+void CArmControlDlg::OnBnClickedButtonSeggo()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
+	ArmMsg msg;
+	msg.msg = AM_SEGGOTO;
+	msg.param.push_back(m_X);
+	msg.param.push_back(m_Y);
+	msg.param.push_back(m_Z);
+	PushMsg(msg);
+}
+
 void CArmControlDlg::PushMsg(ArmMsg & msg)
 {
-	m_lock.lock();
+	msgArrayLock.lock();
 	msgArray.push_back(msg);
-	m_lock.unlock();
+	msgArrayLock.unlock();
 }
 
 DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
@@ -341,14 +361,15 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 	vector<ArmMsg>::iterator itMsg;
 	while (1)
 	{
-		m_lock.lock();
+		//((CTetrisPlaceDlg*)dlg->GetParent())->pBoardDlg->Invalidate();
+		msgArrayLock.lock();
 		itMsg = msgArray.begin();
 		if (itMsg != msgArray.end())
 		{
 			switch (itMsg->msg)
 			{
 			case AM_GOTO:
-				dlg->m_pA->GoTo(itMsg->param[0], itMsg->param[1], itMsg->param[2]);				
+				dlg->m_pA->GoTo(itMsg->param[0], itMsg->param[1], itMsg->param[2]);
 				break;
 			case AM_GRAB:
 				dlg->m_pA->Grab();
@@ -363,7 +384,7 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 				dlg->m_pA->SteerEngineTo(itMsg->param[0]);
 				break;
 			case AM_MOVETO:
-				dlg->m_pA->Grab(itMsg->param[0], itMsg->param[1], itMsg->param[2], 
+				dlg->m_pA->Grab(itMsg->param[0], itMsg->param[1], itMsg->param[2],
 					itMsg->param[3], itMsg->param[4]);
 				break;
 			case AM_SEGGOTO:
@@ -384,21 +405,8 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 		}
 		else
 			;
-		m_lock.unlock();
+		msgArrayLock.unlock();
 		Sleep(10);
 	}
 	return 0;
-}
-
-
-void CArmControlDlg::OnBnClickedButtonSeggo()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	UpdateData();
-	ArmMsg msg;
-	msg.msg = AM_SEGGOTO;
-	msg.param.push_back(m_X);
-	msg.param.push_back(m_Y);
-	msg.param.push_back(m_Z);
-	PushMsg(msg);
 }
