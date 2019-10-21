@@ -121,7 +121,7 @@ void CConnectDlg::Connect()
 	// TODO: 在此处添加实现代码.
 	CTetrisPlaceDlg * parentDlg = (CTetrisPlaceDlg*)GetParent();
 	int iPortSel = m_comPort.GetCurSel();
-	if (iPortSel >= 0)
+	if (!m_bPortOpen && iPortSel >= 0)
 	{
 		CString str;
 		m_comPort.GetLBText(m_comPort.GetCurSel(), str);
@@ -152,8 +152,11 @@ void CConnectDlg::Connect()
 		MessageBox(_T("请选择一个串口"), _T("连接"));
 	}
 	int iCameraSel = m_comCamera.GetCurSel();
-	((CTetrisPlaceDlg*)GetParent())->pCameraDlg->StartCamera(iCameraSel);
-	m_bCameraOpen = TRUE;
+	if (!m_bCameraOpen && iCameraSel >= 0)
+	{
+		if (((CTetrisPlaceDlg*)GetParent())->pCameraDlg->StartCamera(iCameraSel))
+			m_bCameraOpen = TRUE;
+	}
 }
 
 

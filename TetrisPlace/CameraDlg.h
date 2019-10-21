@@ -37,7 +37,7 @@ protected:
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnInitDialog();
-	void StartCamera(int iCamera);
+	BOOL StartCamera(int iCamera);
 	void Distinguish();
 	void StartDistinguishAndGrabOnce();
 	void StartDistinguishAndGrabLoop();
@@ -56,6 +56,7 @@ public:
 	HANDLE hThread;
 	HObject  ho_Image;//, ho_Region, ho_ConnectedRegions, ho_SelectedRegions;
 	HObject  ho_SelectedRegions;
+	HTuple hl_width, hl_height;
 	HTuple  hv_WindowHandle;
 	HTuple  hv_AcqHandle;
 	HTuple hv_Row[TYPE_COUNT],

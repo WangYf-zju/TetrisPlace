@@ -84,9 +84,6 @@ BOOL CCameraDlg::OnInitDialog()
 	m_bDistinguish = TRUE;
 	m_bLoop = FALSE;
 	m_bStart = FALSE;
-	HWND hImgWnd = GetDlgItem(IDC_PICTURE)->m_hWnd;
-
-	OpenWindow(0, 0, 600, 450, (Hlong)hImgWnd, "visible", "", &hv_WindowHandle);
 	try
 	{
 		for (int i = 0; i < TYPE_COUNT; i++)
@@ -105,12 +102,35 @@ BOOL CCameraDlg::OnInitDialog()
 				  // 异常: OCX 属性页应返回 FALSE
 }
 
-void CCameraDlg::StartCamera(int iCamera)
+BOOL CCameraDlg::StartCamera(int iCamera)
 {
+	HWND hImgWnd = GetDlgItem(IDC_PICTURE)->m_hWnd;
+	CRect rc;
+	GetDlgItem(IDC_PICTURE)->GetClientRect(&rc);
+	OpenWindow(0, 0, rc.Width(), rc.Height(), (Hlong)hImgWnd, "visible", "", &hv_WindowHandle);
+	char sCamera[5] = { 0 };
+	sprintf(sCamera, _T("%d"), iCamera);
+	try
+	{
+		OpenFramegrabber("DirectShow", 1, 1, 0, 0, 0, 0, "default", 8, "gray", -1, "false",
+			"default", sCamera, 0, -1, &hv_AcqHandle);
+	}
+	catch (HException & exception)
+	{
+		MessageBox(_T("无法打开相机"));
+		return FALSE;
+	}
+
+	GrabImageStart(hv_AcqHandle, -1);
+	GrabImageAsync(&ho_Image, hv_AcqHandle, -1);
+	GetImageSize(ho_Image, &hl_width, &hl_height);
+
+
 	hThread = CreateThread(NULL, 0, CameraThreadProc, this, 0, 0);
 	m_bStart = TRUE;
 	m_bDistinguish = TRUE;
 	m_cameraIndex = iCamera;
+	return TRUE;
 }
 
 #define SCALE_PICTURE 58/18
@@ -285,22 +305,6 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 	HObject  ho_MapFixed;
 	HObject  ho_Region, ho_RegionClosing, ho_ConnectedRegions;
 	HTuple  hv_CamParVirtualFixed, hv_CamParOriginal;
-	HTuple width, height;
-	char sCamera[5] = { 0 };
-	sprintf(sCamera, _T("%d"), dlg->m_cameraIndex);
-	try
-	{
-		OpenFramegrabber("DirectShow", 1, 1, 0, 0, 0, 0, "default", 8, "gray", -1, "false",
-			"default", sCamera, 0, -1, &(dlg->hv_AcqHandle));
-	}
-	catch (HException & exception)
-	{
-		dlg->MessageBox(_T("无法打开相机"));
-		return 0;
-	}
-	GrabImageStart(dlg->hv_AcqHandle, -1);
-	GrabImageAsync(&(dlg->ho_Image), dlg->hv_AcqHandle, -1);
-	GetImageSize(dlg->ho_Image, &width, &height);
 
 	int i = 0;
 	while (1 && dlg->m_bStart)
@@ -327,7 +331,7 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		OpeningCircle(ho_Region, &ho_RegionClosing, 1.2);
 		Connection(ho_RegionClosing, &ho_ConnectedRegions);
 		SelectShape(ho_ConnectedRegions, &dlg->ho_SelectedRegions, "area", "and", 9000, 20000);
-		SetPart(dlg->hv_WindowHandle, 0, 0, height, width);
+		SetPart(dlg->hv_WindowHandle, 0, 0, dlg->hl_height, dlg->hl_width);
 		DispObj(dlg->ho_Image, dlg->hv_WindowHandle);
 		if (dlg->m_bDistinguish)
 		{
