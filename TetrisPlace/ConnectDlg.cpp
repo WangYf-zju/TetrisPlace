@@ -35,6 +35,7 @@ BEGIN_MESSAGE_MAP(CConnectDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_RUN, &CConnectDlg::OnBnClickedButtonRun)
 	ON_BN_CLICKED(IDC_RADIO_LOOP, &CConnectDlg::OnBnClickedRadioLoop)
 	ON_BN_CLICKED(IDC_RADIO_ONCE, &CConnectDlg::OnBnClickedRadioOnce)
+	ON_BN_CLICKED(IDC_BUTTON_ARMCORRECT, &CConnectDlg::OnBnClickedButtonArmcorrect)
 END_MESSAGE_MAP()
 
 
@@ -119,7 +120,7 @@ void CConnectDlg::OnBnClickedButtonCon()
 void CConnectDlg::Connect()
 {
 	// TODO: 在此处添加实现代码.
-	CTetrisPlaceDlg * parentDlg = (CTetrisPlaceDlg*)GetParent();
+	CTetrisPlaceDlg * parentDlg = (CTetrisPlaceDlg*)(GetParent());
 	int iPortSel = m_comPort.GetCurSel();
 	if (!m_bPortOpen && iPortSel >= 0)
 	{
@@ -187,4 +188,16 @@ void CConnectDlg::OnBnClickedRadioOnce()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	m_OnceLoop = RUN_ONCE;
+}
+
+
+void CConnectDlg::OnBnClickedButtonArmcorrect()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (m_bPortOpen && m_bCameraOpen)
+	{
+
+	}
+	else
+		MessageBox(_T("串口或相机没有连接"), _T("运行"));
 }

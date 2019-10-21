@@ -185,6 +185,7 @@
     <ClInclude Include="CameraDlg.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="ConnectDlg.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="NextBlockDlg.h" />
     <ClInclude Include="SerialDlg.h" />
     <ClInclude Include="Resource.h" />

@@ -131,17 +131,18 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	pCameraDlg->MoveWindow(cRC.Width()*0.3, cRC.Height()*0.1, 
 		cRC.Width()*0.45, cRC.Height()*0.67);
 	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5,
-		cRC.Width()*0.45 - 10, cRC.Height()*0.67 - 10);
+		cRC.Width()*0.45 - 10, cRC.Height()*0.67 - 50);
 	pCameraDlg->ShowWindow(SW_SHOW);
 	pBoardDlg = new CBoardDlg;
 	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
 	pBoardDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.1, 
-		cRC.Width()*0.24, cRC.Height()*0.55);
+		cRC.Width()*0.24, cRC.Height()*0.67);
+	pBoardDlg->InitDlg();
 	pBoardDlg->ShowWindow(SW_SHOW);
 	pNextBlockDlg = new CNextBlockDlg;
 	pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);
-	pNextBlockDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.67,
-		cRC.Width()*0.24, cRC.Height()*0.33);
+	pNextBlockDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.79,
+		cRC.Width()*0.24, cRC.Height()*0.21);
 	pNextBlockDlg->ShowWindow(SW_SHOW);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -224,4 +225,20 @@ void CTetrisPlaceDlg::OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult)
 		pSerialDlg->ShowWindow(SW_SHOW);
 	}
 	*pResult = 0;
+}
+
+
+LRESULT CTetrisPlaceDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	switch (message)
+	{
+	case USER_WM_PAINTBOARD:
+		pBoardDlg->PostMessage(USER_WM_PAINTBOARD);
+		break;
+	case USER_WM_PAINTTETRIS:
+		pBoardDlg->PostMessage(USER_WM_PAINTTETRIS, wParam, lParam);
+		break;
+	}
+	return CDialogEx::WindowProc(message, wParam, lParam);
 }

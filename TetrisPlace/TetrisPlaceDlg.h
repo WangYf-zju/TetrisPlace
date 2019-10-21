@@ -61,4 +61,5 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	CTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult);
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 };

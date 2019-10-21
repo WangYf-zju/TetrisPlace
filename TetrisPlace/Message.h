@@ -1,0 +1,4 @@
+#pragma once
+
+#define USER_WM_PAINTBOARD	10001
+#define USER_WM_PAINTTETRIS	10002

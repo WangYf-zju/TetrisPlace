@@ -14,6 +14,7 @@
 #define AM_SEGGOTO		7
 #define AM_GOTOR		8
 #define AM_GOANGLETOR	9
+#define AM_CORRECT		10
 
 
 using std::vector;
@@ -87,16 +88,17 @@ public:
 	afx_msg void OnBnClickedSettingon();
 	afx_msg void OnBnClickedSettingoff();
 	afx_msg void OnBnClickedButtonMove();
+	afx_msg void OnBnClickedButtonSeggo();
+	afx_msg void OnBnClickedButtonSetzero();
 
 	// symmetry: 0(asymmetry), 1(180 deg rotational symmetry), 2(90 deg rotational symmetry)
 	void Grab(double x, double y, double des_x, double des_y, double r, int symmetry = 0);
-
 	void SetCoor(double x, double y, double z);
 	void SetAngle(double x, double y, double z);
 	void GoToR(int dx, int dy, int dz);
 	void GoTo(int x, int y, int z);
-	afx_msg void OnBnClickedButtonSeggo();
-	afx_msg void OnBnClickedButtonSetzero();
+	void SegGoTo(int x, int y, int z);
+	void CorrectArm();
 };
 
 DWORD  WINAPI ArmCtrlThreadProc(LPVOID lpParam);

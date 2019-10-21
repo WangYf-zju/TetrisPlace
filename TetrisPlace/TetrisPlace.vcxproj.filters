@@ -66,6 +66,9 @@
     <ClInclude Include="ConnectDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TetrisPlace.cpp">

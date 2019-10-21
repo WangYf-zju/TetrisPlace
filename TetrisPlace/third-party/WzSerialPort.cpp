@@ -6,6 +6,9 @@
 
 #include <WinSock2.h>
 #include <windows.h>
+#include <mutex>
+using std::mutex;
+mutex serialLock;
 
 WzSerialPort::WzSerialPort()
 {
@@ -149,6 +152,7 @@ int WzSerialPort::send(const void *buf,int len)
 
 		if (this->synchronizeflag)
 		{
+			serialLock.lock();
 			// 同步方式
 			DWORD dwBytesWrite = len; //成功写入的数据字节数
 			BOOL bWriteStat = WriteFile(hCom, //串口句柄
@@ -156,6 +160,7 @@ int WzSerialPort::send(const void *buf,int len)
 				dwBytesWrite, //要发送的数据字节数
 				&dwBytesWrite, //DWORD*，用来接收返回成功发送的数据字节数
 				NULL); //NULL为同步发送，OVERLAPPED*为异步发送
+			serialLock.unlock();
 			if (!bWriteStat)
 			{
 				return 0;
@@ -203,9 +208,9 @@ int WzSerialPort::receive(void *buf,int maxlen)
 	if (this && m_bOpen)
 	{
 		HANDLE hCom = *(HANDLE*)pHandle;
-
 		if (this->synchronizeflag)
 		{
+			serialLock.lock();
 			//同步方式
 			DWORD wCount = maxlen; //成功读取的数据字节数
 			BOOL bReadStat = ReadFile(hCom, //串口句柄
@@ -213,6 +218,7 @@ int WzSerialPort::receive(void *buf,int maxlen)
 				wCount, //要读取的数据最大字节数
 				&wCount, //DWORD*,用来接收返回成功读取的数据字节数
 				NULL); //NULL为同步发送，OVERLAPPED*为异步发送
+			serialLock.unlock();
 			if (!bReadStat)
 			{
 				return 0;

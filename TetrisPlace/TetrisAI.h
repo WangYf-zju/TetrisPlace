@@ -1,4 +1,7 @@
 #pragma once
+#include <mutex>
+using std::mutex;
+
 #define ROW 12
 #define COL 10
 typedef BOOL BoardState[ROW][COL];
@@ -36,6 +39,9 @@ public:
 	void PlaceTetris(Position * pos);
 	void RemoveTetris(int x, int y, int r);
 	static void PlaceTetris(int type, Position * pos);
+	static void ReverseBlock(int x, int y);
+	static void SetBlock(int x, int y);
+	static void RemoveBlock(int x, int y);
 private:
 	BOOL FindSupremePos();
 	BOOL CanPlaceTetris(int x, int y, int r);

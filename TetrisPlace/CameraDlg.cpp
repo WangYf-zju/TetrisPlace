@@ -84,6 +84,7 @@ BOOL CCameraDlg::OnInitDialog()
 	m_bDistinguish = TRUE;
 	m_bLoop = FALSE;
 	m_bStart = FALSE;
+	m_bCorrect = FALSE;
 	try
 	{
 		for (int i = 0; i < TYPE_COUNT; i++)
@@ -169,7 +170,17 @@ int CCameraDlg::GetGridR(int type, double rot)
 	return r;
 }
 
+void CCameraDlg::UpdateBoardDlg()
+{
+	((CTetrisPlaceDlg*)GetParent())->PostMessage(USER_WM_PAINTBOARD, 0, 0);
+}
 
+void CCameraDlg::DrawTetrisOnBoard(int type, Position * pos)
+{
+	WPARAM wParam = (WPARAM)type;
+	LPARAM lParam = (LPARAM)pos;
+	((CTetrisPlaceDlg*)GetParent())->PostMessage(USER_WM_PAINTTETRIS, wParam, lParam);
+}
 
 void CCameraDlg::Distinguish()
 {
@@ -263,9 +274,8 @@ void CCameraDlg::Distinguish()
 				double toY = -grid_toX * 18 + OFFSETY2 + 18 * 9;
 				((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0 + r_revise, symmetry);
 				if (!m_bLoop) m_bGrab = FALSE;
+				UpdateBoardDlg();
 				TetrisAI::PlaceTetris(supreme_type, &pos);
-				//((CTetrisPlaceDlg*)GetParent())->pNextBlockDlg->DrawNext(supreme_type,
-				//	((CTetrisPlaceDlg*)GetParent())->pNextBlockDlg->GetDC());
 			}
 			else
 			{
@@ -297,6 +307,32 @@ void CCameraDlg::StartDistinguishAndGrabLoop()
 	m_bLoop = TRUE;
 }
 
+void CCameraDlg::CorrectArm()
+{
+	HTuple ScaleMin = 0.95;
+	HTuple ScaleMax = 1.05;
+	HTuple MinScore = 0.9;
+	HTuple NumMatches = 1;
+	HTuple MaxOverlap = 0.5;
+	HTuple Greediness = 0.8;
+
+	try
+	{
+		//FindScaledShapeModel(ho_Image, hv_ModelID[i], HTuple(0).TupleRad(), HTuple(360).TupleRad(),
+		//	ScaleMin, ScaleMax, MinScore, NumMatches, MaxOverlap,
+		//	"least_squares", (HTuple(5).Append(1)), Greediness,
+		//	&hv_Row, &hv_Column, &hv_Angle, &hv_Scale, &hv_Score);
+		double d_x = 0, d_y = 0;
+
+
+	}
+	catch (HException & expection)
+	{
+
+	}
+}
+
+
 DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 {
 	CCameraDlg * dlg = (CCameraDlg*)lpParam;
@@ -305,8 +341,7 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 	HObject  ho_MapFixed;
 	HObject  ho_Region, ho_RegionClosing, ho_ConnectedRegions;
 	HTuple  hv_CamParVirtualFixed, hv_CamParOriginal;
-
-	int i = 0;
+	
 	while (1 && dlg->m_bStart)
 	{
 		GrabImageAsync(&dlg->ho_Image, dlg->hv_AcqHandle, -1);
@@ -337,7 +372,11 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		{
 			dlg->Distinguish();
 		}
-		Sleep(1000);
+		if (dlg->m_bCorrect)
+		{
+			dlg->CorrectArm();
+		}
+		Sleep(10);
 	}
 	return 0;
 }

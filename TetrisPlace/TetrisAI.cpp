@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 
+mutex boardLock;
 const BOOL TetrisShapeArray[7][4][16] =
 {
 {{1,0,0,0,1,1,1},{0,1,1,0,0,1,0,0,0,1},{0,0,0,0,1,1,1,0,0,0,1},{0,1,0,0,0,1,0,0,1,1}},
@@ -222,7 +223,10 @@ void TetrisAI::PlaceTetris(int x, int y, int r)
 		{
 			if (TetrisShape[m_type][r][4 * j + i])
 			{
-				(*m_pBoard)[y + j][x + i] = TRUE;
+				SetBlock(x + i, y + j);
+				//boardLock.lock();
+				//(*m_pBoard)[y + j][x + i] = TRUE;
+				//boardLock.unlock();
 			}
 		}
 	}
@@ -242,7 +246,10 @@ void TetrisAI::RemoveTetris(int x, int y, int r)
 		{
 			if (TetrisShape[m_type][r][4 * j + i])
 			{
-				(*m_pBoard)[y + j][x + i] = FALSE;
+				RemoveBlock(x + i, y + j);
+				//boardLock.lock();
+				//(*m_pBoard)[y + j][x + i] = FALSE;
+				//boardLock.unlock();
 			}
 		}
 	}
@@ -256,10 +263,34 @@ void TetrisAI::PlaceTetris(int type, Position * pos)
 		{
 			if (TetrisShape[type][pos->r][4 * j + i])
 			{
-				(*m_pBoard)[pos->y + j][pos->x + i] = TRUE;
+				SetBlock(pos->x + i, pos->y + j);
+				//boardLock.lock();
+				//(*m_pBoard)[pos->y + j][pos->x + i] = TRUE;
+				//boardLock.unlock();
 			}
 		}
 	}
+}
+
+void TetrisAI::ReverseBlock(int x, int y)
+{
+	boardLock.lock();
+	(*m_pBoard)[y][x] = !(*m_pBoard)[y][x];
+	boardLock.unlock();
+}
+
+void TetrisAI::SetBlock(int x, int y)
+{
+	boardLock.lock();
+	(*m_pBoard)[y][x] = TRUE;
+	boardLock.unlock();
+}
+
+void TetrisAI::RemoveBlock(int x, int y)
+{
+	boardLock.lock();
+	(*m_pBoard)[y][x] = FALSE;
+	boardLock.unlock();
 }
 
 int TetrisAI::CalcRowTrans()

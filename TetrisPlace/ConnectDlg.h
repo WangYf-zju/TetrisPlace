@@ -49,4 +49,5 @@ public:
 	afx_msg void OnBnClickedButtonRun();
 	afx_msg void OnBnClickedRadioLoop();
 	afx_msg void OnBnClickedRadioOnce();
+	afx_msg void OnBnClickedButtonArmcorrect();
 };

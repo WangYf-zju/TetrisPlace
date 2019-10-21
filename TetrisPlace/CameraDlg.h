@@ -41,6 +41,9 @@ public:
 	void Distinguish();
 	void StartDistinguishAndGrabOnce();
 	void StartDistinguishAndGrabLoop();
+	void CorrectArm();
+	void UpdateBoardDlg();
+	void DrawTetrisOnBoard(int type, Position * pos);
 
 private:
 	int GetGridX(int type, int r, double col);
@@ -51,6 +54,7 @@ public:
 	BOOL m_bGrab;
 	BOOL m_bStart;
 	BOOL m_bLoop;
+	BOOL m_bCorrect;
 	int m_cameraIndex;
 	TypeInfo m_typeInfo[TYPE_COUNT];
 	HANDLE hThread;

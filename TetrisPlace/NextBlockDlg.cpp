@@ -112,7 +112,7 @@ void CNextBlockDlg::OnBnClickedButtonPlace()
 	Position * pos = nextTR.PlaceToSupremePos();
 	if (pos != nullptr)
 	{
-		CBoardDlg * pBoardDlg = ((CTetrisPlaceDlg*)this->GetParent())->pBoardDlg;
+		CBoardDlg * pBoardDlg = ((CTetrisPlaceDlg*)GetParent())->pBoardDlg;
 		pBoardDlg->DrawClient();
 		pBoardDlg->DrawTetris(&(pBoardDlg->m_memDC), m_type, pos->x, pos->y, pos->r);
 		pBoardDlg->Invalidate(FALSE);

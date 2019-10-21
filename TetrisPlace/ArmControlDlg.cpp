@@ -229,18 +229,9 @@ void CArmControlDlg::OnBnClickedButtonSteergo()
 void CArmControlDlg::OnBnClickedButtonUnlock()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	//if (m_bLock)
-	//{
-		m_pA->UnlockMotor();
-		m_bLock = FALSE;
-	//	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowTextW(_T("电机锁定"));
-	//}
-	//else
-	//{
-		//m_pA->LockMotor();
-		//m_bLock = TRUE;
-		GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
-	//}
+	m_pA->UnlockMotor();
+	m_bLock = FALSE;
+	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
 	UpdateState();
 }
 
@@ -293,6 +284,18 @@ void CArmControlDlg::OnBnClickedButtonSetzero()
 	UpdateState();
 }
 
+void CArmControlDlg::OnBnClickedButtonSeggo()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
+	ArmMsg msg;
+	msg.msg = AM_SEGGOTO;
+	msg.param.push_back(m_X);
+	msg.param.push_back(m_Y);
+	msg.param.push_back(m_Z);
+	PushMsg(msg);
+}
+
 void CArmControlDlg::Grab(double x, double y, double des_x, double des_y, double r, int symmetry)
 {
 	ArmMsg msg;
@@ -336,16 +339,19 @@ void CArmControlDlg::GoTo(int x, int y, int z)
 	PushMsg(msg);
 }
 
-void CArmControlDlg::OnBnClickedButtonSeggo()
+void CArmControlDlg::SegGoTo(int x, int y, int z)
 {
-	// TODO: 在此添加控件通知处理程序代码
-	UpdateData();
 	ArmMsg msg;
 	msg.msg = AM_SEGGOTO;
-	msg.param.push_back(m_X);
-	msg.param.push_back(m_Y);
-	msg.param.push_back(m_Z);
+	msg.param.push_back(x);
+	msg.param.push_back(y);
+	msg.param.push_back(z);
 	PushMsg(msg);
+}
+
+void CArmControlDlg::CorrectArm()
+{
+	
 }
 
 void CArmControlDlg::PushMsg(ArmMsg & msg)
@@ -361,7 +367,6 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 	vector<ArmMsg>::iterator itMsg;
 	while (1)
 	{
-		//((CTetrisPlaceDlg*)dlg->GetParent())->pBoardDlg->Invalidate();
 		msgArrayLock.lock();
 		itMsg = msgArray.begin();
 		if (itMsg != msgArray.end())
@@ -395,6 +400,10 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 				break;
 			case AM_GOANGLETOR:
 				dlg->m_pA->GoAngleToR(itMsg->param[0], itMsg->param[1], itMsg->param[2]);
+				break;
+			case AM_CORRECT:
+				dlg->m_pA->GoSegTo(50, 50, 40);
+				((CTetrisPlaceDlg*)(dlg->GetParent()->GetParent()))->pCameraDlg->CorrectArm();
 				break;
 			default:
 				break;
