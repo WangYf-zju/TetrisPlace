@@ -11,9 +11,9 @@
 #include <stdio.h>
 
 
-const int RowBoundary[11] = { 0,55,113,171,229,287,345,403,461,519,577 };
-const int ColumnBoundary[13] = { 92,150,208,266,324,382,440,498,556,614,672,730,788 };
-const int AngleOffset[TYPE_COUNT] = { 270,90,90,90,0,90,90 };
+const int RowBoundary[11] = { 13,66,121,181,238,296,354,412,470,533,590 };
+const int ColumnBoundary[13] = { 45,108,166,223,282,341,400,458,515,573,627,683,742 };
+const int AngleOffset[TYPE_COUNT] = { 180,270,0,0,0,0,180 };
 const double PictureXOffset[TYPE_COUNT][4] = {
 	{9,0,-9,0},{9,0,-9,0},{-9,0,-9,0},{-9,0,-9,0},{-9,-9,-9,-9},{0,-9,0,-9},{9,0,-9,0}
 };
@@ -134,6 +134,14 @@ BOOL CCameraDlg::StartCamera(int iCamera)
 	return TRUE;
 }
 
+void CCameraDlg::CloseCamera()
+{
+	m_bStart = FALSE;
+	m_bCorrect = FALSE;
+	m_bGrab = FALSE;
+	m_bLoop = FALSE;
+}
+
 #define SCALE_PICTURE 58/18
 int CCameraDlg::GetGridX(int type, int r, double col)
 {
@@ -205,12 +213,14 @@ void CCameraDlg::Distinguish()
 
 			int length = 0;
 			length = hv_Row[i].Length();
+			
 			if (length <= 0)
 			{
 				m_typeInfo[i].bExist = FALSE;
 			}
 			else
-			{			
+			{
+				double angle = (hv_Angle[i])[0].D() * 180 / 3.1415926;
 				m_typeInfo[i].bExist = TRUE;
 				TetrisAI AI(i);
 				double rank = AI.GetSupremeRank();
@@ -226,23 +236,19 @@ void CCameraDlg::Distinguish()
 #ifndef NONE_UI
 				HTuple  hv_RefColumn, hv_HomMat2D, hv_TestImages, hv_T;
 				HObject  ho_TemplateImage, ho_ModelContours, ho_TransContours;
-				CString str;
-				str.Format(_T("Row: %d; Column: %d; Angle: %f; Scale: %f\n"),
-					(int)(hv_Row[i])[0].D(), (int)(hv_Column[i])[0].D(),
-					180*(hv_Angle[i])[0].D()/3.1415926, (hv_Scale[i])[0].D());
-				//MessageBox(str);
+
 				GetShapeModelContours(&ho_ModelContours, hv_ModelID[i], 1);
 
 				HomMat2dIdentity(&hv_HomMat2D);
-				HomMat2dScale(hv_HomMat2D, hv_Scale[i], hv_Scale[i],
+				HomMat2dScale(hv_HomMat2D, (hv_Scale[i])[0], (hv_Scale[i])[0],
 					0, 0, &hv_HomMat2D);
-				HomMat2dRotate(hv_HomMat2D, hv_Angle[i], 0, 0, &hv_HomMat2D);
-				HomMat2dTranslate(hv_HomMat2D, hv_Row[i], hv_Column[i],
+				HomMat2dRotate(hv_HomMat2D, (hv_Angle[i])[0], 0, 0, &hv_HomMat2D);
+				HomMat2dTranslate(hv_HomMat2D, (hv_Row[i])[0], (hv_Column[i])[0],
 					&hv_HomMat2D);
 				AffineTransContourXld(ho_ModelContours, &ho_TransContours, hv_HomMat2D);
 
-				SetColor(hv_WindowHandle, "green");
-				SetLineWidth(hv_WindowHandle, 2);
+				SetColor(hv_WindowHandle, "red");
+				SetLineWidth(hv_WindowHandle, 5);
 
 				DispObj(ho_TransContours, hv_WindowHandle);
 			}
@@ -274,8 +280,8 @@ void CCameraDlg::Distinguish()
 				double toY = -grid_toX * 18 + OFFSETY2 + 18 * 9;
 				((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0 + r_revise, symmetry);
 				if (!m_bLoop) m_bGrab = FALSE;
-				UpdateBoardDlg();
 				TetrisAI::PlaceTetris(supreme_type, &pos);
+				DrawTetrisOnBoard(supreme_type, &pos);
 			}
 			else
 			{
@@ -347,12 +353,12 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		GrabImageAsync(&dlg->ho_Image, dlg->hv_AcqHandle, -1);
 
 		hv_CamParOriginal.Clear();
-		hv_CamParOriginal[0] = 0.0384924;
-		hv_CamParOriginal[1] = -5311.75;
-		hv_CamParOriginal[2] = 8.43797e-006;
+		hv_CamParOriginal[0] = 0.0062502;
+		hv_CamParOriginal[1] = -6349.24;
+		hv_CamParOriginal[2] = 8.25879e-006;
 		hv_CamParOriginal[3] = 8.3e-006;
-		hv_CamParOriginal[4] = 425.258;
-		hv_CamParOriginal[5] = 301.19;
+		hv_CamParOriginal[4] = 402.971;
+		hv_CamParOriginal[5] = 307.108;
 		hv_CamParOriginal[6] = 800;
 		hv_CamParOriginal[7] = 600;
 		hv_CamParVirtualFixed = hv_CamParOriginal;
@@ -361,11 +367,11 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 			"bilinear");
 		MapImage(dlg->ho_Image, ho_MapFixed, &dlg->ho_Image);//纠正相机畸变
 
-		Threshold(dlg->ho_Image, &ho_Region, 155, 255);
+		Threshold(dlg->ho_Image, &ho_Region, 128, 255);
 
-		OpeningCircle(ho_Region, &ho_RegionClosing, 1.2);
+		OpeningCircle(ho_Region, &ho_RegionClosing, 5);
 		Connection(ho_RegionClosing, &ho_ConnectedRegions);
-		SelectShape(ho_ConnectedRegions, &dlg->ho_SelectedRegions, "area", "and", 9000, 20000);
+		SelectShape(ho_ConnectedRegions, &dlg->ho_SelectedRegions, "area", "and", 10000, 50000);
 		SetPart(dlg->hv_WindowHandle, 0, 0, dlg->hl_height, dlg->hl_width);
 		DispObj(dlg->ho_Image, dlg->hv_WindowHandle);
 		if (dlg->m_bDistinguish)
@@ -376,7 +382,7 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		{
 			dlg->CorrectArm();
 		}
-		Sleep(10);
+		Sleep(1000);
 	}
 	return 0;
 }

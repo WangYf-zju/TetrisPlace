@@ -161,6 +161,20 @@ void CConnectDlg::Connect()
 }
 
 
+void CConnectDlg::Disconnect()
+{
+	// TODO: 在此处添加实现代码.
+	if (m_bPortOpen)
+	{
+
+	}
+	if (m_bCameraOpen)
+	{
+		m_bCameraOpen = FALSE;
+	}
+}
+
+
 void CConnectDlg::OnBnClickedButtonRun()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -201,3 +215,5 @@ void CConnectDlg::OnBnClickedButtonArmcorrect()
 	else
 		MessageBox(_T("串口或相机没有连接"), _T("运行"));
 }
+
+

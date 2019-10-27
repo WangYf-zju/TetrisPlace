@@ -293,6 +293,17 @@ void TetrisAI::RemoveBlock(int x, int y)
 	boardLock.unlock();
 }
 
+void TetrisAI::ClearBoard()
+{
+	for (int i = 0; i < COL; i++)
+	{
+		for (int j = 0; j < ROW; j++)
+		{
+			RemoveBlock(i, j);
+		}
+	}
+}
+
 int TetrisAI::CalcRowTrans()
 {
 	int count = 0;

@@ -201,6 +201,8 @@ int WzSerialPort::send(const void *buf,int len)
 			return dwBytesWrite;
 		}
 	}
+	else
+		return -1;
 }
 
 int WzSerialPort::receive(void *buf,int maxlen)
@@ -263,5 +265,7 @@ int WzSerialPort::receive(void *buf,int maxlen)
 			return wCount;
 		}
 	}
+	else
+		return -1;
 }
 

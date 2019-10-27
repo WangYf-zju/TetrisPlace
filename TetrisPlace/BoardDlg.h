@@ -30,6 +30,10 @@ public:
 	void DrawTetris(CDC *pDC, int type, Position * pos);
 	void DrawClient();
 	void InitDlg();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnBnClickedButtonModify();
+	afx_msg void OnBnClickedButtonRefreshboard();
+	afx_msg void OnBnClickedButtonAddtetris();
 
 private:
 	void DrawBorder(CDC *pDC);
@@ -47,8 +51,5 @@ private:
 	BOOL m_bModify;
 public:
 	CDC m_memDC;
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnBnClickedButtonModify();
-	afx_msg void OnBnClickedButtonClearboard();
-	afx_msg void OnBnClickedButtonRefreshboard();
+	static HWND hBoardDlg;
 };

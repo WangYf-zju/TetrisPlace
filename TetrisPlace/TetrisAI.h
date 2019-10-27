@@ -42,6 +42,7 @@ public:
 	static void ReverseBlock(int x, int y);
 	static void SetBlock(int x, int y);
 	static void RemoveBlock(int x, int y);
+	static void ClearBoard();
 private:
 	BOOL FindSupremePos();
 	BOOL CanPlaceTetris(int x, int y, int r);

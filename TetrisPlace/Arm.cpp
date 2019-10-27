@@ -82,10 +82,7 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 	if (dSteerAngle > 180)dSteerAngle -= 360;
 	else if (dSteerAngle < -180)dSteerAngle += 360;
 	// revise steering engine
-	// TODO: 
-	//if (dSteerAngle > 0)dSteerAngle += 10;
-	//else if (dSteerAngle)dSteerAngle -= 10;
-	dSteerAngle *= 1.05;
+	dSteerAngle *= 1.08;
 
 	if (dSteerAngle < 0) duration = SteerEngineTo(180);
 	else duration = SteerEngineTo(0);
@@ -158,7 +155,7 @@ void Arm::GoToR(double dx, double dy, double dz)
 {
 	double duration = GoTo(m_cCoor[X] + dx, m_cCoor[Y] + dy, m_cCoor[Z] + dz);
 	if (duration > 0)
-		Sleep(duration);
+		Sleep((int)duration);
 }
 
 void Arm::GoSegTo(double x, double y, double z/*=MOVE_Z*/)
@@ -209,7 +206,7 @@ void Arm::GoAngleToR(double dx, double dy, double dz)
 {
 	double duration = GoAngleTo(dx + m_cAngle[X], dy + m_cAngle[Y], dz + m_cAngle[Z]);
 	if (duration > 0)
-		Sleep(duration);
+		Sleep((int)duration);
 }
 
 double Arm::SteerEngineTo(double r)
