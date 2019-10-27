@@ -1,17 +1,17 @@
 #pragma once
 
 #include "third-party/WzSerialPort.h"
-#define GRAB_Z	20.0
-#define DISGRAB_Z 5.0
+#define GRAB_Z	15.0
+#define DISGRAB_Z 23.0
 #define MOVE_Z	40.0
 #define ARM_SPEED 12 // degree per second
 #define STEERING_SPEED 180
 
 
-#define OFFSETX1	-13
-#define OFFSETY1	75
-#define OFFSETX2	-34
-#define OFFSETY2	271
+#define OFFSETX1	9.81
+#define OFFSETY1	59.85
+#define OFFSETX2	-69.81
+#define OFFSETY2	257.25
 
 class Arm
 {

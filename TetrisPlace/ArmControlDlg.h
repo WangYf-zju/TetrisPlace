@@ -68,6 +68,12 @@ public:
 	BOOL m_bLock;
 	HANDLE hThread;
 	static BOOL bArmBusy;
+	double memAbX;
+	double memAbY;
+	double memAbZ;
+	double memReX;
+	double memReY;
+	double memReZ;
 
 private:
 	WzSerialPort * m_pW;
@@ -99,6 +105,9 @@ public:
 	void GoTo(int x, int y, int z);
 	void SegGoTo(int x, int y, int z);
 	void CorrectArm();
+	afx_msg void OnBnClickedButtonXgo();
+	afx_msg void OnBnClickedButtonYgo();
+	afx_msg void OnBnClickedButtonZgo();
 };
 
 DWORD  WINAPI ArmCtrlThreadProc(LPVOID lpParam);

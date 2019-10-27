@@ -72,6 +72,9 @@ BEGIN_MESSAGE_MAP(CArmControlDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_MOVE, &CArmControlDlg::OnBnClickedButtonMove)
 	ON_BN_CLICKED(IDC_BUTTON_SEGGO, &CArmControlDlg::OnBnClickedButtonSeggo)
 	ON_BN_CLICKED(IDC_BUTTON_SETZERO, &CArmControlDlg::OnBnClickedButtonSetzero)
+	ON_BN_CLICKED(IDC_BUTTON_XGO, &CArmControlDlg::OnBnClickedButtonXgo)
+	ON_BN_CLICKED(IDC_BUTTON_YGO, &CArmControlDlg::OnBnClickedButtonYgo)
+	ON_BN_CLICKED(IDC_BUTTON_ZGO, &CArmControlDlg::OnBnClickedButtonZgo)
 END_MESSAGE_MAP()
 
 
@@ -108,6 +111,8 @@ BOOL CArmControlDlg::OnInitDialog()
 	((CButton*)GetDlgItem(IDC_SETTINGOFF))->SetCheck(1);
 	UpdateState();
 	hThread = CreateThread(NULL, 0, ArmCtrlThreadProc, this, 0, 0);
+	memAbX = 0; memAbY = 0; memAbZ = 0;
+	memReX = 0; memReY = 0; memReZ = 0;
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -239,14 +244,36 @@ void CArmControlDlg::OnBnClickedButtonUnlock()
 void CArmControlDlg::OnBnClickedRelative()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_bRelative = TRUE;
+	if (!m_bRelative)
+	{
+		m_bRelative = TRUE;
+		UpdateData();
+		memAbX = m_X;
+		memAbY = m_Y;
+		memAbZ = m_Z;
+		m_X = memReX;
+		m_Y = memReY;
+		m_Z = memReZ;
+		UpdateData(FALSE);
+	}	
 }
 
 
 void CArmControlDlg::OnBnClickedAbsolute()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	m_bRelative = FALSE;
+	if (m_bRelative)
+	{
+		m_bRelative = FALSE;
+		UpdateData();
+		memReX = m_X;
+		memReY = m_Y;
+		memReZ = m_Z;
+		m_X = memAbX;
+		m_Y = memAbY;
+		m_Z = memAbZ;
+		UpdateData(FALSE);
+	}	
 }
 
 
@@ -349,6 +376,47 @@ void CArmControlDlg::SegGoTo(int x, int y, int z)
 	PushMsg(msg);
 }
 
+
+void CArmControlDlg::OnBnClickedButtonXgo()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (m_bRelative)
+	{
+		GoToR(m_AX, 0, 0);
+	}
+	else
+	{
+		GoTo(m_AX, m_pA->m_cCoor[1], m_pA->m_cCoor[2]);
+	}
+}
+
+
+void CArmControlDlg::OnBnClickedButtonYgo()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (m_bRelative)
+	{
+		GoToR(0, m_AY, 0);
+	}
+	else
+	{
+		GoTo(m_pA->m_cCoor[1], m_AY, m_pA->m_cCoor[2]);
+	}
+}
+
+
+void CArmControlDlg::OnBnClickedButtonZgo()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if (m_bRelative)
+	{
+		GoToR(0, 0, m_AZ);
+	}
+	else
+	{
+		GoTo(m_pA->m_cCoor[0], m_pA->m_cCoor[1], m_AZ);
+	}
+}
 void CArmControlDlg::CorrectArm()
 {
 	
@@ -419,3 +487,4 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 	}
 	return 0;
 }
+

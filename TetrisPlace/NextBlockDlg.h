@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "TetrisAI.h"
 
 // CNextBlockDlg 对话框
 
@@ -21,14 +21,16 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-public:
+private:
 	int m_type;
+	TetrisAI * m_nextTR;
 
 public:
-	afx_msg void OnBnClickedButtonNextok();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnBnClickedButtonPlace();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	void DrawNext(int type, CDC *pDC);
+	CComboBox m_comTetris;
+	afx_msg void OnCbnSelchangeComboTetris();
 };

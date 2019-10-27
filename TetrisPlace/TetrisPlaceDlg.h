@@ -49,7 +49,6 @@ protected:
 
 public:
 	CConnectDlg * pCntDlg;
-	CNextBlockDlg * pNextBlockDlg;
 	CSerialDlg * pSerialDlg;
 	CArmControlDlg *pArmCtrlDlg;
 	CBoardDlg * pBoardDlg;

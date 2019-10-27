@@ -3,15 +3,16 @@
 
 #include "stdafx.h"
 #include "TetrisPlace.h"
-#include "BoardDlg.h"
 #include "afxdialogex.h"
 #include "TetrisAI.h"
-
+#include "BoardDlg.h"
+#include "NextBlockDlg.h"
 
 // CBoardDlg 对话框
 
 IMPLEMENT_DYNAMIC(CBoardDlg, CDialogEx)
 
+HWND CBoardDlg::hBoardDlg = 0;
 CBoardDlg::CBoardDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG_BOARD, pParent)
 {
@@ -32,8 +33,8 @@ BEGIN_MESSAGE_MAP(CBoardDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_LBUTTONDOWN()
 	ON_BN_CLICKED(IDC_BUTTON_MODIFY, &CBoardDlg::OnBnClickedButtonModify)
-	ON_BN_CLICKED(IDC_BUTTON_CLEARBOARD, &CBoardDlg::OnBnClickedButtonClearboard)
 	ON_BN_CLICKED(IDC_BUTTON_REFRESHBOARD, &CBoardDlg::OnBnClickedButtonRefreshboard)
+	ON_BN_CLICKED(IDC_BUTTON_ADDTETRIS, &CBoardDlg::OnBnClickedButtonAddtetris)
 END_MESSAGE_MAP()
 
 
@@ -77,7 +78,9 @@ LRESULT CBoardDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		Invalidate(FALSE);
 		break;
 	case USER_WM_PAINTTETRIS:
-		DrawTetris(nullptr, (int)wParam, (Position*)lParam);
+		DrawClient();
+		DrawTetris(&m_memDC, (int)wParam, (Position*)lParam);
+		Invalidate(FALSE);
 		break;
 	}
 	return CDialogEx::WindowProc(message, wParam, lParam);
@@ -163,6 +166,7 @@ BOOL CBoardDlg::OnInitDialog()
 
 	// TODO:  在此添加额外的初始化
 	m_bModify = FALSE;
+	hBoardDlg = this->m_hWnd;
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -221,35 +225,33 @@ void CBoardDlg::OnBnClickedButtonModify()
 	{
 		m_bModify = FALSE;
 		GetDlgItem(IDC_BUTTON_MODIFY)->SetWindowText(_T("修改盘面"));
+		GetDlgItem(IDC_BUTTON_REFRESHBOARD)->SetWindowTextA(_T("刷新"));
 	}
 	else
 	{
 		m_bModify = TRUE;
 		GetDlgItem(IDC_BUTTON_MODIFY)->SetWindowText(_T("确定"));
+		GetDlgItem(IDC_BUTTON_REFRESHBOARD)->SetWindowTextA(_T("清空"));
 	}
-}
-
-
-
-
-void CBoardDlg::OnBnClickedButtonClearboard()
-{
-	// TODO: 在此添加控件通知处理程序代码
-	for (int i = 0; i < COL; i++)
-	{
-		for (int j = 0; j < ROW; j++)
-		{
-			TetrisAI::RemoveBlock(i, j);
-		}
-	}
-	DrawClient();
-	Invalidate(FALSE);
 }
 
 
 void CBoardDlg::OnBnClickedButtonRefreshboard()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	if (m_bModify)
+	{
+		TetrisAI::ClearBoard();
+	}
 	DrawClient();
 	Invalidate(FALSE);
+}
+
+
+void CBoardDlg::OnBnClickedButtonAddtetris()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CNextBlockDlg NextDlg;
+	//NextDlg.Create(IDD_DIALOG_NEXTBLOCK, this);
+	NextDlg.DoModal();
 }

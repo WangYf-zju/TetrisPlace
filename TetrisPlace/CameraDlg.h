@@ -38,6 +38,7 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnInitDialog();
 	BOOL StartCamera(int iCamera);
+	void CloseCamera();
 	void Distinguish();
 	void StartDistinguishAndGrabOnce();
 	void StartDistinguishAndGrabLoop();
