@@ -380,6 +380,7 @@ void CArmControlDlg::SegGoTo(int x, int y, int z)
 void CArmControlDlg::OnBnClickedButtonXgo()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
 	if (m_bRelative)
 	{
 		GoToR(m_AX, 0, 0);
@@ -394,6 +395,7 @@ void CArmControlDlg::OnBnClickedButtonXgo()
 void CArmControlDlg::OnBnClickedButtonYgo()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
 	if (m_bRelative)
 	{
 		GoToR(0, m_AY, 0);
@@ -408,6 +410,7 @@ void CArmControlDlg::OnBnClickedButtonYgo()
 void CArmControlDlg::OnBnClickedButtonZgo()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	UpdateData();
 	if (m_bRelative)
 	{
 		GoToR(0, 0, m_AZ);
