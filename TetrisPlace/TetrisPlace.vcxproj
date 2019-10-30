@@ -185,6 +185,7 @@
     <ClInclude Include="CameraDlg.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="ConnectDlg.h" />
+    <ClInclude Include="InfoDlg.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="NextBlockDlg.h" />
     <ClInclude Include="SerialDlg.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="BoardDlg.cpp" />
     <ClCompile Include="CameraDlg.cpp" />
     <ClCompile Include="ConnectDlg.cpp" />
+    <ClCompile Include="InfoDlg.cpp" />
     <ClCompile Include="NextBlockDlg.cpp" />
     <ClCompile Include="SerialDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

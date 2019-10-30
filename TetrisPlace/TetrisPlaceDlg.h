@@ -10,6 +10,7 @@
 #include "NextBlockDlg.h"
 #include "BoardDlg.h"
 #include "CameraDlg.h"
+#include "InfoDlg.h"
 #include "third-party/WzSerialPort.h"
 #include "Arm.h"
 
@@ -53,6 +54,7 @@ public:
 	CArmControlDlg *pArmCtrlDlg;
 	CBoardDlg * pBoardDlg;
 	CCameraDlg * pCameraDlg;
+	CInfoDlg * pInfoDlg;
 	WzSerialPort m_w;
 	Arm m_a;
 

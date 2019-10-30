@@ -8,7 +8,6 @@
 #include "ArmControlDlg.h"
 #include "afxdialogex.h"
 #include "ArmControlDlg.h"
-#include <stdio.h>
 
 
 const int RowBoundary[11] = { 13,66,121,181,238,296,354,412,470,533,590 };
@@ -190,6 +189,27 @@ void CCameraDlg::DrawTetrisOnBoard(int type, Position * pos)
 	((CTetrisPlaceDlg*)GetParent())->PostMessage(USER_WM_PAINTTETRIS, wParam, lParam);
 }
 
+void CCameraDlg::DrawContours(int type)
+{
+	HTuple  hv_RefColumn, hv_HomMat2D, hv_TestImages, hv_T;
+	HObject  ho_TemplateImage, ho_ModelContours, ho_TransContours;
+
+	GetShapeModelContours(&ho_ModelContours, hv_ModelID[type], 1);
+
+	HomMat2dIdentity(&hv_HomMat2D);
+	HomMat2dScale(hv_HomMat2D, (hv_Scale[type])[0], (hv_Scale[type])[0],
+		0, 0, &hv_HomMat2D);
+	HomMat2dRotate(hv_HomMat2D, (hv_Angle[type])[0], 0, 0, &hv_HomMat2D);
+	HomMat2dTranslate(hv_HomMat2D, (hv_Row[type])[0], (hv_Column[type])[0],
+		&hv_HomMat2D);
+	AffineTransContourXld(ho_ModelContours, &ho_TransContours, hv_HomMat2D);
+
+	SetColor(hv_WindowHandle, "red");
+	SetLineWidth(hv_WindowHandle, 5);
+
+	DispObj(ho_TransContours, hv_WindowHandle);
+}
+
 void CCameraDlg::Distinguish()
 {
 	HTuple ScaleMin[TYPE_COUNT] = { 0.95,0.95,0.95,0.95,0.95,0.95,0.95 };
@@ -201,7 +221,7 @@ void CCameraDlg::Distinguish()
 
 	try
 	{
-		double max_rank = -10e3;
+		double max_rank = -1e3;
 		int supreme_type = -1;
 		Position pos;
 		for (int i = 0; i < TYPE_COUNT; i++)
@@ -211,19 +231,36 @@ void CCameraDlg::Distinguish()
 				"least_squares", (HTuple(5).Append(1)), Greediness[i],
 				&hv_Row[i], &hv_Column[i], &hv_Angle[i], &hv_Scale[i], &hv_Score[i]);
 
-			int length = 0;
-			length = hv_Row[i].Length();
-			
+			int length = hv_Row[i].Length();
+			m_typeInfo[i].count = length;
 			if (length <= 0)
 			{
 				m_typeInfo[i].bExist = FALSE;
 			}
 			else
 			{
-				double angle = (hv_Angle[i])[0].D() * 180 / 3.1415926;
 				m_typeInfo[i].bExist = TRUE;
 				TetrisAI AI(i);
 				double rank = AI.GetSupremeRank();
+				m_typeInfo[i].rank = AI.GetSupremeRank();
+				m_typeInfo[i].grid_toX = AI.GetSupremePos()->x;
+				m_typeInfo[i].grid_toY = AI.GetSupremePos()->y;
+				m_typeInfo[i].grid_toR = AI.GetSupremePos()->r;
+				m_typeInfo[i].grid_r = GetGridR(i, (hv_Angle[i])[0].D());
+				m_typeInfo[i].grid_x = GetGridX(i, m_typeInfo[i].grid_r, (hv_Column[i])[0].D());
+				m_typeInfo[i].grid_y = GetGridY(i, m_typeInfo[i].grid_r, (hv_Row[i])[0].D());
+				m_typeInfo[i].x = 
+					(m_typeInfo[i].grid_x + GrabXGridOffset[i][m_typeInfo[i].grid_r]) 
+					* GRID_DISTANCE + OFFSETX1;
+				m_typeInfo[i].y = 
+					(m_typeInfo[i].grid_y + GrabYGridOffset[i][m_typeInfo[i].grid_r]) 
+					* GRID_DISTANCE + OFFSETY1;
+				// 放置仓从下向上放，需旋转180°
+				m_typeInfo[i].toX = -m_typeInfo[i].grid_toY * GRID_DISTANCE
+					+ OFFSETX2;
+				m_typeInfo[i].toY = (9-m_typeInfo[i].grid_toX) * GRID_DISTANCE
+					+ OFFSETY2;
+
 				if (max_rank < rank && AI.m_canPlace)
 				{
 					max_rank = rank;
@@ -232,28 +269,12 @@ void CCameraDlg::Distinguish()
 					pos.y = AI.GetSupremePos()->y;
 					pos.r = AI.GetSupremePos()->r;
 				}
-							
 #ifndef NONE_UI
-				HTuple  hv_RefColumn, hv_HomMat2D, hv_TestImages, hv_T;
-				HObject  ho_TemplateImage, ho_ModelContours, ho_TransContours;
-
-				GetShapeModelContours(&ho_ModelContours, hv_ModelID[i], 1);
-
-				HomMat2dIdentity(&hv_HomMat2D);
-				HomMat2dScale(hv_HomMat2D, (hv_Scale[i])[0], (hv_Scale[i])[0],
-					0, 0, &hv_HomMat2D);
-				HomMat2dRotate(hv_HomMat2D, (hv_Angle[i])[0], 0, 0, &hv_HomMat2D);
-				HomMat2dTranslate(hv_HomMat2D, (hv_Row[i])[0], (hv_Column[i])[0],
-					&hv_HomMat2D);
-				AffineTransContourXld(ho_ModelContours, &ho_TransContours, hv_HomMat2D);
-
-				SetColor(hv_WindowHandle, "red");
-				SetLineWidth(hv_WindowHandle, 5);
-
-				DispObj(ho_TransContours, hv_WindowHandle);
-			}
+				DrawContours(i);
 #endif // !NONE_UI
+			}
 		}
+		UpdateInfo(supreme_type);
 		if (m_bGrab && !CArmControlDlg::bArmBusy)
 		{
 			if (supreme_type >= 0)
@@ -387,3 +408,10 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 	return 0;
 }
 
+
+
+void CCameraDlg::UpdateInfo(int supreme)
+{
+	::PostMessage(CInfoDlg::hInfoDlg, USER_WM_UPDATEINFO,
+		(WPARAM)supreme, (LPARAM)&m_typeInfo);
+}

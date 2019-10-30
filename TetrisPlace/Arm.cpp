@@ -51,7 +51,7 @@ void Arm::InitArm()
 	try
 	{
 		char initBuff[100] =
-			"G95\r\nM1004 R0\r\nM2005\r\nM1006\r\n";
+			"M105\r\nM84\r\nG95\r\nM1004 R0\r\nM2005\r\nM1006\r\n";
 		m_w->send(initBuff, strlen(initBuff));
 	}
 	catch (...)
@@ -79,18 +79,6 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 	Calc_Angle(des_x, des_y, MOVE_Z);
 	double dAngleZ = angleZ1 - m_tAngle[Z] ;
 	double dSteerAngle = r - dAngleZ;
-	if (dSteerAngle > 180)dSteerAngle -= 360;
-	else if (dSteerAngle < -180)dSteerAngle += 360;
-	// revise steering engine
-	dSteerAngle *= 1.08;
-
-	if (dSteerAngle < 0) duration = SteerEngineTo(180);
-	else duration = SteerEngineTo(0);
-	if (duration > 0)
-		Sleep((int)duration);
-	GoSegTo(x, y);
-	Grab();
-	//GoSegTo(OFFSETX2, OFFSETY2);
 	int iSteerAngle = (int)dSteerAngle;
 	switch (symmetry)
 	{
@@ -103,7 +91,20 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 		iSteerAngle %= 90;
 		break;
 	}
-	Disgrab(des_x, des_y, (double)iSteerAngle);
+	dSteerAngle = (double)iSteerAngle;
+	// revise steering engine
+	dSteerAngle *= 1.08;
+
+	if (dSteerAngle > 180)dSteerAngle -= 360;
+	else if (dSteerAngle < -180)dSteerAngle += 360;
+
+	if (dSteerAngle < 0) duration = SteerEngineTo(180);
+	else duration = SteerEngineTo(0);
+	if (duration > 0)
+		Sleep((int)duration);
+	GoSegTo(x, y);
+	Grab();
+	Disgrab(des_x, des_y, dSteerAngle);
 	CArmControlDlg::bArmBusy = FALSE;
 }
 

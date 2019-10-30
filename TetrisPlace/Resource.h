@@ -14,6 +14,7 @@
 #define IDD_DIALOG_CAMERA               138
 #define IDD_DIALOG_CONNECT              140
 #define IDR_MENU_MAIN                   142
+#define IDD_DIALOG_INFO                 143
 #define IDC_COMBO_SERIAL                1000
 #define IDC_BUTTON_OPENPORT             1001
 #define IDC_EDIT_RX                     1002
@@ -30,7 +31,6 @@
 #define IDC_GCOOR                       1013
 #define IDC_STATIC_Y                    1014
 #define IDC_EDIT_Y                      1015
-#define IDC_STATIC_X3                   1016
 #define IDC_STATIC_Z                    1017
 #define IDC_EDIT_Z                      1018
 #define IDC_BUTTON_COORGO               1019
@@ -93,6 +93,7 @@
 #define IDC_BUTTON_XGO                  1077
 #define IDC_BUTTON_YGO                  1078
 #define IDC_BUTTON_ZGO                  1079
+#define IDC_LIST_RANK                   1080
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -103,9 +104,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32776
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1081
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -3,16 +3,25 @@
 #include "TetrisAI.h"
 using namespace HalconCpp;
 #define TYPE_COUNT 7
+#define GRID_DISTANCE	18
 
 typedef struct {
 	BOOL bExist;
+	int count;
+	int rank;
+	int grid_x;
+	int grid_y;
+	int grid_r;
+	int grid_toX;
+	int grid_toY;
+	int grid_toR;
 	double x;
 	double y;
-	double r;
 	double toX;
 	double toY;
-	double toR;
-	int rank;
+	double dx;
+	double dy;
+	double dr;
 }TypeInfo;
 
 // CCameraDlg 对话框
@@ -50,6 +59,7 @@ private:
 	int GetGridX(int type, int r, double col);
 	int GetGridY(int type, int r, double row);
 	int GetGridR(int type, double rot);
+	void DrawContours(int type);
 public:
 	BOOL m_bDistinguish;
 	BOOL m_bGrab;

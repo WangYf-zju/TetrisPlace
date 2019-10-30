@@ -122,30 +122,28 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	pSerialDlg->Create(IDD_DIALOG_SERIAL, &m_tab);
 	pSerialDlg->MoveWindow(10, 20, cRC.Width()*0.27 - 20, cRC.Height()*0.9 - 30);
 	pSerialDlg->ShowWindow(SW_HIDE);
-
-
 	pCntDlg = new CConnectDlg;
 	pCntDlg->Create(IDD_DIALOG_CONNECT, this);
 	pCntDlg->MoveWindow(20, 10, cRC.Width() - 40, cRC.Height()*0.073);
 	pCntDlg->ShowWindow(SW_SHOW);
 	pCameraDlg = new CCameraDlg;
 	pCameraDlg->Create(IDD_DIALOG_CAMERA, this);
-	pCameraDlg->MoveWindow(cRC.Width()*0.3, cRC.Height()*0.1, 
-		cRC.Width()*0.45, cRC.Height()*0.67);
+	pCameraDlg->MoveWindow(cRC.Width()*0.29, cRC.Height()*0.1, 
+		cRC.Width()*0.45, cRC.Height()*0.66);
 	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5,
-		cRC.Width()*0.45 - 10, cRC.Height()*0.67 - 10);
+		cRC.Width()*0.45 - 12, cRC.Height()*0.66 - 12);
 	pCameraDlg->ShowWindow(SW_SHOW);
 	pBoardDlg = new CBoardDlg;
 	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
-	pBoardDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.1, 
-		cRC.Width()*0.24, cRC.Height()*0.67);
+	pBoardDlg->MoveWindow(cRC.Width()*0.75, cRC.Height()*0.1, 
+		cRC.Width()*0.24, cRC.Height()*0.66);
 	pBoardDlg->InitDlg();
 	pBoardDlg->ShowWindow(SW_SHOW);
-	//pNextBlockDlg = new CNextBlockDlg;
-	//pNextBlockDlg->Create(IDD_DIALOG_NEXTBLOCK, this);
-	//pNextBlockDlg->MoveWindow(cRC.Width()*0.76, cRC.Height()*0.79,
-	//	cRC.Width()*0.24, cRC.Height()*0.21);
-	//pNextBlockDlg->ShowWindow(SW_SHOW);
+	pInfoDlg = new CInfoDlg;
+	pInfoDlg->Create(IDD_DIALOG_INFO, this);
+	pInfoDlg->MoveWindow(cRC.Width()*0.29, cRC.Height()*0.77,
+		cRC.Width()*0.7, cRC.Height()*0.225);
+	pInfoDlg->ShowWindow(SW_SHOW);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
