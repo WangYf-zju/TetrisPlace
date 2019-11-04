@@ -46,8 +46,6 @@ BOOL CSerialDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_bOpen = TRUE;
 	m_w = &((CTetrisPlaceDlg*)GetParent())->m_w;
-	//GetConnectedPort();
-	//hThread = CreateThread(NULL, 0, SerialThreadProc, this, 0, 0);
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
 }
@@ -86,62 +84,6 @@ void CSerialDlg::OnBnClickedButtonSend()
 }
 
 
-//void CSerialDlg::OnBnClickedButtonOpenport()
-//{
-//	// TODO: 在此添加控件通知处理程序代码	
-//	if (!m_bOpen)
-//	{
-//		int iCurSel = m_com.GetCurSel();
-//		if (iCurSel >= 0)
-//		{
-//			CString str;
-//			m_com.GetLBText(m_com.GetCurSel(), str);
-//			int portNo = str[3] - '0';
-//			CTetrisPlaceDlg * parentDlg = (CTetrisPlaceDlg*)GetParent();
-//			if (parentDlg->m_w.open(portNo, BAUDRATE,
-//				PARITY, DATABIT, STOPBIT, SYNCHRONIZE))
-//			{
-//				m_bOpen = TRUE;
-//				m_w = &parentDlg->m_w;
-//				GetDlgItem(IDC_BUTTON_OPENPORT)->SetWindowTextW(_T("关闭串口"));
-//				((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->EnableWindow(TRUE);
-//				if (MessageBox(_T("保留机械臂当前参数？"), _T("打开串口"),
-//					MB_YESNO) == IDYES)
-//				{
-//					parentDlg->pArmCtrlDlg->BindSerialPort(m_w, FALSE);
-//				}
-//				else
-//				{
-//					parentDlg->pArmCtrlDlg->BindSerialPort(m_w, TRUE);
-//				}
-//				hThread = CreateThread(NULL, 0, SerialThreadProc, this, 0, 0);
-//			}
-//			else
-//			{
-//				MessageBox(_T("串口连接失败"), _T("打开串口"));
-//			}
-//		}
-//		else
-//		{
-//			MessageBox(_T("请选择一个串口"), _T("打开串口"));
-//		}
-//	}
-//	else
-//	{
-//		m_w->close();
-//		GetDlgItem(IDC_BUTTON_OPENPORT)->SetWindowTextW(_T("打开串口"));
-//		((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->EnableWindow(FALSE);
-//		m_bOpen = FALSE;
-//		TerminateThread(hThread, 0);
-//	}
-//}
-//
-//
-//void CSerialDlg::OnBnClickedButtonRefresh()
-//{
-//	// TODO: 在此添加控件通知处理程序代码
-//	GetConnectedPort();
-//}
 
 void CSerialDlg::StartListenPort()
 {
@@ -162,11 +104,14 @@ DWORD WINAPI SerialThreadProc(LPVOID lpParam)
 		if (dlg->m_bOpen && dlg->m_w != nullptr)
 		{
 			int len = dlg->m_w->receive(buff, sizeof(buff) - 2);
-			buff[len - 1] = '\n';
-			buff[len] = 0;
-			CString str(buff);
-			dlg->m_receive += str;
-			dlg->UpdateReceive();
+			if (len > 0)
+			{
+				buff[len - 1] = '\n';
+				buff[len] = 0;
+				CString str(buff);
+				dlg->m_receive += str;
+				dlg->UpdateReceive();
+			}			
 		}
 	}
 	return 0;

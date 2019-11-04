@@ -160,6 +160,8 @@ int WzSerialPort::send(const void *buf,int len)
 				dwBytesWrite, //要发送的数据字节数
 				&dwBytesWrite, //DWORD*，用来接收返回成功发送的数据字节数
 				NULL); //NULL为同步发送，OVERLAPPED*为异步发送
+			// 清空发送缓冲区
+			PurgeComm(hCom, PURGE_TXCLEAR);
 			serialLock.unlock();
 			if (!bWriteStat)
 			{
@@ -198,6 +200,8 @@ int WzSerialPort::send(const void *buf,int len)
 					return 0;
 				}
 			}
+			// 清空发送缓冲区
+			PurgeComm(hCom, PURGE_TXCLEAR);
 			return dwBytesWrite;
 		}
 	}

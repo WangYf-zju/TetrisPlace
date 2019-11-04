@@ -51,7 +51,7 @@ void Arm::InitArm()
 	try
 	{
 		char initBuff[100] =
-			"M105\r\nM84\r\nG95\r\nM1004 R0\r\nM2005\r\nM1006\r\n";
+			"M105\r\nM84\r\nG95\r\nG93 X0 Y0 Z0\r\nM1004 R0\r\nM2005\r\nM1006\r\n";
 		m_w->send(initBuff, strlen(initBuff));
 	}
 	catch (...)

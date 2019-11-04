@@ -383,11 +383,11 @@ void CArmControlDlg::OnBnClickedButtonXgo()
 	UpdateData();
 	if (m_bRelative)
 	{
-		GoToR(m_AX, 0, 0);
+		GoToR(m_X, 0, 0);
 	}
 	else
 	{
-		GoTo(m_AX, m_pA->m_cCoor[1], m_pA->m_cCoor[2]);
+		GoTo(m_X, m_pA->m_cCoor[1], m_pA->m_cCoor[2]);
 	}
 }
 
@@ -398,11 +398,11 @@ void CArmControlDlg::OnBnClickedButtonYgo()
 	UpdateData();
 	if (m_bRelative)
 	{
-		GoToR(0, m_AY, 0);
+		GoToR(0, m_Y, 0);
 	}
 	else
 	{
-		GoTo(m_pA->m_cCoor[1], m_AY, m_pA->m_cCoor[2]);
+		GoTo(m_pA->m_cCoor[1], m_Y, m_pA->m_cCoor[2]);
 	}
 }
 
@@ -413,11 +413,11 @@ void CArmControlDlg::OnBnClickedButtonZgo()
 	UpdateData();
 	if (m_bRelative)
 	{
-		GoToR(0, 0, m_AZ);
+		GoToR(0, 0, m_Z);
 	}
 	else
 	{
-		GoTo(m_pA->m_cCoor[0], m_pA->m_cCoor[1], m_AZ);
+		GoTo(m_pA->m_cCoor[0], m_pA->m_cCoor[1], m_Z);
 	}
 }
 void CArmControlDlg::CorrectArm()

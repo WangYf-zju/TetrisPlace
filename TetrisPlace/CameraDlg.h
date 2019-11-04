@@ -81,6 +81,7 @@ public:
 		hv_Score[TYPE_COUNT],
 		hv_ModelID[TYPE_COUNT];
 
+	void UpdateInfo(int supreme);
 };
 
 DWORD WINAPI CameraThreadProc(LPVOID lpParam);

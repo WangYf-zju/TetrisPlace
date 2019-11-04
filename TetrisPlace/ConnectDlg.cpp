@@ -128,7 +128,7 @@ void CConnectDlg::Connect()
 		m_comPort.GetLBText(m_comPort.GetCurSel(), str);
 		int portNo = _ttoi(str.Mid(3, str.GetLength() - 3));
 		if (parentDlg->m_w.open(portNo, BAUDRATE,
-			PARITY, DATABIT, STOPBIT, SYNCHRONIZE))
+			PARITY, DATABIT, STOPBIT, SYNCHRONIZEFLAG))
 		{
 			m_bPortOpen = TRUE;
 			if (MessageBox(_T("重置机械臂参数？"), _T("连接"),
@@ -141,7 +141,7 @@ void CConnectDlg::Connect()
 				parentDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, FALSE);
 			}
 			parentDlg->pSerialDlg->BindSerialPort(&parentDlg->m_w);
-			//parentDlg->pSerialDlg->StartListenPort();
+			parentDlg->pSerialDlg->StartListenPort();
 		}
 		else
 		{

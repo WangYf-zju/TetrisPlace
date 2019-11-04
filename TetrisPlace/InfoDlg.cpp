@@ -102,24 +102,25 @@ void CInfoDlg::UpdateInfo(int supreme, TypeInfo * info)
 		for (int i = 0; i < TYPE_COUNT; i++)
 		{
 			CString str;
-			str.Format(_T("%d", info[i].count));
-			m_listRank.SetItemText(i, 1, str);
+			
 			if (info[i].count > 0)
 			{
-				str.Format(_T("%d", info[i].rank));
+				str.Format(_T("%d"), info[i].count);
+				m_listRank.SetItemText(i, 1, str);
+				str.Format(_T("%d"), info[i].rank);
 				m_listRank.SetItemText(i, 2, str);
-				str.Format("(%d,%d)", info[i].grid_x, info[i].grid_y);
+				str.Format(_T("(%d,%d)"), info[i].grid_x, info[i].grid_y);
 				m_listRank.SetItemText(i, 3, str);
-				str.Format("(%d,%d)", info[i].grid_toX, info[i].grid_toY);
+				str.Format(_T("(%d,%d)"), info[i].grid_toX, info[i].grid_toY);
 				m_listRank.SetItemText(i, 4, str);
-				str.Format("(%.1f,%.1f)", info[i].x, info[i].y);
+				str.Format(_T("(%.1f,%.1f)"), info[i].x, info[i].y);
 				m_listRank.SetItemText(i, 5, str);
-				str.Format("(%.1f,%.1f)", info[i].toX, info[i].toY);
+				str.Format(_T("(%.1f,%.1f)"), info[i].toX, info[i].toY);
 				m_listRank.SetItemText(i, 6, str);
 			}
 			else
 			{
-				m_listRank.SetItemText(i, 2, "");
+				m_listRank.SetItemText(i, 2, "0");
 				m_listRank.SetItemText(i, 3, "");
 				m_listRank.SetItemText(i, 4, "");
 				m_listRank.SetItemText(i, 5, "");
