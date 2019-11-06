@@ -72,6 +72,12 @@
     <ClInclude Include="InfoDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Parameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreSetDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TetrisPlace.cpp">
@@ -117,6 +123,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="InfoDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreSetDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

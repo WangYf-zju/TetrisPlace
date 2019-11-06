@@ -186,9 +186,11 @@
     <ClInclude Include="CameraDlg.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="ConnectDlg.h" />
+    <ClInclude Include="StoreSetDlg.h" />
     <ClInclude Include="InfoDlg.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="NextBlockDlg.h" />
+    <ClInclude Include="Parameter.h" />
     <ClInclude Include="SerialDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -206,8 +208,10 @@
     <ClCompile Include="BoardDlg.cpp" />
     <ClCompile Include="CameraDlg.cpp" />
     <ClCompile Include="ConnectDlg.cpp" />
+    <ClCompile Include="StoreSetDlg.cpp" />
     <ClCompile Include="InfoDlg.cpp" />
     <ClCompile Include="NextBlockDlg.cpp" />
+    <ClCompile Include="Parameter.cpp" />
     <ClCompile Include="SerialDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

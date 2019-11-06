@@ -15,6 +15,7 @@
 #define IDD_DIALOG_CONNECT              140
 #define IDR_MENU_MAIN                   142
 #define IDD_DIALOG_INFO                 143
+#define IDD_DIALOG_STORESETTING         145
 #define IDC_COMBO_SERIAL                1000
 #define IDC_BUTTON_OPENPORT             1001
 #define IDC_EDIT_RX                     1002
@@ -94,19 +95,52 @@
 #define IDC_BUTTON_YGO                  1078
 #define IDC_BUTTON_ZGO                  1079
 #define IDC_LIST_RANK                   1080
+#define IDC_RADIO_STORE1                1081
+#define IDC_RADIO_STORE2                1082
+#define IDC_STATIC_GSTORE               1083
+#define IDC_STORE_ROWDIS                1084
+#define IDC_STORE_COLDIS                1085
+#define IDC_STORE_X                     1086
+#define IDC_STORE_Y                     1087
+#define IDC_STORE_X0                    1089
+#define IDC_STORE_X1                    1090
+#define IDC_STORE_X2                    1091
+#define IDC_STORE_X3                    1092
+#define IDC_STORE_X4                    1093
+#define IDC_STORE_X5                    1094
+#define IDC_STORE_X6                    1095
+#define IDC_STORE_X7                    1096
+#define IDC_STORE_X8                    1097
+#define IDC_STORE_X9                    1098
+#define IDC_STORE_X10                   1099
+#define IDC_STORE_X11                   1100
+#define IDC_STORE_X12                   1101
+#define IDC_STORE_Y0                    1102
+#define IDC_STORE_Y1                    1103
+#define IDC_STORE_Y2                    1104
+#define IDC_STORE_Y3                    1105
+#define IDC_STORE_Y4                    1106
+#define IDC_STORE_Y5                    1107
+#define IDC_STORE_Y6                    1108
+#define IDC_STORE_Y7                    1109
+#define IDC_STORE_Y8                    1110
+#define IDC_STORE_Y9                    1111
+#define IDC_STORE_Y10                   1114
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
 #define ID_32774                        32774
 #define ID_32775                        32775
+#define ID_32776                        32776
+#define ID_32777                        32777
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        145
-#define _APS_NEXT_COMMAND_VALUE         32776
-#define _APS_NEXT_CONTROL_VALUE         1081
+#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_COMMAND_VALUE         32778
+#define _APS_NEXT_CONTROL_VALUE         1090
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -9,9 +9,6 @@
 #include "afxdialogex.h"
 #include "ArmControlDlg.h"
 
-
-const int RowBoundary[11] = { 13,66,121,181,238,296,354,412,470,533,590 };
-const int ColumnBoundary[13] = { 45,108,166,223,282,341,400,458,515,573,627,683,742 };
 const int AngleOffset[TYPE_COUNT] = { 180,270,0,0,0,0,180 };
 const double PictureXOffset[TYPE_COUNT][4] = {
 	{9,0,-9,0},{9,0,-9,0},{-9,0,-9,0},{-9,0,-9,0},{-9,-9,-9,-9},{0,-9,0,-9},{9,0,-9,0}
@@ -147,7 +144,7 @@ int CCameraDlg::GetGridX(int type, int r, double col)
 	int x = (int)(col + PictureXOffset[type][r] * SCALE_PICTURE);
 	for (int i = 0; i < 12; i++)
 	{
-		if (x > ColumnBoundary[i] && x < ColumnBoundary[i + 1])
+		if (x > CParameter::pStoreColBoundary[i] && x < CParameter::pStoreColBoundary[i + 1])
 		{
 			return i;
 		}
@@ -159,7 +156,7 @@ int CCameraDlg::GetGridY(int type, int r, double row)
 	int y = (int)(row + PictureYOffset[type][r] * SCALE_PICTURE);
 	for (int i = 0; i < 10; i++)
 	{
-		if (y > RowBoundary[i] && y < RowBoundary[i + 1])
+		if (y > CParameter::pStoreRowBoundary[i] && y < CParameter::pStoreRowBoundary[i + 1])
 		{
 			return 9 - i;
 		}
