@@ -44,6 +44,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	static HWND hCameraDlg;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnInitDialog();
 	BOOL StartCamera(int iCamera);
@@ -60,12 +61,17 @@ private:
 	int GetGridY(int type, int r, double row);
 	int GetGridR(int type, double rot);
 	void DrawContours(int type);
+	int * m_xBoundary;
+	int * m_yBoundary;
 public:
+	void DrawBoundary();
 	BOOL m_bDistinguish;
 	BOOL m_bGrab;
 	BOOL m_bStart;
 	BOOL m_bLoop;
 	BOOL m_bCorrect;
+	BOOL m_bDrawBoundary;
+	BOOL m_bBoundaryChange;
 	int m_cameraIndex;
 	TypeInfo m_typeInfo[TYPE_COUNT];
 	HANDLE hThread;
@@ -82,6 +88,8 @@ public:
 		hv_ModelID[TYPE_COUNT];
 
 	void UpdateInfo(int supreme);
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	afx_msg void OnPaint();
 };
 
 DWORD WINAPI CameraThreadProc(LPVOID lpParam);

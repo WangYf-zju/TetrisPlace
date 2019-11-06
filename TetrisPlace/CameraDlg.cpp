@@ -9,6 +9,9 @@
 #include "afxdialogex.h"
 #include "ArmControlDlg.h"
 
+
+HWND CCameraDlg::hCameraDlg = nullptr;
+
 const int AngleOffset[TYPE_COUNT] = { 180,270,0,0,0,0,180 };
 const double PictureXOffset[TYPE_COUNT][4] = {
 	{9,0,-9,0},{9,0,-9,0},{-9,0,-9,0},{-9,0,-9,0},{-9,-9,-9,-9},{0,-9,0,-9},{9,0,-9,0}
@@ -50,6 +53,7 @@ void CCameraDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CCameraDlg, CDialogEx)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -81,6 +85,9 @@ BOOL CCameraDlg::OnInitDialog()
 	m_bLoop = FALSE;
 	m_bStart = FALSE;
 	m_bCorrect = FALSE;
+	m_bDrawBoundary = FALSE;
+	m_bBoundaryChange = FALSE;
+	hCameraDlg = this->m_hWnd;
 	try
 	{
 		for (int i = 0; i < TYPE_COUNT; i++)
@@ -206,6 +213,23 @@ void CCameraDlg::DrawContours(int type)
 
 	DispObj(ho_TransContours, hv_WindowHandle);
 }
+
+void CCameraDlg::DrawBoundary()
+{
+	//m_bDrawBoundary = FALSE;
+	HObject hBoundary;
+	for (int i = 0; i < STORE_COL_BOUNDARY_COUNT; i++)
+	{
+		GenRegionLine(&hBoundary, 0, m_xBoundary[i], CAMERA_Y_PX, m_xBoundary[i]);
+		DispObj(hBoundary, hv_WindowHandle);
+	}
+	for (int i = 0; i < STORE_ROW_BOUNDARY_COUNT; i++)
+	{
+		GenRegionLine(&hBoundary, m_yBoundary[i], 0, m_yBoundary[i], CAMERA_X_PX);
+		DispObj(hBoundary, hv_WindowHandle);
+	}
+}
+
 
 void CCameraDlg::Distinguish()
 {
@@ -398,16 +422,25 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		ReduceDomain(ho_ImageReduce, ho_ConnectedRegions, &ho_ImageReduce1);
 
 		SetPart(dlg->hv_WindowHandle, 0, 0, dlg->hl_height, dlg->hl_width);
-		DispObj(dlg->ho_Image, dlg->hv_WindowHandle);
-		if (dlg->m_bDistinguish)
+		if (!dlg->m_bDrawBoundary || dlg->m_bBoundaryChange)
 		{
-			dlg->Distinguish();
+			DispObj(dlg->ho_Image, dlg->hv_WindowHandle);
+			if (dlg->m_bDistinguish)
+			{
+				dlg->Distinguish();
+			}
+			dlg->m_bBoundaryChange = FALSE;
+		}
+		else
+		{
+			dlg->DrawBoundary();
 		}
 		if (dlg->m_bCorrect)
 		{
 			dlg->CorrectArm();
+			Sleep(1000);
 		}
-		Sleep(1000);
+		Sleep(500);
 	}
 	return 0;
 }
@@ -418,4 +451,33 @@ void CCameraDlg::UpdateInfo(int supreme)
 {
 	::PostMessage(CInfoDlg::hInfoDlg, USER_WM_UPDATEINFO,
 		(WPARAM)supreme, (LPARAM)&m_typeInfo);
+}
+
+
+LRESULT CCameraDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	switch (message)
+	{
+	case USER_WM_DRAWBOUNDARY:
+		m_xBoundary = (int*)(((LPARAM*)lParam)[0]);
+		m_yBoundary = (int*)(((LPARAM*)lParam)[1]);
+		m_bDrawBoundary = TRUE;
+		m_bBoundaryChange = TRUE;
+		break;
+	case USER_WM_DISDRAWBOUNDARY:
+		m_bDrawBoundary = FALSE;
+		m_bBoundaryChange = FALSE;
+		break;
+	}
+	return CDialogEx::WindowProc(message, wParam, lParam);
+}
+
+
+void CCameraDlg::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+					   // TODO: 在此处添加消息处理程序代码
+					   // 不为绘图消息调用 CDialogEx::OnPaint()
+
 }

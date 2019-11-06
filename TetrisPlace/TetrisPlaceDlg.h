@@ -13,6 +13,7 @@
 #include "InfoDlg.h"
 #include "third-party/WzSerialPort.h"
 #include "Arm.h"
+#include "StoreSetDlg.h"
 
 #define BAUDRATE	115200
 #define PARITY		0
@@ -63,4 +64,5 @@ public:
 	CTabCtrl m_tab;
 	afx_msg void OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	afx_msg void OnMenuStoreset();
 };

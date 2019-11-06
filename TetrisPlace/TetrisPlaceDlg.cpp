@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_SERIAL, &CTetrisPlaceDlg::OnTcnSelchangeTabSerial)
+	ON_COMMAND(ID_MENU_STORESET, &CTetrisPlaceDlg::OnMenuStoreset)
 END_MESSAGE_MAP()
 
 
@@ -241,4 +242,12 @@ LRESULT CTetrisPlaceDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return CDialogEx::WindowProc(message, wParam, lParam);
+}
+
+
+void CTetrisPlaceDlg::OnMenuStoreset()
+{
+	// TODO: 在此添加命令处理程序代码
+	CStoreSetDlg storeSetDlg;
+	storeSetDlg.DoModal();
 }
