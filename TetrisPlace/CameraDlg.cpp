@@ -363,7 +363,8 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 	HWND hImgWnd = dlg->GetDlgItem(IDC_PICTURE)->m_hWnd;
 
 	HObject  ho_MapFixed;
-	HObject  ho_Region, ho_RegionClosing, ho_ConnectedRegions;
+	HObject  ho_Region, ho_RegionClosing, ho_RegionOpening, ho_ConnectedRegions, ho_Gauss, ho_ROI;
+	HObject  ho_ImageReduce, ho_ImageReduce1;
 	HTuple  hv_CamParVirtualFixed, hv_CamParOriginal;
 	
 	while (1 && dlg->m_bStart)
@@ -371,25 +372,31 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		GrabImageAsync(&dlg->ho_Image, dlg->hv_AcqHandle, -1);
 
 		hv_CamParOriginal.Clear();
-		hv_CamParOriginal[0] = 0.0062502;
-		hv_CamParOriginal[1] = -6349.24;
-		hv_CamParOriginal[2] = 8.25879e-006;
+		hv_CamParOriginal[0] = 0.00652862;
+		hv_CamParOriginal[1] = -9224.01;
+		hv_CamParOriginal[2] = 8.30004e-006;
 		hv_CamParOriginal[3] = 8.3e-006;
-		hv_CamParOriginal[4] = 402.971;
-		hv_CamParOriginal[5] = 307.108;
-		hv_CamParOriginal[6] = 800;
-		hv_CamParOriginal[7] = 600;
+		hv_CamParOriginal[4] = 323.226;
+		hv_CamParOriginal[5] = 226.988;
+		hv_CamParOriginal[6] = 640;
+		hv_CamParOriginal[7] = 480;
 		hv_CamParVirtualFixed = hv_CamParOriginal;
 		hv_CamParVirtualFixed[1] = 0;
-		GenRadialDistortionMap(&ho_MapFixed, hv_CamParOriginal, hv_CamParVirtualFixed,
-			"bilinear");
+		GenRadialDistortionMap(&ho_MapFixed, hv_CamParOriginal, hv_CamParVirtualFixed,"bilinear");
 		MapImage(dlg->ho_Image, ho_MapFixed, &dlg->ho_Image);//纠正相机畸变
 
-		Threshold(dlg->ho_Image, &ho_Region, 128, 255);
+		GaussFilter(dlg->ho_Image, &ho_Gauss, 5);
+	
+		GenRectangle1(&ho_ROI, 58.3, 61.5, 438.3, 511.1);
+		ReduceDomain(ho_Gauss, ho_ROI, &ho_ImageReduce);
 
-		OpeningCircle(ho_Region, &ho_RegionClosing, 5);
+		Threshold(ho_ImageReduce, &ho_Region, 145, 255);
+		OpeningCircle(ho_Region, &ho_RegionOpening, 1.5);
+		ClosingCircle(ho_RegionOpening, &ho_RegionClosing, 1.5);
+
 		Connection(ho_RegionClosing, &ho_ConnectedRegions);
-		SelectShape(ho_ConnectedRegions, &dlg->ho_SelectedRegions, "area", "and", 10000, 50000);
+		ReduceDomain(ho_ImageReduce, ho_ConnectedRegions, &ho_ImageReduce1);
+
 		SetPart(dlg->hv_WindowHandle, 0, 0, dlg->hl_height, dlg->hl_width);
 		DispObj(dlg->ho_Image, dlg->hv_WindowHandle);
 		if (dlg->m_bDistinguish)
