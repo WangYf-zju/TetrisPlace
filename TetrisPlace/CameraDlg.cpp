@@ -12,7 +12,7 @@
 
 HWND CCameraDlg::hCameraDlg = nullptr;
 
-const int AngleOffset[TYPE_COUNT] = { 180,270,0,0,0,0,180 };
+const int AngleOffset[TYPE_COUNT] = { 90,90,90,90,90,90,90 };
 const double PictureXOffset[TYPE_COUNT][4] = {
 	{9,0,-9,0},{9,0,-9,0},{-9,0,-9,0},{-9,0,-9,0},{-9,-9,-9,-9},{0,-9,0,-9},{9,0,-9,0}
 };

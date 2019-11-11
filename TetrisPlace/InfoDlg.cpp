@@ -48,8 +48,8 @@ BOOL CInfoDlg::OnInitDialog()
 	m_listRank.InsertColumn(0, _T("序号"), LVCFMT_LEFT, 40);
 	m_listRank.InsertColumn(1, _T("数量"), LVCFMT_LEFT, 40);
 	m_listRank.InsertColumn(2, _T("分数"), LVCFMT_LEFT, 40);
-	m_listRank.InsertColumn(3, _T("位置(x,y)"), LVCFMT_LEFT, 80);
-	m_listRank.InsertColumn(4, _T("放置(x,y)"), LVCFMT_LEFT, 80);
+	m_listRank.InsertColumn(3, _T("位置(x,y,r)"), LVCFMT_LEFT, 80);
+	m_listRank.InsertColumn(4, _T("放置(x,y,r)"), LVCFMT_LEFT, 80);
 	m_listRank.InsertColumn(5, _T("实际位置(x,y)"), LVCFMT_LEFT, 100);
 	m_listRank.InsertColumn(6, _T("实际放置(x,y)"), LVCFMT_LEFT, 100);
 	m_listRank.InsertColumn(7, _T("行程(x,y,r)"), LVCFMT_LEFT, 100);
@@ -109,9 +109,9 @@ void CInfoDlg::UpdateInfo(int supreme, TypeInfo * info)
 				m_listRank.SetItemText(i, 1, str);
 				str.Format(_T("%d"), info[i].rank);
 				m_listRank.SetItemText(i, 2, str);
-				str.Format(_T("(%d,%d)"), info[i].grid_x, info[i].grid_y);
+				str.Format(_T("(%d,%d,%d)"), info[i].grid_x, info[i].grid_y, info[i].grid_r);
 				m_listRank.SetItemText(i, 3, str);
-				str.Format(_T("(%d,%d)"), info[i].grid_toX, info[i].grid_toY);
+				str.Format(_T("(%d,%d,%d)"), info[i].grid_toX, info[i].grid_toY, info[i].grid_toR);
 				m_listRank.SetItemText(i, 4, str);
 				str.Format(_T("(%.1f,%.1f)"), info[i].x, info[i].y);
 				m_listRank.SetItemText(i, 5, str);

@@ -2,16 +2,16 @@
 
 #include "third-party/WzSerialPort.h"
 #define GRAB_Z	15.0
-#define DISGRAB_Z 23.0
-#define MOVE_Z	40.0
+#define DISGRAB_Z 40.0
+#define MOVE_Z	45.0
 #define ARM_SPEED 12 // degree per second
 #define STEERING_SPEED 180
 
 
-#define OFFSETX1	9.81
-#define OFFSETY1	59.85
-#define OFFSETX2	-69.81
-#define OFFSETY2	257.25
+#define OFFSETX1	48
+#define OFFSETY1	74
+#define OFFSETX2	17
+#define OFFSETY2	294
 
 class Arm
 {
@@ -47,7 +47,7 @@ private:
 
 
 public:
-	static const enum startCoor { startX = 140, startY = -102, startZ = -105 };
+	static const enum startCoor { startX = 96, startY = -145, startZ = -100 };
 	double m_cCoor[3];
 	double m_cAngle[3];
 	double m_steerAngle;

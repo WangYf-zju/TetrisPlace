@@ -19,7 +19,7 @@
 #define PARITY		0
 #define DATABIT		8
 #define STOPBIT		0
-#define SYNCHRONIZEFLAG	0
+#define SYNCHRONIZEFLAG	1
 
 
 // CTetrisPlaceDlg 对话框

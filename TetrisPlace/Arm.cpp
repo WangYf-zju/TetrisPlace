@@ -51,7 +51,7 @@ void Arm::InitArm()
 	try
 	{
 		char initBuff[100] =
-			"M105\r\nM84\r\nG95\r\nG93 X0 Y0 Z0\r\nM1004 R0\r\nM2005\r\nM1006\r\n";
+			"M84\nG95\nM1004 R0\nM2005\nM1006\n";
 		m_w->send(initBuff, strlen(initBuff));
 	}
 	catch (...)
@@ -143,7 +143,7 @@ double Arm::GoTo(double x, double y, double z/*=MOVE_Z*/)
 	m_cAngle[Y] = m_tAngle[Y];
 	m_cAngle[Z] = m_tAngle[Z];
 	char buff[100] = { 0 };
-	sprintf_s(buff, "G1 X%.6f Y%.6f Z%.6f\r\n", 
+	sprintf_s(buff, "G1 X%.6f Y%.6f Z%.6f\n", 
 		m_dAngle[X], m_dAngle[Y], m_dAngle[Z]);
 	m_w->send(buff, strlen(buff));
 	m_cCoor[X] = x;
@@ -190,9 +190,9 @@ double Arm::GoAngleTo(double x, double y, double z)
 	m_cAngle[Y] = y;
 	m_cAngle[Z] = z;
 	char buff[100] = { 0 };
-	m_w->send("G95\r\n", 5);
+	m_w->send("G95\n", 4);
 	Sleep(100);
-	sprintf_s(buff, "G1 X%.6f Y%.6f Z%.6f\r\n",
+	sprintf_s(buff, "G1 X%.6f Y%.6f Z%.6f\n",
 		m_dAngle[X], m_dAngle[Y], m_dAngle[Z]);
 	m_w->send(buff, strlen(buff));
 	
@@ -213,7 +213,7 @@ void Arm::GoAngleToR(double dx, double dy, double dz)
 double Arm::SteerEngineTo(double r)
 {
 	char buff[100] = { 0 };
-	sprintf_s(buff, "M1004 R%.1f\r\n", r);
+	sprintf_s(buff, "M1004 R%.1f\n", r);
 	m_w->send(buff, strlen(buff));
 	double duration = fabs(m_steerAngle - r) / STEERING_SPEED;
 	m_steerAngle = r;
@@ -245,21 +245,21 @@ void Arm::SetAngle(double x, double y, double z)
 void Arm::OpenPump()
 {
 	char buff[100] = { 0 };
-	sprintf_s(buff, "M2006\r\nM1005\r\n");
+	sprintf_s(buff, "M2006\nM1005\n");
 	m_w->send(buff, strlen(buff));
 }
 
 void Arm::ClosePump()
 {
 	char buff[100] = { 0 };
-	sprintf_s(buff, "M2005\r\nM1006\r\n");
+	sprintf_s(buff, "M2005\nM1006\n");
 	m_w->send(buff, strlen(buff));
 }
 
 void Arm::UnlockMotor()
 {
 	char buff[100] = { 0 };
-	sprintf_s(buff, "M84\r\n");
+	sprintf_s(buff, "M84\n");
 	m_w->send(buff, strlen(buff));
 }
 
