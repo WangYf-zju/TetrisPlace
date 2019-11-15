@@ -182,6 +182,7 @@
   <ItemGroup>
     <ClInclude Include="Arm.h" />
     <ClInclude Include="ArmControlDlg.h" />
+    <ClInclude Include="ArmSetDlg.h" />
     <ClInclude Include="BoardDlg.h" />
     <ClInclude Include="CameraDlg.h" />
     <ClInclude Include="config.h" />
@@ -205,6 +206,7 @@
   <ItemGroup>
     <ClCompile Include="Arm.cpp" />
     <ClCompile Include="ArmControlDlg.cpp" />
+    <ClCompile Include="ArmSetDlg.cpp" />
     <ClCompile Include="BoardDlg.cpp" />
     <ClCompile Include="CameraDlg.cpp" />
     <ClCompile Include="ConnectDlg.cpp" />
@@ -233,6 +235,10 @@
     <None Include="res\TetrisPlace.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\icon1.ico" />
+    <Image Include="res\stop.bmp" />
+    <Image Include="res\stop.ico" />
+    <Image Include="res\stop.png" />
     <Image Include="res\TetrisPlace.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -56,6 +56,7 @@ CTetrisPlaceDlg::CTetrisPlaceDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_TETRISPLACE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_bCreate = FALSE;
 }
 
 void CTetrisPlaceDlg::DoDataExchange(CDataExchange* pDX)
@@ -70,6 +71,12 @@ BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_SERIAL, &CTetrisPlaceDlg::OnTcnSelchangeTabSerial)
 	ON_COMMAND(ID_MENU_STORESET, &CTetrisPlaceDlg::OnMenuStoreset)
+	ON_WM_SIZE()
+	ON_WM_CLOSE()
+	ON_WM_HSCROLL()
+	ON_WM_VSCROLL()
+	ON_COMMAND(ID_MENU_ARMSET, &CTetrisPlaceDlg::OnMenuArmset)
+	ON_STN_DBLCLK(IDC_EMERGENCY, &CTetrisPlaceDlg::OnStnDblclickEmergency)
 END_MESSAGE_MAP()
 
 
@@ -105,49 +112,68 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	
-
 	ShowWindow(SW_MAXIMIZE);
-	CRect cRC;
-	GetClientRect(&cRC);
-	int margin = 10;
 
 	m_tab.InsertItem(0, _T("电机控制"));
 	m_tab.InsertItem(1, _T("串口"));
-	m_tab.MoveWindow(20, cRC.Height()*0.1, cRC.Width()*0.27, cRC.Height()*0.9);
 	pArmCtrlDlg = new CArmControlDlg;
 	pArmCtrlDlg->Create(IDD_DIALOG_ARMCONTROL, &m_tab);
-	pArmCtrlDlg->MoveWindow(10, 20, cRC.Width()*0.27 - 20, cRC.Height()*0.9 - 30);
 	pArmCtrlDlg->ShowWindow(SW_SHOW);
 	pSerialDlg = new CSerialDlg;
 	pSerialDlg->Create(IDD_DIALOG_SERIAL, &m_tab);
-	pSerialDlg->MoveWindow(10, 20, cRC.Width()*0.27 - 20, cRC.Height()*0.9 - 30);
 	pSerialDlg->ShowWindow(SW_HIDE);
 	pCntDlg = new CConnectDlg;
 	pCntDlg->Create(IDD_DIALOG_CONNECT, this);
-	pCntDlg->MoveWindow(20, 10, cRC.Width() - 40, cRC.Height()*0.073);
 	pCntDlg->ShowWindow(SW_SHOW);
 	pCameraDlg = new CCameraDlg;
 	pCameraDlg->Create(IDD_DIALOG_CAMERA, this);
-	pCameraDlg->MoveWindow(cRC.Width()*0.29, cRC.Height()*0.1, 
-		cRC.Width()*0.45, cRC.Height()*0.66);
-	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5,
-		cRC.Width()*0.45 - 12, cRC.Height()*0.66 - 12);
 	pCameraDlg->ShowWindow(SW_SHOW);
 	pBoardDlg = new CBoardDlg;
 	pBoardDlg->Create(IDD_DIALOG_BOARD, this);
-	pBoardDlg->MoveWindow(cRC.Width()*0.75, cRC.Height()*0.1, 
-		cRC.Width()*0.24, cRC.Height()*0.66);
-	pBoardDlg->InitDlg();
 	pBoardDlg->ShowWindow(SW_SHOW);
 	pInfoDlg = new CInfoDlg;
 	pInfoDlg->Create(IDD_DIALOG_INFO, this);
-	pInfoDlg->MoveWindow(cRC.Width()*0.29, cRC.Height()*0.77,
-		cRC.Width()*0.7, cRC.Height()*0.225);
 	pInfoDlg->ShowWindow(SW_SHOW);
+	m_bCreate = TRUE;
+	UpdateWindowPos();
+
+	SetScrollRange(SB_VERT, 0, 50, FALSE);
+	SetScrollRange(SB_HORZ, 0, 50, FALSE);
+	SCROLLINFO info;
+	info.cbSize = sizeof(SCROLLINFO);
+	info.fMask = SIF_PAGE;
+	info.nPage = 50;
+	SetScrollInfo(SB_VERT, &info, FALSE);
+	SetScrollInfo(SB_HORZ, &info, FALSE);
+	SetScrollPos(SB_VERT, 0);
+	SetScrollPos(SB_HORZ, 0);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
+
+
+void CTetrisPlaceDlg::OnClose()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	int oper = MessageBox(_T("是否当前设定的保存参数？"), _T("俄罗斯方块"), MB_YESNOCANCEL);
+	switch (oper)
+	{
+	case IDYES:
+		// TODO: 
+		m_w.close();
+		break;
+	case IDNO:
+		// TODO: 
+		m_w.close();
+		break;
+	case IDCANCEL:
+	default:
+		return;
+	}
+
+	CDialogEx::OnClose();
+}
+
 
 void CTetrisPlaceDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
@@ -245,9 +271,89 @@ LRESULT CTetrisPlaceDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
+
+void CTetrisPlaceDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+	if (m_bCreate)
+	{
+		UpdateWindowPos();
+		int sx = GetSystemMetrics(SM_CXFULLSCREEN);
+		int sy = GetSystemMetrics(SM_CYFULLSCREEN);
+		
+		SCROLLINFO v_info, h_info;
+		v_info.cbSize = sizeof(SCROLLINFO);
+		v_info.fMask = SIF_PAGE;
+		v_info.nPage = 50 * cy / sy;
+		SetScrollInfo(SB_VERT, &v_info);
+		h_info.cbSize = sizeof(SCROLLINFO);
+		h_info.fMask = SIF_PAGE;
+		h_info.nPage = 50 * cx / sx;
+		SetScrollInfo(SB_HORZ, &h_info);
+	}
+}
+
+
 void CTetrisPlaceDlg::OnMenuStoreset()
 {
 	// TODO: 在此添加命令处理程序代码
 	CStoreSetDlg storeSetDlg;
 	storeSetDlg.DoModal();
+}
+
+void CTetrisPlaceDlg::UpdateWindowPos()
+{
+	int cx = GetSystemMetrics(SM_CXFULLSCREEN) - GetSystemMetrics(SM_CXVSCROLL);
+	int cy = GetSystemMetrics(SM_CYFULLSCREEN) - GetSystemMetrics(SM_CYSIZE)
+		- GetSystemMetrics(SM_CYVSCROLL);
+	CRect rc(0,0,cx,cy);
+	int margin = 10;
+
+	m_tab.MoveWindow(20, rc.Height()*0.1, rc.Width()*0.27, rc.Height()*0.9);
+	pArmCtrlDlg->MoveWindow(10, 20, rc.Width()*0.27 - 20, rc.Height()*0.9 - 30);
+	pSerialDlg->MoveWindow(10, 20, rc.Width()*0.27 - 20, rc.Height()*0.9 - 30);
+	pCntDlg->MoveWindow(20, 10, rc.Width() - 40, rc.Height()*0.073);
+	pCameraDlg->MoveWindow(rc.Width()*0.29, rc.Height()*0.1,
+		rc.Width()*0.45, rc.Height()*0.66);
+	pCameraDlg->GetDlgItem(IDC_PICTURE)->MoveWindow(5, 5,
+		rc.Width()*0.45 - 12, rc.Height()*0.66 - 12);
+	pBoardDlg->MoveWindow(rc.Width()*0.75, rc.Height()*0.1,
+		rc.Width()*0.24, rc.Height()*0.66);
+	pBoardDlg->InitDlg();
+	pInfoDlg->MoveWindow(rc.Width()*0.29, rc.Height()*0.77,
+		rc.Width()*0.57, rc.Height()*0.225);
+	GetDlgItem(IDC_EMERGENCY)->MoveWindow(rc.Width()*0.87, rc.Height()*0.78, 
+		rc.Width()*0.12, rc.Height()*0.21);
+}
+
+
+void CTetrisPlaceDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	SetScrollPos(SB_HORZ, nPos, TRUE);
+	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
+}
+
+
+void CTetrisPlaceDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	SetScrollPos(SB_VERT, nPos, TRUE);
+	CDialogEx::OnVScroll(nSBCode, nPos, pScrollBar);
+}
+
+
+void CTetrisPlaceDlg::OnMenuArmset()
+{
+	// TODO: 在此添加命令处理程序代码
+	CArmSetDlg ArmSetDlg;
+	ArmSetDlg.DoModal();
+}
+
+
+void CTetrisPlaceDlg::OnStnDblclickEmergency()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	pArmCtrlDlg->m_pA->EmgerencyStop();
+	MessageBox(_T("机械臂以紧急停止，请重新连接"));
 }

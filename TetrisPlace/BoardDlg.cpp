@@ -176,10 +176,13 @@ void CBoardDlg::InitDlg()
 	CRect rc;
 	GetClientRect(&rc);
 	m_sideLength = (rc.Width() - 20) / COL;
+	m_memDC.DeleteDC();
 	m_memDC.CreateCompatibleDC(this->GetDC());
+	m_memBmp.DeleteObject();
 	m_memBmp.CreateCompatibleBitmap(GetDC(), rc.Width(), rc.Height());
 	m_memDC.SelectObject(&m_memBmp);
 	DrawClient();
+	Invalidate(FALSE);
 }
 
 
@@ -252,6 +255,5 @@ void CBoardDlg::OnBnClickedButtonAddtetris()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	CNextBlockDlg NextDlg;
-	//NextDlg.Create(IDD_DIALOG_NEXTBLOCK, this);
 	NextDlg.DoModal();
 }

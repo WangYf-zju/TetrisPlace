@@ -108,6 +108,7 @@ public:
 	afx_msg void OnBnClickedButtonXgo();
 	afx_msg void OnBnClickedButtonYgo();
 	afx_msg void OnBnClickedButtonZgo();
+	afx_msg void OnBnClickedButtonLock();
 };
 
 DWORD  WINAPI ArmCtrlThreadProc(LPVOID lpParam);

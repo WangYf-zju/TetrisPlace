@@ -16,6 +16,8 @@
 #define IDR_MENU_MAIN                   142
 #define IDD_DIALOG_INFO                 143
 #define IDD_DIALOG_STORESETTING         145
+#define IDD_DIALOG_ARMSETTING           149
+#define IDB_BITMAP_STOP                 155
 #define IDC_COMBO_SERIAL                1000
 #define IDC_BUTTON_OPENPORT             1001
 #define IDC_EDIT_RX                     1002
@@ -69,6 +71,7 @@
 #define IDC_EDIT_MOVEY                  1051
 #define IDC_STATIC_ToX                  1052
 #define IDC_EDIT_MOVEX2                 1053
+#define IDC_BUTTON_LOCK                 1053
 #define IDC_EDIT_MOVEToX                1054
 #define IDC_STATIC_ToY                  1055
 #define IDC_EDIT_MOVEY2                 1056
@@ -129,6 +132,10 @@
 #define IDC_STORE_CANCEL                1113
 #define IDC_STORE_Y10                   1114
 #define IDC_STORE_DEFAULT               1115
+#define IDC_ARM_STARTX                  1117
+#define IDC_ARM_STARTY                  1118
+#define IDC_ARM_STARTZ                  1119
+#define IDC_EMERGENCY                   1120
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -137,14 +144,15 @@
 #define ID_32776                        32776
 #define ID_32777                        32777
 #define ID_MENU_STORESET                32778
+#define ID_MENU_ARMSET                  32779
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        149
-#define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         1117
+#define _APS_NEXT_RESOURCE_VALUE        156
+#define _APS_NEXT_COMMAND_VALUE         32780
+#define _APS_NEXT_CONTROL_VALUE         1121
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

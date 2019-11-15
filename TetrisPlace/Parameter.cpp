@@ -33,6 +33,9 @@ int StoreColBoundary[STORE_COL_BOUNDARY_COUNT] = {
 int * CParameter::pStoreRowBoundary = StoreRowBoundary;
 int * CParameter::pStoreColBoundary = StoreColBoundary;
 
+int CParameter::startX = DEFAULT_ARM_STARTX;
+int CParameter::startY = DEFAULT_ARM_STARTY;
+int CParameter::startZ = DEFAULT_ARM_STARTZ;
 CParameter::CParameter()
 {
 }

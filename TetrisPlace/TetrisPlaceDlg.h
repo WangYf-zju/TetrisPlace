@@ -14,6 +14,7 @@
 #include "third-party/WzSerialPort.h"
 #include "Arm.h"
 #include "StoreSetDlg.h"
+#include "ArmSetDlg.h"
 
 #define BAUDRATE	115200
 #define PARITY		0
@@ -44,9 +45,11 @@ protected:
 
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
+	afx_msg void OnClose();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 	DECLARE_MESSAGE_MAP()
 
 public:
@@ -57,7 +60,7 @@ public:
 	CCameraDlg * pCameraDlg;
 	CInfoDlg * pInfoDlg;
 	WzSerialPort m_w;
-	Arm m_a;
+	BOOL m_bCreate;
 
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -65,4 +68,9 @@ public:
 	afx_msg void OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	afx_msg void OnMenuStoreset();
+	void UpdateWindowPos();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnMenuArmset();
+	afx_msg void OnStnDblclickEmergency();
 };

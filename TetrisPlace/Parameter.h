@@ -7,5 +7,9 @@ public:
 
 	static int * pStoreRowBoundary;
 	static int * pStoreColBoundary;
+
+	static int startX;
+	static int startY;
+	static int startZ;
 };
 

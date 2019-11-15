@@ -79,24 +79,25 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 	Calc_Angle(des_x, des_y, MOVE_Z);
 	double dAngleZ = angleZ1 - m_tAngle[Z] ;
 	double dSteerAngle = r - dAngleZ;
-	int iSteerAngle = (int)dSteerAngle;
-	switch (symmetry)
-	{
-	case 0:
-		break;
-	case 1:
-		iSteerAngle %= 180;
-		break;
-	case 2:
-		iSteerAngle %= 90;
-		break;
-	}
-	dSteerAngle = (double)iSteerAngle;
+	//int iSteerAngle = (int)dSteerAngle;
+	//switch (symmetry)
+	//{
+	//case 0:
+	//	break;
+	//case 1:
+	//	iSteerAngle %= 180;
+	//	break;
+	//case 2:
+	//	iSteerAngle %= 90;
+	//	break;
+	//}
+	//dSteerAngle = (double)iSteerAngle;
 	// revise steering engine
-	dSteerAngle *= 1.08;
 
 	if (dSteerAngle > 180)dSteerAngle -= 360;
 	else if (dSteerAngle < -180)dSteerAngle += 360;
+
+	dSteerAngle *= 1.08;
 
 	if (dSteerAngle < 0) duration = SteerEngineTo(180);
 	else duration = SteerEngineTo(0);
@@ -265,8 +266,16 @@ void Arm::UnlockMotor()
 
 void Arm::LockMotor()
 {
-	GoAngleToR(0.1, 0, 0);
-	GoAngleToR(-0.1, 0, 0);
+	char buff[100] = { 0 };
+	sprintf_s(buff, "M17\n");
+	m_w->send(buff, strlen(buff));
+}
+
+void Arm::EmgerencyStop()
+{
+	char buff[100] = { 0 };
+	sprintf_s(buff, "M112\n");
+	m_w->send(buff, strlen(buff));
 }
 
 void Arm::InitAngle()
@@ -306,7 +315,9 @@ const double OA = 31; const double BC = 31; const double AB = 136; const double 
 const double BD = 191; const double DE = 73; const double EF = 58;
 void Arm::Calc_Angle(double x, double y, double z)
 {
-	double Xf = x + startX, Yf = y + startY, Zf = z + startZ;
+	double Xf = x + CParameter::startX,
+		Yf = y + CParameter::startY,
+		Zf = z + CParameter::startZ;
 
 	// Quadrant 1,4
 	if (Xf >= 0 && Yf > 0 || Xf >= 0 && Yf <= 0)
@@ -353,9 +364,9 @@ void Arm::Calc_Coor(double ax, double ay, double az)
 	double Xd = Xb + (Xc - Xb) / BC * BD;
 	double Yd = Yb + (Yc - Yb) / BC * BD;
 	double Xf = Xd + DE; double Yf = Yd - EF;
-	m_tCoor[X] = cos(ang_Z) * Xf - startX;
-	m_tCoor[Y] = sin(ang_Z) * Xf - startY;
-	m_tCoor[Z] = Yf - startZ;
+	m_tCoor[X] = cos(ang_Z) * Xf - CParameter::startX;
+	m_tCoor[Y] = sin(ang_Z) * Xf - CParameter::startY;
+	m_tCoor[Z] = Yf - CParameter::startZ;
 }
 
 #undef X

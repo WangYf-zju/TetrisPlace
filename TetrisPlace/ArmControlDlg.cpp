@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CArmControlDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_XGO, &CArmControlDlg::OnBnClickedButtonXgo)
 	ON_BN_CLICKED(IDC_BUTTON_YGO, &CArmControlDlg::OnBnClickedButtonYgo)
 	ON_BN_CLICKED(IDC_BUTTON_ZGO, &CArmControlDlg::OnBnClickedButtonZgo)
+	ON_BN_CLICKED(IDC_BUTTON_LOCK, &CArmControlDlg::OnBnClickedButtonLock)
 END_MESSAGE_MAP()
 
 
@@ -236,7 +237,15 @@ void CArmControlDlg::OnBnClickedButtonUnlock()
 	// TODO: 在此添加控件通知处理程序代码
 	m_pA->UnlockMotor();
 	m_bLock = FALSE;
-	GetDlgItem(IDC_BUTTON_UNLOCK)->SetWindowText(_T("电机解锁"));
+	UpdateState();
+}
+
+
+void CArmControlDlg::OnBnClickedButtonLock()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_pA->LockMotor();
+	m_bLock = TRUE;
 	UpdateState();
 }
 

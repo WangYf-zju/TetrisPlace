@@ -163,9 +163,9 @@ void CInfoDlg::OnPaint()
 			{
 				if (TetrisAI::TetrisShape[type][0][j * 4 + i])
 				{
-					CRect rc(cRC.Width() * 0.84 + i * sideLength + 1,
+					CRect rc(cRC.Width() * 0.82 + i * sideLength + 1,
 						cRC.Height() * 0.3 + j * sideLength + 1,
-						cRC.Width() * 0.84 + (i + 1) * sideLength - 2,
+						cRC.Width() * 0.82 + (i + 1) * sideLength - 2,
 						cRC.Height() * 0.3 + (j + 1) * sideLength - 2);
 					dc.FillSolidRect(&rc, RGB(192, 192, 192));
 				}

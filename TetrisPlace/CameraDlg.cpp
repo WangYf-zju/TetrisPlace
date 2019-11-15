@@ -300,8 +300,6 @@ void CCameraDlg::Distinguish()
 		{
 			if (supreme_type >= 0)
 			{
-				int r_revise = (int)((hv_Angle[supreme_type])[0].D() * 180 / 3.1415926) % 90;
-				if (r_revise > 45)r_revise -= 90;
 				int r = GetGridR(supreme_type, (hv_Angle[supreme_type])[0].D());
 				int grid_x = GetGridX(supreme_type, r, (hv_Column[supreme_type])[0].D());
 				int grid_y = GetGridY(supreme_type, r, (hv_Row[supreme_type])[0].D());
@@ -320,7 +318,7 @@ void CCameraDlg::Distinguish()
 				double y = (grid_y + GrabYGridOffset[supreme_type][r]) * 18 + OFFSETY1;
 				double toX = -grid_toY * 18 + OFFSETX2;
 				double toY = -grid_toX * 18 + OFFSETY2 + 18 * 9;
-				((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0 + r_revise, symmetry);
+				((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0, symmetry);
 				if (!m_bLoop) m_bGrab = FALSE;
 				TetrisAI::PlaceTetris(supreme_type, &pos);
 				DrawTetrisOnBoard(supreme_type, &pos);

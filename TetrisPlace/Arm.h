@@ -36,6 +36,7 @@ public:
 	void ClosePump();
 	void UnlockMotor();
 	void LockMotor();
+	void EmgerencyStop();
 
 private:
 	void InitAngle();
@@ -47,7 +48,6 @@ private:
 
 
 public:
-	static const enum startCoor { startX = 96, startY = -145, startZ = -100 };
 	double m_cCoor[3];
 	double m_cAngle[3];
 	double m_steerAngle;

@@ -78,6 +78,9 @@
     <ClInclude Include="StoreSetDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ArmSetDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TetrisPlace.cpp">
@@ -131,6 +134,9 @@
     <ClCompile Include="StoreSetDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ArmSetDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TetrisPlace.rc">
@@ -144,6 +150,18 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\TetrisPlace.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stop.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\icon1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stop.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stop.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
