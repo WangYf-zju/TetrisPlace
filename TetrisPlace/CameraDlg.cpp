@@ -145,7 +145,7 @@ void CCameraDlg::CloseCamera()
 	m_bLoop = FALSE;
 }
 
-#define SCALE_PICTURE 58/18
+#define SCALE_PICTURE 39/18
 int CCameraDlg::GetGridX(int type, int r, double col)
 {
 	int x = (int)(col + PictureXOffset[type][r] * SCALE_PICTURE);
@@ -269,6 +269,7 @@ void CCameraDlg::Distinguish()
 				m_typeInfo[i].grid_toR = AI.GetSupremePos()->r;
 				m_typeInfo[i].grid_r = GetGridR(i, (hv_Angle[i])[0].D());
 				m_typeInfo[i].grid_x = GetGridX(i, m_typeInfo[i].grid_r, (hv_Column[i])[0].D());
+				double test = (hv_Row[i])[0].D();
 				m_typeInfo[i].grid_y = GetGridY(i, m_typeInfo[i].grid_r, (hv_Row[i])[0].D());
 				m_typeInfo[i].x = 
 					(m_typeInfo[i].grid_x + GrabXGridOffset[i][m_typeInfo[i].grid_r]) 
