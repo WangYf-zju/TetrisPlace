@@ -36,6 +36,11 @@ int * CParameter::pStoreColBoundary = StoreColBoundary;
 int CParameter::startX = DEFAULT_ARM_STARTX;
 int CParameter::startY = DEFAULT_ARM_STARTY;
 int CParameter::startZ = DEFAULT_ARM_STARTZ;
+
+int CParameter::offsetX1 = DEFAULT_OFFSETX1;
+int CParameter::offsetY1 = DEFAULT_OFFSETY1;
+int CParameter::offsetX2 = DEFAULT_OFFSETX2;
+int CParameter::offsetY2 = DEFAULT_OFFSETY2;
 CParameter::CParameter()
 {
 }

@@ -11,6 +11,8 @@
 mutex msgArrayLock;
 vector<ArmMsg> msgArray;
 BOOL CArmControlDlg::bArmBusy = FALSE;
+HWND CArmControlDlg::hArmCtrlDlg = 0;
+CArmControlDlg * CArmControlDlg::instance = nullptr;
 
 IMPLEMENT_DYNAMIC(CArmControlDlg, CDialogEx)
 
@@ -102,6 +104,9 @@ BOOL CArmControlDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	instance = this;
+	hArmCtrlDlg = this->m_hWnd;
+
 	m_pA = new Arm();
 	m_bRelative = TRUE;
 	bArmBusy = FALSE;
@@ -500,3 +505,15 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 	return 0;
 }
 
+
+LRESULT CArmControlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	switch (message)
+	{
+	case USER_WM_ARMMSG:
+		PushMsg(*(ArmMsg*)lParam);
+		break;
+	}
+	return CDialogEx::WindowProc(message, wParam, lParam);
+}

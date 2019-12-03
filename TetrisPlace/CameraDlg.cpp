@@ -2,13 +2,12 @@
 //
 
 #include "stdafx.h"
+#include "afxdialogex.h"
 #include "TetrisPlace.h"
 #include "TetrisPlaceDlg.h"
 #include "CameraDlg.h"
-#include "ArmControlDlg.h"
-#include "afxdialogex.h"
-#include "ArmControlDlg.h"
 
+mutex cmrimgLock;
 
 HWND CCameraDlg::hCameraDlg = nullptr;
 
@@ -234,7 +233,7 @@ void CCameraDlg::DrawBoundary()
 void CCameraDlg::Distinguish()
 {
 	HTuple ScaleMin[TYPE_COUNT] = { 0.95,0.95,0.95,0.95,0.95,0.95,0.95 };
-	HTuple ScaleMax[TYPE_COUNT] = { 1.05,1.05,1.05,1.05,1.05,1.05,1.05 };
+	HTuple ScaleMax[TYPE_COUNT] = { 1.1,1.1,1.1,1.1,1.1,1.1,1.1 };
 	HTuple MinScore[TYPE_COUNT] = { 0.9,0.9,0.9,0.9,0.9,0.9,0.9 };
 	HTuple NumMatches[TYPE_COUNT] = { 5,5,5,5,5,5,5 };
 	HTuple MaxOverlap[TYPE_COUNT] = { 0.5,0.5,0.5,0.5,0.5,0.5,0.5 };
@@ -273,15 +272,15 @@ void CCameraDlg::Distinguish()
 				m_typeInfo[i].grid_y = GetGridY(i, m_typeInfo[i].grid_r, (hv_Row[i])[0].D());
 				m_typeInfo[i].x = 
 					(m_typeInfo[i].grid_x + GrabXGridOffset[i][m_typeInfo[i].grid_r]) 
-					* GRID_DISTANCE + OFFSETX1;
+					* GRID_DISTANCE + CParameter::offsetX1;
 				m_typeInfo[i].y = 
 					(m_typeInfo[i].grid_y + GrabYGridOffset[i][m_typeInfo[i].grid_r]) 
-					* GRID_DISTANCE + OFFSETY1;
+					* GRID_DISTANCE + CParameter::offsetY1;
 				// 放置仓从下向上放，需旋转180°
 				m_typeInfo[i].toX = -m_typeInfo[i].grid_toY * GRID_DISTANCE
-					+ OFFSETX2;
+					+ CParameter::offsetX2;
 				m_typeInfo[i].toY = (9-m_typeInfo[i].grid_toX) * GRID_DISTANCE
-					+ OFFSETY2;
+					+ CParameter::offsetY2;
 
 				if (max_rank < rank && AI.m_canPlace)
 				{
@@ -315,11 +314,16 @@ void CCameraDlg::Distinguish()
 					symmetry = 1;
 				else if (supreme_type == 4)
 					symmetry = 2;
-				double x = (grid_x + GrabXGridOffset[supreme_type][r]) * 18 + OFFSETX1;
-				double y = (grid_y + GrabYGridOffset[supreme_type][r]) * 18 + OFFSETY1;
-				double toX = -grid_toY * 18 + OFFSETX2;
-				double toY = -grid_toX * 18 + OFFSETY2 + 18 * 9;
-				((CTetrisPlaceDlg*)GetParent())->pArmCtrlDlg->Grab(x, y, toX, toY, dr * 90.0, symmetry);
+				
+				double y_cpst = 0;
+				if (grid_toY <= 6)
+					y_cpst = 1.0 * (9 - grid_toY) / 6 * 4;
+				double x = (grid_x + GrabXGridOffset[supreme_type][r]) * 18 + CParameter::offsetX1;
+				double y = (grid_y + GrabYGridOffset[supreme_type][r]) * 18 + CParameter::offsetY1;
+				double toX = -grid_toY * 18 + CParameter::offsetX2;
+				double toY = -grid_toX * 18 + CParameter::offsetY2 + 18 * 9 + y_cpst;
+
+				CArmControlDlg::instance->Grab(x, y, toX, toY, dr * 90.0, symmetry);
 				if (!m_bLoop) m_bGrab = FALSE;
 				TetrisAI::PlaceTetris(supreme_type, &pos);
 				DrawTetrisOnBoard(supreme_type, &pos);
@@ -421,6 +425,11 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		ReduceDomain(ho_ImageReduce, ho_ConnectedRegions, &ho_ImageReduce1);
 
 		SetPart(dlg->hv_WindowHandle, 0, 0, dlg->hl_height, dlg->hl_width);
+
+		cmrimgLock.lock();
+		WriteImage((dlg->ho_Image), "jpg", 0, "./temp/cmr-temp.jpg");
+		cmrimgLock.unlock();
+
 		if (!dlg->m_bDrawBoundary || dlg->m_bBoundaryChange)
 		{
 			DispObj(dlg->ho_Image, dlg->hv_WindowHandle);

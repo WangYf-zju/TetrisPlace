@@ -81,6 +81,15 @@
     <ClInclude Include="ArmSetDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="third-party\mongoose.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LeftColDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TetrisPlace.cpp">
@@ -135,6 +144,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ArmSetDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\mongoose.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LeftColDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

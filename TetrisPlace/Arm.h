@@ -8,11 +8,6 @@
 #define STEERING_SPEED 180
 
 
-#define OFFSETX1	48
-#define OFFSETY1	74
-#define OFFSETX2	17
-#define OFFSETY2	294
-
 class Arm
 {
 public:

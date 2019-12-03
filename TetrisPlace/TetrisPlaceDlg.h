@@ -5,8 +5,7 @@
 #pragma once
 
 #include "ConnectDlg.h"
-#include "SerialDlg.h"
-#include "ArmControlDlg.h"
+#include "LeftColDlg.h"
 #include "NextBlockDlg.h"
 #include "BoardDlg.h"
 #include "CameraDlg.h"
@@ -54,8 +53,7 @@ protected:
 
 public:
 	CConnectDlg * pCntDlg;
-	CSerialDlg * pSerialDlg;
-	CArmControlDlg *pArmCtrlDlg;
+	CLeftColDlg * pLeftColDlg;
 	CBoardDlg * pBoardDlg;
 	CCameraDlg * pCameraDlg;
 	CInfoDlg * pInfoDlg;
@@ -64,8 +62,6 @@ public:
 
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	CTabCtrl m_tab;
-	afx_msg void OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult);
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	afx_msg void OnMenuStoreset();
 	void UpdateWindowPos();

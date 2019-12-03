@@ -50,8 +50,6 @@ END_MESSAGE_MAP()
 
 // CTetrisPlaceDlg 对话框
 
-
-
 CTetrisPlaceDlg::CTetrisPlaceDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_TETRISPLACE_DIALOG, pParent)
 {
@@ -62,14 +60,12 @@ CTetrisPlaceDlg::CTetrisPlaceDlg(CWnd* pParent /*=nullptr*/)
 void CTetrisPlaceDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_TAB_SERIAL, m_tab);
 }
 
 BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_SERIAL, &CTetrisPlaceDlg::OnTcnSelchangeTabSerial)
 	ON_COMMAND(ID_MENU_STORESET, &CTetrisPlaceDlg::OnMenuStoreset)
 	ON_WM_SIZE()
 	ON_WM_CLOSE()
@@ -114,17 +110,13 @@ BOOL CTetrisPlaceDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 	ShowWindow(SW_MAXIMIZE);
 
-	m_tab.InsertItem(0, _T("电机控制"));
-	m_tab.InsertItem(1, _T("串口"));
-	pArmCtrlDlg = new CArmControlDlg;
-	pArmCtrlDlg->Create(IDD_DIALOG_ARMCONTROL, &m_tab);
-	pArmCtrlDlg->ShowWindow(SW_SHOW);
-	pSerialDlg = new CSerialDlg;
-	pSerialDlg->Create(IDD_DIALOG_SERIAL, &m_tab);
-	pSerialDlg->ShowWindow(SW_HIDE);
+
 	pCntDlg = new CConnectDlg;
 	pCntDlg->Create(IDD_DIALOG_CONNECT, this);
 	pCntDlg->ShowWindow(SW_SHOW);
+	pLeftColDlg = new CLeftColDlg;
+	pLeftColDlg->Create(IDD_LEFTCOL);
+	pLeftColDlg->ShowWindow(SW_SHOW);
 	pCameraDlg = new CCameraDlg;
 	pCameraDlg->Create(IDD_DIALOG_CAMERA, this);
 	pCameraDlg->ShowWindow(SW_SHOW);
@@ -237,24 +229,6 @@ BOOL CTetrisPlaceDlg::PreTranslateMessage(MSG* pMsg)
 }
 
 
-void CTetrisPlaceDlg::OnTcnSelchangeTabSerial(NMHDR *pNMHDR, LRESULT *pResult)
-{
-	// TODO: 在此添加控件通知处理程序代码
-	int curPage = m_tab.GetCurSel();
-	if (curPage == 0)
-	{
-		pArmCtrlDlg->ShowWindow(SW_SHOW);
-		pSerialDlg->ShowWindow(SW_HIDE);
-	}
-	else
-	{
-		pArmCtrlDlg->ShowWindow(SW_HIDE);
-		pSerialDlg->ShowWindow(SW_SHOW);
-	}
-	*pResult = 0;
-}
-
-
 LRESULT CTetrisPlaceDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// TODO: 在此添加专用代码和/或调用基类
@@ -309,9 +283,8 @@ void CTetrisPlaceDlg::UpdateWindowPos()
 	CRect rc(0,0,cx,cy);
 	int margin = 10;
 
-	m_tab.MoveWindow(20, rc.Height()*0.1, rc.Width()*0.27, rc.Height()*0.9);
-	pArmCtrlDlg->MoveWindow(10, 20, rc.Width()*0.27 - 20, rc.Height()*0.9 - 30);
-	pSerialDlg->MoveWindow(10, 20, rc.Width()*0.27 - 20, rc.Height()*0.9 - 30);
+	pLeftColDlg->MoveWindow(20, rc.Height()*0.1, rc.Width()*0.27, rc.Height()*0.9);
+	pLeftColDlg->UpdateWindowPos();
 	pCntDlg->MoveWindow(20, 10, rc.Width() - 40, rc.Height()*0.073);
 	pCameraDlg->MoveWindow(rc.Width()*0.29, rc.Height()*0.1,
 		rc.Width()*0.45, rc.Height()*0.66);
@@ -354,6 +327,6 @@ void CTetrisPlaceDlg::OnMenuArmset()
 void CTetrisPlaceDlg::OnStnDblclickEmergency()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	pArmCtrlDlg->m_pA->EmgerencyStop();
+	pLeftColDlg->pArmCtrlDlg->m_pA->EmgerencyStop();
 	MessageBox(_T("机械臂以紧急停止，请重新连接"));
 }

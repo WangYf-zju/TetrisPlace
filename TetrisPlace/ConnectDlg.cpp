@@ -134,14 +134,14 @@ void CConnectDlg::Connect()
 			if (MessageBox(_T("重置机械臂参数？"), _T("连接"),
 				MB_YESNO) == IDYES)
 			{
-				parentDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, TRUE);
+				parentDlg->pLeftColDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, TRUE);
 			}
 			else
 			{
-				parentDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, FALSE);
+				parentDlg->pLeftColDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, FALSE);
 			}
-			parentDlg->pSerialDlg->BindSerialPort(&parentDlg->m_w);
-			parentDlg->pSerialDlg->StartListenPort();
+			parentDlg->pLeftColDlg->pSerialDlg->BindSerialPort(&parentDlg->m_w);
+			parentDlg->pLeftColDlg->pSerialDlg->StartListenPort();
 		}
 		else
 		{

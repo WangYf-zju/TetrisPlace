@@ -187,6 +187,8 @@
     <ClInclude Include="CameraDlg.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="ConnectDlg.h" />
+    <ClInclude Include="LeftColDlg.h" />
+    <ClInclude Include="ServerDlg.h" />
     <ClInclude Include="StoreSetDlg.h" />
     <ClInclude Include="InfoDlg.h" />
     <ClInclude Include="Message.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="TetrisPlaceDlg.h" />
     <ClInclude Include="third-party\CameraList.h" />
     <ClInclude Include="third-party\EnumSerial.h" />
+    <ClInclude Include="third-party\mongoose.h" />
     <ClInclude Include="third-party\WzSerialPort.h" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +213,8 @@
     <ClCompile Include="BoardDlg.cpp" />
     <ClCompile Include="CameraDlg.cpp" />
     <ClCompile Include="ConnectDlg.cpp" />
+    <ClCompile Include="LeftColDlg.cpp" />
+    <ClCompile Include="ServerDlg.cpp" />
     <ClCompile Include="StoreSetDlg.cpp" />
     <ClCompile Include="InfoDlg.cpp" />
     <ClCompile Include="NextBlockDlg.cpp" />
@@ -226,6 +231,12 @@
     <ClCompile Include="TetrisPlaceDlg.cpp" />
     <ClCompile Include="third-party\CameraList.cpp" />
     <ClCompile Include="third-party\EnumSerial.cpp" />
+    <ClCompile Include="third-party\mongoose.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="third-party\WzSerialPort.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -23,7 +23,7 @@ using std::mutex;
 
 typedef struct ArmMsg{
 	int msg;
-	vector<int> param;
+	vector<double> param;
 }ArmMsg;
 
 // CArmControlDlg 对话框
@@ -46,6 +46,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	static HWND hArmCtrlDlg;
+	static CArmControlDlg * instance;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void BindSerialPort(WzSerialPort * w, BOOL bArmInit = FALSE);
 	void UpdateState();
@@ -109,6 +111,7 @@ public:
 	afx_msg void OnBnClickedButtonYgo();
 	afx_msg void OnBnClickedButtonZgo();
 	afx_msg void OnBnClickedButtonLock();
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 DWORD  WINAPI ArmCtrlThreadProc(LPVOID lpParam);

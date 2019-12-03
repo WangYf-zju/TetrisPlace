@@ -18,6 +18,8 @@
 #define IDD_DIALOG_STORESETTING         145
 #define IDD_DIALOG_ARMSETTING           149
 #define IDB_BITMAP_STOP                 155
+#define IDD_DIALOG_HTTP                 156
+#define IDD_LEFTCOL                     158
 #define IDC_COMBO_SERIAL                1000
 #define IDC_BUTTON_OPENPORT             1001
 #define IDC_EDIT_RX                     1002
@@ -136,6 +138,8 @@
 #define IDC_ARM_STARTY                  1118
 #define IDC_ARM_STARTZ                  1119
 #define IDC_EMERGENCY                   1120
+#define IDC_OPENHTTP                    1121
+#define IDC_TAB                         1122
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -150,9 +154,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        156
+#define _APS_NEXT_RESOURCE_VALUE        160
 #define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1121
+#define _APS_NEXT_CONTROL_VALUE         1123
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "HalconCpp.h"
 #include "TetrisAI.h"
+#include "ArmControlDlg.h"
+#include <mutex>
+using std::mutex;
 using namespace HalconCpp;
 #define TYPE_COUNT 7
 #define GRID_DISTANCE	18
