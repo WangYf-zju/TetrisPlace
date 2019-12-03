@@ -82,26 +82,37 @@
 #define IDC_STATIC_R                    1059
 #define IDC_EDIT_MOVER                  1060
 #define IDC_PICTURE                     1061
+#define IDC_BUTTON_XADD1                1061
 #define IDC_BUTTON_SEGGO                1062
 #define IDC_COMBO_PORT                  1063
+#define IDC_BUTTON_XSUB1                1063
 #define IDC_STATIC_PORT                 1064
+#define IDC_BUTTON_XADD18               1064
 #define IDC_BUTTON_SETZERO              1065
 #define IDC_COMBO_CAMERA                1066
+#define IDC_BUTTON_XSUB18               1066
 #define IDC_TAB_SERIAL                  1067
 #define IDC_STATIC_CAMERA               1068
 #define IDC_RADIO_LOOP                  1069
 #define IDC_RADIO_ONCE                  1070
 #define IDC_COMBO_TETRIS                1071
+#define IDC_BUTTON_YADD1                1071
 #define IDC_BUTTON_CON                  1072
+#define IDC_BUTTON_YSUB1                1072
 #define IDC_BUTTON_REFRESHBOARD         1073
+#define IDC_BUTTON_YADD18               1073
 #define IDC_BUTTON_ARMCORRECT           1074
+#define IDC_BUTTON_YSUB18               1074
 #define IDC_EDIT_NEXT                   1075
+#define IDC_BUTTON_ZADD1                1075
+#define IDC_BUTTON_ZSUB1                1076
 #define IDC_BUTTON_XGO                  1077
 #define IDC_BUTTON_YGO                  1078
 #define IDC_BUTTON_ZGO                  1079
 #define IDC_LIST_RANK                   1080
 #define IDC_RADIO_STORE1                1081
 #define IDC_RADIO_STORE2                1082
+#define IDC_BUTTON_GOZERO               1082
 #define IDC_STATIC_GSTORE               1083
 #define IDC_STORE_ROWDIS                1084
 #define IDC_STORE_COLDIS                1085
@@ -140,6 +151,8 @@
 #define IDC_EMERGENCY                   1120
 #define IDC_OPENHTTP                    1121
 #define IDC_TAB                         1122
+#define IDC_EDIT_PORT                   1123
+#define IDC_EDIT_SERVER                 1124
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -149,14 +162,20 @@
 #define ID_32777                        32777
 #define ID_MENU_STORESET                32778
 #define ID_MENU_ARMSET                  32779
+#define ID_32780                        32780
+#define ID_32781                        32781
+#define ID_32782                        32782
+#define ID_32783                        32783
+#define ID_                             32784
+#define ID_MENU_DISCAMERA               32785
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        160
-#define _APS_NEXT_COMMAND_VALUE         32780
-#define _APS_NEXT_CONTROL_VALUE         1123
+#define _APS_NEXT_COMMAND_VALUE         32786
+#define _APS_NEXT_CONTROL_VALUE         1125
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

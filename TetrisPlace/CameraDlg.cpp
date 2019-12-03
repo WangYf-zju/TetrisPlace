@@ -10,6 +10,7 @@
 mutex cmrimgLock;
 
 HWND CCameraDlg::hCameraDlg = nullptr;
+CCameraDlg * CCameraDlg::instance = nullptr;
 
 const int AngleOffset[TYPE_COUNT] = { 90,90,90,90,90,90,90 };
 const double PictureXOffset[TYPE_COUNT][4] = {
@@ -79,6 +80,9 @@ BOOL CCameraDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	hCameraDlg = this->m_hWnd;
+	instance = this;
+
 	m_bGrab = FALSE;
 	m_bDistinguish = TRUE;
 	m_bLoop = FALSE;
@@ -86,7 +90,6 @@ BOOL CCameraDlg::OnInitDialog()
 	m_bCorrect = FALSE;
 	m_bDrawBoundary = FALSE;
 	m_bBoundaryChange = FALSE;
-	hCameraDlg = this->m_hWnd;
 	try
 	{
 		for (int i = 0; i < TYPE_COUNT; i++)
@@ -142,6 +145,7 @@ void CCameraDlg::CloseCamera()
 	m_bCorrect = FALSE;
 	m_bGrab = FALSE;
 	m_bLoop = FALSE;
+	CloseHandle(hThread);
 }
 
 #define SCALE_PICTURE 39/18
@@ -315,13 +319,15 @@ void CCameraDlg::Distinguish()
 				else if (supreme_type == 4)
 					symmetry = 2;
 				
-				double y_cpst = 0;
-				if (grid_toY <= 6)
-					y_cpst = 1.0 * (9 - grid_toY) / 6 * 4;
-				double x = (grid_x + GrabXGridOffset[supreme_type][r]) * 18 + CParameter::offsetX1;
-				double y = (grid_y + GrabYGridOffset[supreme_type][r]) * 18 + CParameter::offsetY1;
+				double x_cpst = 0, y_cpst = 0, toy_cpst = 0;
+				// if (grid_x > 3)
+					x_cpst = (grid_x - 3) * 2 / 3;
+				if (grid_toX < 6)
+					toy_cpst = 1.0 * (6 - grid_toX);
+				double x = (grid_x + GrabXGridOffset[supreme_type][r]) * 18 + CParameter::offsetX1 + x_cpst;
+				double y = (grid_y + GrabYGridOffset[supreme_type][r]) * 18 + CParameter::offsetY1 + y_cpst;
 				double toX = -grid_toY * 18 + CParameter::offsetX2;
-				double toY = -grid_toX * 18 + CParameter::offsetY2 + 18 * 9 + y_cpst;
+				double toY = -grid_toX * 18 + CParameter::offsetY2 + 18 * 9 + toy_cpst;
 
 				CArmControlDlg::instance->Grab(x, y, toX, toY, dr * 90.0, symmetry);
 				if (!m_bLoop) m_bGrab = FALSE;
@@ -450,6 +456,8 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 		}
 		Sleep(500);
 	}
+	CloseFramegrabber(dlg->hv_AcqHandle);
+	CloseWindow(dlg->hv_WindowHandle);
 	return 0;
 }
 

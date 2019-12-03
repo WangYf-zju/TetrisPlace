@@ -48,6 +48,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	static HWND hCameraDlg;
+	static CCameraDlg * instance;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnInitDialog();
 	BOOL StartCamera(int iCamera);

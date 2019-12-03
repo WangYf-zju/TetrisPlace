@@ -5,12 +5,12 @@
 	<title>K·L·J 机器人俄罗斯方块</title>
 	<style type="text/css">
 		body{margin: 0 auto; width: 80%;}
-		div{margin: 3vh; vertical-align: middle;}
-		table{text-align: center; vertical-align: middle;}
-		#headline{font-size: 8vh; text-align: center; margin: 5vh;}
-		.dropdown{display: inline-block; font-size: 5vh;}
-		.icon{width: 6vh; height: 6vh; vertical-align: middle;}
-		#foot{font-size: 3vh;}
+		div{margin: 2vw; vertical-align: middle;}
+		table{text-align: center; vertical-align: middle; margin-left: 5vw; margin-right: 5vw}
+		#headline{font-size: 6vw; text-align: center; margin: 3vw;}
+		.dropdown{display: inline-block; font-size: 3vw;}
+		.icon{width: 5vw; height: 5vw; vertical-align: middle;}
+		#foot{font-size: 2vw;}
 	</style>
 	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 </head>
@@ -22,7 +22,7 @@
 		</div>
 		<div class="dropdown">相机实时预览</div>
 	</div>
-	<div id="camera" style="display: none;">
+	<div id="camera" style="display: none; text-align: center;">
 		<img id="camera-prev">
 	</div>
 	<div id="title2">
@@ -32,13 +32,36 @@
 		<div class="dropdown">参数查看</div>
 	</div>
 	<div id="parameter" style="display: none;">
-		<table>
-			<tr><th>机械臂</th></tr>
-			<tr><th>坐标</th><td>x0y0z0</td></tr>
-			<tr><th>角度</th><td>ax0ay0az0</td></tr>
-			<tr><th>舵机</th><td>0</td></tr>
-			<tr><th>气泵</th><td>关</td></tr>
+		<table border="2" width="90%">
+			<tr><th colspan="7">机械臂</th></tr>
+			<tr>
+				<th>&#160&#160坐标&#160&#160</th>
+				<td>X</td>
+				<td>00.00</td>
+				<td>Y</td>
+				<td>00.00</td>
+				<td>Z</td>
+				<td>00.00</td>
+			</tr>
+			<tr>
+				<th>&#160&#160角度&#160&#160</th>
+				<td>Angle X</td>
+				<td>00.00</td>
+				<td>Angle Y</td>
+				<td>00.00</td>
+				<td>Angle Z</td>
+				<td>00.00</td>
+			</tr>
+			<tr>
+				<th>&#160&#160舵机&#160&#160</th>
+				<td colspan="6">00.00</td>
+			</tr>
+			<tr>
+				<th>&#160&#160气泵&#160&#160</th>
+				<td colspan="6">关</td>
+			</tr>
 		</table>
+		<div style="display: none;">机械臂串口未连接</div>
 	</div>
 	<div id="title3">
 		<div class="dropdown">
@@ -65,35 +88,6 @@
 			<p>xxx All Rights Reserved</p>
 		</div>
 	</div>
-	<script type="text/javascript">
-		var bStartCamera = false;
-		var bShowParam = false;
-		var camera_int;
-		$(function() {
-			$('#title1').click(function(){$('#camera').slideToggle(500,FinishSlideCamera);});
-			$('#title2').click(function(){$('#parameter').slideToggle(500,FinishSlideCamera);});
-		});
-
-		var FinishSlideCamera = function() {
-			bStartCamera = !bStartCamera;
-			if (bStartCamera === true) {
-				camera_int = setInterval(function() {
-					$('#camera-prev').attr('src','./res/cmr.jpg?time='+new Date().getTime());
-				},1000);
-			} else {
-				clearInterval(camera_int);
-			}
-		};
-
-		var FinishSlideParam = function() {
-			bShowParam = !bShowParam;
-			if(bShowParam === true) {
-				$.get('./param',function() {
-
-				});			
-			}
-			
-		};
-	</script>
+	<script src="./index.js"></script>
 </body>
 </html>

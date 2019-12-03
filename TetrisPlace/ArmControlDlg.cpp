@@ -78,6 +78,17 @@ BEGIN_MESSAGE_MAP(CArmControlDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_YGO, &CArmControlDlg::OnBnClickedButtonYgo)
 	ON_BN_CLICKED(IDC_BUTTON_ZGO, &CArmControlDlg::OnBnClickedButtonZgo)
 	ON_BN_CLICKED(IDC_BUTTON_LOCK, &CArmControlDlg::OnBnClickedButtonLock)
+	ON_BN_CLICKED(IDC_BUTTON_XADD1, &CArmControlDlg::OnBnClickedButtonXadd1)
+	ON_BN_CLICKED(IDC_BUTTON_XSUB1, &CArmControlDlg::OnBnClickedButtonXsub1)
+	ON_BN_CLICKED(IDC_BUTTON_XADD18, &CArmControlDlg::OnBnClickedButtonXadd18)
+	ON_BN_CLICKED(IDC_BUTTON_XSUB18, &CArmControlDlg::OnBnClickedButtonXsub18)
+	ON_BN_CLICKED(IDC_BUTTON_YADD1, &CArmControlDlg::OnBnClickedButtonYadd1)
+	ON_BN_CLICKED(IDC_BUTTON_YSUB1, &CArmControlDlg::OnBnClickedButtonYsub1)
+	ON_BN_CLICKED(IDC_BUTTON_YADD18, &CArmControlDlg::OnBnClickedButtonYadd18)
+	ON_BN_CLICKED(IDC_BUTTON_YSUB18, &CArmControlDlg::OnBnClickedButtonYsub18)
+	ON_BN_CLICKED(IDC_BUTTON_ZADD1, &CArmControlDlg::OnBnClickedButtonZadd1)
+	ON_BN_CLICKED(IDC_BUTTON_ZSUB1, &CArmControlDlg::OnBnClickedButtonZsub1)
+	ON_BN_CLICKED(IDC_BUTTON_GOZERO, &CArmControlDlg::OnBnClickedButtonGozero)
 END_MESSAGE_MAP()
 
 
@@ -446,6 +457,73 @@ void CArmControlDlg::PushMsg(ArmMsg & msg)
 	msgArrayLock.unlock();
 }
 
+
+void CArmControlDlg::OnBnClickedButtonXadd1()
+{
+	GoToR(1, 0, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonXsub1()
+{
+	GoToR(-1, 0, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonXadd18()
+{
+	GoToR(18, 0, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonXsub18()
+{
+	GoToR(-18, 0, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonYadd1()
+{
+	GoToR(0, 1, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonYsub1()
+{
+	GoToR(0, -1, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonYadd18()
+{
+	GoToR(0, 18, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonYsub18()
+{
+	GoToR(0, -18, 0);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonZadd1()
+{
+	GoToR(0, 0, 1);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonZsub1()
+{
+	GoToR(0, 0, -1);
+}
+
+
+void CArmControlDlg::OnBnClickedButtonGozero()
+{
+	GoTo(0, 0, 0);
+}
+
+
 DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 {
 	CArmControlDlg * dlg = (CArmControlDlg*)lpParam;
@@ -475,7 +553,7 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 				break;
 			case AM_MOVETO:
 				dlg->m_pA->Grab(itMsg->param[0], itMsg->param[1], itMsg->param[2],
-					itMsg->param[3], itMsg->param[4]);
+					itMsg->param[3], itMsg->param[4], (int)(itMsg->param[5]));
 				break;
 			case AM_SEGGOTO:
 				dlg->m_pA->GoSegTo(itMsg->param[0], itMsg->param[1], itMsg->param[2]);
@@ -509,11 +587,6 @@ DWORD WINAPI ArmCtrlThreadProc(LPVOID lpParam)
 LRESULT CArmControlDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// TODO: 在此添加专用代码和/或调用基类
-	switch (message)
-	{
-	case USER_WM_ARMMSG:
-		PushMsg(*(ArmMsg*)lParam);
-		break;
-	}
 	return CDialogEx::WindowProc(message, wParam, lParam);
 }
+

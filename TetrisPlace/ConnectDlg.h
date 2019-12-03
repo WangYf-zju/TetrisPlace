@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "third-party/EnumSerial.h"
 #include "third-party/CameraList.h"
+#include "CameraDlg.h"
+#include "ArmControlDlg.h"
 #include <vector>
 #include <string>
 using std::vector;
@@ -38,17 +40,18 @@ private:
 	CArray< SSerInfo, SSerInfo&> m_portList;
 	CameraList m_cameraList;
 public:
+	static CConnectDlg * instance;
 	CComboBox m_comPort;
 	CComboBox m_comCamera;
 	BOOL m_bCameraOpen;
 	BOOL m_bPortOpen;
 	int m_OnceLoop;
+	void Connect();
+	void DisconnectCamera();
 	afx_msg void OnBnClickedButtonRefresh();
 	afx_msg void OnBnClickedButtonCon();
-	void Connect();
 	afx_msg void OnBnClickedButtonRun();
 	afx_msg void OnBnClickedRadioLoop();
 	afx_msg void OnBnClickedRadioOnce();
 	afx_msg void OnBnClickedButtonArmcorrect();
-	void Disconnect();
 };

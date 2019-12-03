@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_WM_VSCROLL()
 	ON_COMMAND(ID_MENU_ARMSET, &CTetrisPlaceDlg::OnMenuArmset)
 	ON_STN_DBLCLK(IDC_EMERGENCY, &CTetrisPlaceDlg::OnStnDblclickEmergency)
+	ON_COMMAND(ID_MENU_DISCAMERA, &CTetrisPlaceDlg::OnMenuDiscamera)
 END_MESSAGE_MAP()
 
 
@@ -316,17 +317,22 @@ void CTetrisPlaceDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 }
 
 
-void CTetrisPlaceDlg::OnMenuArmset()
-{
-	// TODO: 在此添加命令处理程序代码
-	CArmSetDlg ArmSetDlg;
-	ArmSetDlg.DoModal();
-}
-
-
 void CTetrisPlaceDlg::OnStnDblclickEmergency()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	pLeftColDlg->pArmCtrlDlg->m_pA->EmgerencyStop();
 	MessageBox(_T("机械臂以紧急停止，请重新连接"));
+}
+
+
+void CTetrisPlaceDlg::OnMenuArmset()
+{
+	CArmSetDlg ArmSetDlg;
+	ArmSetDlg.DoModal();
+}
+
+
+void CTetrisPlaceDlg::OnMenuDiscamera()
+{
+	CConnectDlg::instance->DisconnectCamera();
 }

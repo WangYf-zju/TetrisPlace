@@ -87,7 +87,7 @@ void CSerialDlg::OnBnClickedButtonSend()
 
 void CSerialDlg::StartListenPort()
 {
-	//hThread = CreateThread(NULL, 0, SerialThreadProc, this, 0, 0);
+	hThread = CreateThread(NULL, 0, SerialThreadProc, this, 0, 0);
 }
 
 void CSerialDlg::BindSerialPort(WzSerialPort * w)

@@ -100,12 +100,6 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 	if (dSteerAngle > 180)dSteerAngle -= 360;
 	else if (dSteerAngle < -180)dSteerAngle += 360;
 
-	// revise steering engine
-	//if (dSteerAngle <= 0 && dSteerAngle >= -90);
-	//else if (dSteerAngle > 0 && dSteerAngle < 90) dSteerAngle /= 9.0 / 7.0;
-	//else if (dSteerAngle >= 90) dSteerAngle = dSteerAngle - 90 + 90.0 / 9.0 * 7.0;
-	//else if (dSteerAngle < -90) dSteerAngle = 90.0 + (dSteerAngle - 90) / 9.0 * 7.0;
-
 	if (dSteerAngle < 0) duration = SteerEngineTo(180);
 	else duration = SteerEngineTo(0);
 	if (duration > 0)

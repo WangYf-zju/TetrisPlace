@@ -69,4 +69,5 @@ public:
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnMenuArmset();
 	afx_msg void OnStnDblclickEmergency();
+	afx_msg void OnMenuDiscamera();
 };

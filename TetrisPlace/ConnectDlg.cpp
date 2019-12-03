@@ -9,6 +9,8 @@
 
 // CConnectDlg 对话框
 
+CConnectDlg * CConnectDlg::instance = nullptr;
+
 IMPLEMENT_DYNAMIC(CConnectDlg, CDialogEx)
 
 CConnectDlg::CConnectDlg(CWnd* pParent /*=nullptr*/)
@@ -62,6 +64,7 @@ BOOL CConnectDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	instance = this;
 	m_bPortOpen = FALSE;
 	m_bCameraOpen = FALSE;
 	m_OnceLoop = RUN_ONCE;
@@ -134,11 +137,11 @@ void CConnectDlg::Connect()
 			if (MessageBox(_T("重置机械臂参数？"), _T("连接"),
 				MB_YESNO) == IDYES)
 			{
-				parentDlg->pLeftColDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, TRUE);
+				CArmControlDlg::instance->BindSerialPort(&parentDlg->m_w, TRUE);
 			}
 			else
 			{
-				parentDlg->pLeftColDlg->pArmCtrlDlg->BindSerialPort(&parentDlg->m_w, FALSE);
+				CArmControlDlg::instance->BindSerialPort(&parentDlg->m_w, FALSE);
 			}
 			parentDlg->pLeftColDlg->pSerialDlg->BindSerialPort(&parentDlg->m_w);
 			parentDlg->pLeftColDlg->pSerialDlg->StartListenPort();
@@ -155,22 +158,19 @@ void CConnectDlg::Connect()
 	int iCameraSel = m_comCamera.GetCurSel();
 	if (!m_bCameraOpen && iCameraSel >= 0)
 	{
-		if (((CTetrisPlaceDlg*)GetParent())->pCameraDlg->StartCamera(iCameraSel))
+		if (CCameraDlg::instance->StartCamera(iCameraSel))
 			m_bCameraOpen = TRUE;
 	}
 }
 
 
-void CConnectDlg::Disconnect()
+void CConnectDlg::DisconnectCamera()
 {
 	// TODO: 在此处添加实现代码.
-	if (m_bPortOpen)
-	{
-
-	}
 	if (m_bCameraOpen)
 	{
 		m_bCameraOpen = FALSE;
+		CCameraDlg::instance->CloseCamera();
 	}
 }
 

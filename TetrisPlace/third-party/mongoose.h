@@ -4031,7 +4031,7 @@ struct mg_connection {
 
 /* Flags that are settable by user */
 #define MG_F_SEND_AND_CLOSE (1 << 10)      /* Push remaining data and close  */
-#define MG_F_CLOSE_IMMEDIATELY (1 << 11)   /* Disconnect */
+#define MG_F_CLOSE_IMMEDIATELY (1 << 11)   /* DisconnectCamera */
 #define MG_F_WEBSOCKET_NO_DEFRAG (1 << 12) /* Websocket specific */
 #define MG_F_DELETE_CHUNK (1 << 13)        /* HTTP specific */
 #define MG_F_ENABLE_BROADCAST (1 << 14)    /* Allow broadcast address usage */

@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "third-party/mongoose.h"
 #include <mutex>
+
+#include "ConnectDlg.h"
+
 using std::mutex;
 
 #define HTTP_PORT "3000"
@@ -40,6 +43,8 @@ public:
 	struct mg_connection *nc;
 	struct mg_bind_opts bind_opts;
 	afx_msg void OnBnClickedOpenhttp();
+	int m_port;
+	CString m_serverPrint;
 };
 
 DWORD WINAPI ServerThreadProc(LPVOID lpParam);

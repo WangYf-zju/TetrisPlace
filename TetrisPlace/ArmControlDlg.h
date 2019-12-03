@@ -111,6 +111,17 @@ public:
 	afx_msg void OnBnClickedButtonYgo();
 	afx_msg void OnBnClickedButtonZgo();
 	afx_msg void OnBnClickedButtonLock();
+	afx_msg void OnBnClickedButtonXadd1();
+	afx_msg void OnBnClickedButtonXsub1();
+	afx_msg void OnBnClickedButtonXadd18();
+	afx_msg void OnBnClickedButtonXsub18();
+	afx_msg void OnBnClickedButtonYadd1();
+	afx_msg void OnBnClickedButtonYsub1();
+	afx_msg void OnBnClickedButtonYadd18();
+	afx_msg void OnBnClickedButtonYsub18();
+	afx_msg void OnBnClickedButtonZadd1();
+	afx_msg void OnBnClickedButtonZsub1();
+	afx_msg void OnBnClickedButtonGozero();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
