@@ -78,7 +78,7 @@ void CSerialDlg::OnBnClickedButtonSend()
 	if (m_w != nullptr && m_bOpen)
 	{
 		UpdateData();
-		m_send += "\r\n";
+		m_send += "\n";
 		m_w->send(m_send.GetBuffer(m_send.GetLength()), m_send.GetLength());
 	}
 }

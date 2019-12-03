@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CameraList.h"
 
 int listCamera(CameraList& list)

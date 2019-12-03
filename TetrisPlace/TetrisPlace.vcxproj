@@ -229,7 +229,10 @@
     <ClCompile Include="TetrisAI.cpp" />
     <ClCompile Include="TetrisPlace.cpp" />
     <ClCompile Include="TetrisPlaceDlg.cpp" />
-    <ClCompile Include="third-party\CameraList.cpp" />
+    <ClCompile Include="third-party\CameraList.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="third-party\EnumSerial.cpp" />
     <ClCompile Include="third-party\mongoose.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>

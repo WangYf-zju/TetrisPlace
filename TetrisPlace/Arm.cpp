@@ -22,6 +22,7 @@ Arm::Arm(WzSerialPort * w)
 		m_tCoor[i] = 0;
 	}
 	m_steerAngle = 0;
+	m_bPumpOpen = 0;
 	m_w = w;
 	InitAngle();
 
@@ -246,6 +247,7 @@ void Arm::SetAngle(double x, double y, double z)
 
 void Arm::OpenPump()
 {
+	m_bPumpOpen = 1;
 	char buff[100] = { 0 };
 	sprintf_s(buff, "M2006\nM1005\n");
 	m_w->send(buff, strlen(buff));
@@ -253,6 +255,7 @@ void Arm::OpenPump()
 
 void Arm::ClosePump()
 {
+	m_bPumpOpen = 0;
 	char buff[100] = { 0 };
 	sprintf_s(buff, "M2005\nM1006\n");
 	m_w->send(buff, strlen(buff));

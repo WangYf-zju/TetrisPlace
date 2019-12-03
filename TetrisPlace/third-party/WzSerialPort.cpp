@@ -200,8 +200,6 @@ int WzSerialPort::send(const void *buf,int len)
 					return 0;
 				}
 			}
-			// 清空发送缓冲区
-			PurgeComm(hCom, PURGE_TXCLEAR);
 			return dwBytesWrite;
 		}
 	}

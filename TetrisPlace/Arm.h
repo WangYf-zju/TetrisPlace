@@ -46,6 +46,7 @@ public:
 	double m_cCoor[3];
 	double m_cAngle[3];
 	double m_steerAngle;
+	int m_bPumpOpen;
 private:
 	WzSerialPort * m_w;
 	double m_tAngle[3];

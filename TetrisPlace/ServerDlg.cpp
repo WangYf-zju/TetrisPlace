@@ -110,8 +110,16 @@ void CServerDlg::ev_handler(struct mg_connection * nc, int ev, void * ev_data)
 			if (CConnectDlg::instance && CConnectDlg::instance->m_bPortOpen)
 			{
 				mg_printf(nc, "%s", "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n");
-				mg_printf_http_chunk(nc,R"({"coor":["%.2f","%.2f","%.2f"],"angle":["%.2f","%.2f","%.2f"],"steer":"%.2f","pump":"%d"})",
-					10.0,10.0,10.0,10.0,10.0,10.0,10.0,0);
+				mg_printf_http_chunk(nc, R"({"coor":["%.2f","%.2f","%.2f"],"angle":["%.2f","%.2f","%.2f"],"steer":"%.2f","pump":"%d"})",
+					CArmControlDlg::instance->m_pA->m_cCoor[0],
+					CArmControlDlg::instance->m_pA->m_cCoor[1],
+					CArmControlDlg::instance->m_pA->m_cCoor[2],
+					CArmControlDlg::instance->m_pA->m_cAngle[0],
+					CArmControlDlg::instance->m_pA->m_cAngle[1],
+					CArmControlDlg::instance->m_pA->m_cAngle[2],
+					CArmControlDlg::instance->m_pA->m_steerAngle,
+					CArmControlDlg::instance->m_pA->m_bPumpOpen
+				);
 				mg_send_http_chunk(nc, "", 0);
 			}
 			else

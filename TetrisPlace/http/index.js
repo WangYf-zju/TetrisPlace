@@ -26,9 +26,9 @@
 			bShowParam = !bShowParam;
 			if (bShowParam === true) {
 				param_int = setInterval(function() {
+					console.log(status);
 					$.get('./param',function(data,status) {
-						console.log(status);
-						if (status == 200) {
+						if (status == "success") {
 							j = JSON.parse(data);
 							$('#parameter > table').show();
 							$('#parameter > div').hide();

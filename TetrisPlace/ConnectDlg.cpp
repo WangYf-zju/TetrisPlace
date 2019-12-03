@@ -106,10 +106,16 @@ int CConnectDlg::RefreshCamera()
 void CConnectDlg::OnBnClickedButtonRefresh()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	RefreshPort();
-	RefreshCamera();
-	m_comPort.SetCurSel(0);
-	m_comCamera.SetCurSel(0);
+	if (!m_bPortOpen)
+	{
+		RefreshPort();
+		m_comPort.SetCurSel(0);
+	}
+	if (!m_bCameraOpen)
+	{
+		RefreshCamera();
+		m_comCamera.SetCurSel(0);
+	}
 }
 
 
@@ -151,7 +157,7 @@ void CConnectDlg::Connect()
 			MessageBox(_T("串口连接失败"), _T("连接"));
 		}
 	}
-	else
+	else if(iPortSel < 0)
 	{
 		MessageBox(_T("请选择一个串口"), _T("连接"));
 	}
