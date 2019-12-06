@@ -7,7 +7,6 @@
 #include "TetrisPlaceDlg.h"
 #include "CameraDlg.h"
 
-mutex cmrimgLock;
 
 HWND CCameraDlg::hCameraDlg = nullptr;
 CCameraDlg * CCameraDlg::instance = nullptr;
@@ -32,6 +31,57 @@ const double ToYGridOffset[TYPE_COUNT][4] = {
 	{1,1,1,1},{1,1,1,1},{0.5,1,0.5,1},{0.5,1,0.5,1},{0.5,0.5,0.5,0.5},{1,1.5,1,1.5},{1,1,1,1}
 };
 
+const double ReviseToY[COL][ROW] = {
+	{0,0,0,-1,-2,-3,-3,-2,-2,-2,-1,0},
+	{0,0,0,0,-1,-1,-1,-2,-1,-1,-1,-0.5},
+	{0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,1,1,0,0,0,0,0,0,0,0},
+	{0,1,1,1,1,1,0,0,0,1,1,1},
+	{1,1,2,2,2,2,2,2,2,2,2,2},
+	{2,2,2,2,2,2,2,2,2,2,2,2},
+	{2,2,2,2,2,2,2,2,2,2,2,2},
+	{2,2,2,2,2,2,2,2,2,2,2,2},
+};
+const double ReviseToX[COL][ROW] = {
+	{0,-1,-2,-2,-3,-3,-2,-2,-2,-1,-1,-1},
+	{1,0,-1,-1,-1,-1,-1,-2,-1,-1,-1,-1},
+	{2,0,0,0,0,-1,-1,-1,-1,-1,-1,-1},
+	{3,0,0,0,0,0,0,-1,-2,-1,-1,-1},
+	{2,0,0,0,0,0,0,-1,-1,-1,-1,-1},
+	{3,2,1,1,1,1,0,0,0,0,0,0},
+	{3,2,1,1,1,1,1,0,0,0,0,0},
+	{3,3,2,1,1,1,1,0,0,0,0,-1},
+	{3,2,1,1,1,1,1,1,0,-1,-1,-1},
+	{2,2,1,1,1,0,0,0,0,-1,-1,-2},
+};
+
+const double ReviseX[COL][ROW] = {
+	{0,0,0,1,1,2,3,3,4,4,4,0},
+	{0,0,0,1,2,2,3,3,3,4,4,0},
+	{0,0,0,1,2,2,3,3,3,4,4,0},
+	{-1,-1,0,1,2,2,3,3,4,4,4,0},
+	{-2,-1,0,1,2,2,3,3,3,3,4,0},
+	{-2,-1,0,1,2,3,3,4,4,4,4,0},
+	{-2,-1,-1,0,1,2,2,2,3,3,3,0},
+	{-3,-2,-1,0,1,2,2,2,3,3,3,0},
+	{-3,-2,-1,0,1,2,2,2,3,3,3,0},
+	{-2,-1,0,1,1,2,2,2,3,3,3,0},
+};
+
+const double ReviseY[COL][ROW] = {
+	{1,1,0,0,-1,-1,-1,-1,-1,-1,0,0},
+	{1,1,1,0,0,-1,-1,-1,-1,-1,0,0},
+	{1,1,0,0,0,0,-1,-1,-1,-1,0,0},
+	{1,1,1,0,0,-1,-1,-1,-1,-1,0,0},
+	{1,1,0,0,0,0,0,-1,-1,-1,-1,0},
+	{1,1,0,0,0,0,0,0,0,0,0,0},
+	{1,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0},
+};
+
 // CCameraDlg 对话框
 
 IMPLEMENT_DYNAMIC(CCameraDlg, CDialogEx)
@@ -53,7 +103,6 @@ void CCameraDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CCameraDlg, CDialogEx)
-	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -120,17 +169,15 @@ BOOL CCameraDlg::StartCamera(int iCamera)
 	{
 		OpenFramegrabber("DirectShow", 1, 1, 0, 0, 0, 0, "default", 8, "gray", -1, "false",
 			"default", sCamera, 0, -1, &hv_AcqHandle);
+		GrabImageStart(hv_AcqHandle, -1);
+		GrabImageAsync(&ho_Image, hv_AcqHandle, -1);
+		GetImageSize(ho_Image, &hl_width, &hl_height);
 	}
 	catch (HException & exception)
 	{
 		MessageBox(_T("无法打开相机"));
 		return FALSE;
 	}
-
-	GrabImageStart(hv_AcqHandle, -1);
-	GrabImageAsync(&ho_Image, hv_AcqHandle, -1);
-	GetImageSize(ho_Image, &hl_width, &hl_height);
-
 
 	hThread = CreateThread(NULL, 0, CameraThreadProc, this, 0, 0);
 	m_bStart = TRUE;
@@ -194,6 +241,14 @@ void CCameraDlg::DrawTetrisOnBoard(int type, Position * pos)
 	WPARAM wParam = (WPARAM)type;
 	LPARAM lParam = (LPARAM)pos;
 	((CTetrisPlaceDlg*)GetParent())->PostMessage(USER_WM_PAINTTETRIS, wParam, lParam);
+}
+
+void CCameraDlg::SaveImage()
+{
+	if (m_bStart)
+	{
+		WriteImage(ho_Image, "png", 0, DEFAULT_SCREENSHOT_SAVEPATH);
+	}
 }
 
 void CCameraDlg::DrawContours(int type)
@@ -266,33 +321,36 @@ void CCameraDlg::Distinguish()
 				m_typeInfo[i].bExist = TRUE;
 				TetrisAI AI(i);
 				double rank = AI.GetSupremeRank();
-				m_typeInfo[i].rank = AI.GetSupremeRank();
-				m_typeInfo[i].grid_toX = AI.GetSupremePos()->x;
-				m_typeInfo[i].grid_toY = AI.GetSupremePos()->y;
-				m_typeInfo[i].grid_toR = AI.GetSupremePos()->r;
-				m_typeInfo[i].grid_r = GetGridR(i, (hv_Angle[i])[0].D());
-				m_typeInfo[i].grid_x = GetGridX(i, m_typeInfo[i].grid_r, (hv_Column[i])[0].D());
-				double test = (hv_Row[i])[0].D();
-				m_typeInfo[i].grid_y = GetGridY(i, m_typeInfo[i].grid_r, (hv_Row[i])[0].D());
-				m_typeInfo[i].x = 
-					(m_typeInfo[i].grid_x + GrabXGridOffset[i][m_typeInfo[i].grid_r]) 
-					* GRID_DISTANCE + CParameter::offsetX1;
-				m_typeInfo[i].y = 
-					(m_typeInfo[i].grid_y + GrabYGridOffset[i][m_typeInfo[i].grid_r]) 
-					* GRID_DISTANCE + CParameter::offsetY1;
-				// 放置仓从下向上放，需旋转180°
-				m_typeInfo[i].toX = -m_typeInfo[i].grid_toY * GRID_DISTANCE
-					+ CParameter::offsetX2;
-				m_typeInfo[i].toY = (9-m_typeInfo[i].grid_toX) * GRID_DISTANCE
-					+ CParameter::offsetY2;
-
-				if (max_rank < rank && AI.m_canPlace)
+				if (AI.GetSupremePos())
 				{
-					max_rank = rank;
-					supreme_type = i;
-					pos.x = AI.GetSupremePos()->x;
-					pos.y = AI.GetSupremePos()->y;
-					pos.r = AI.GetSupremePos()->r;
+					m_typeInfo[i].rank = AI.GetSupremeRank();
+					m_typeInfo[i].grid_toX = AI.GetSupremePos()->x;
+					m_typeInfo[i].grid_toY = AI.GetSupremePos()->y;
+					m_typeInfo[i].grid_toR = AI.GetSupremePos()->r;
+					m_typeInfo[i].grid_r = GetGridR(i, (hv_Angle[i])[0].D());
+					m_typeInfo[i].grid_x = GetGridX(i, m_typeInfo[i].grid_r, (hv_Column[i])[0].D());
+					double test = (hv_Row[i])[0].D();
+					m_typeInfo[i].grid_y = GetGridY(i, m_typeInfo[i].grid_r, (hv_Row[i])[0].D());
+					m_typeInfo[i].x =
+						(m_typeInfo[i].grid_x + GrabXGridOffset[i][m_typeInfo[i].grid_r])
+						* GRID_DISTANCE + CParameter::offsetX1;
+					m_typeInfo[i].y =
+						(m_typeInfo[i].grid_y + GrabYGridOffset[i][m_typeInfo[i].grid_r])
+						* GRID_DISTANCE + CParameter::offsetY1;
+					// 放置仓从下向上放，需旋转180°
+					m_typeInfo[i].toX = -m_typeInfo[i].grid_toY * GRID_DISTANCE
+						+ CParameter::offsetX2;
+					m_typeInfo[i].toY = (9 - m_typeInfo[i].grid_toX) * GRID_DISTANCE
+						+ CParameter::offsetY2;
+
+					if (max_rank < rank && AI.m_canPlace)
+					{
+						max_rank = rank;
+						supreme_type = i;
+						pos.x = AI.GetSupremePos()->x;
+						pos.y = AI.GetSupremePos()->y;
+						pos.r = AI.GetSupremePos()->r;
+					}
 				}
 #ifndef NONE_UI
 				DrawContours(i);
@@ -319,14 +377,14 @@ void CCameraDlg::Distinguish()
 				else if (supreme_type == 4)
 					symmetry = 2;
 				
-				double x_cpst = 0, y_cpst = 0, toy_cpst = 0;
-				// if (grid_x > 3)
-					x_cpst = (grid_x - 3) * 2 / 3;
-				if (grid_toX < 6)
-					toy_cpst = 1.0 * (6 - grid_toX);
+				double x_cpst = 0, y_cpst = 0, toy_cpst = 0, tox_cpst = 0;
+				x_cpst = ReviseX[grid_y][grid_x];
+				y_cpst = ReviseY[grid_y][grid_x];
+				toy_cpst = ReviseToY[(int)(9-grid_toX)][(int)grid_toY];
+				tox_cpst = ReviseToX[(int)(9-grid_toX)][(int)grid_toY];
 				double x = (grid_x + GrabXGridOffset[supreme_type][r]) * 18 + CParameter::offsetX1 + x_cpst;
 				double y = (grid_y + GrabYGridOffset[supreme_type][r]) * 18 + CParameter::offsetY1 + y_cpst;
-				double toX = -grid_toY * 18 + CParameter::offsetX2;
+				double toX = -grid_toY * 18 + CParameter::offsetX2 + tox_cpst;
 				double toY = -grid_toX * 18 + CParameter::offsetY2 + 18 * 9 + toy_cpst;
 
 				CArmControlDlg::instance->Grab(x, y, toX, toY, dr * 90.0, symmetry);
@@ -375,10 +433,7 @@ void CCameraDlg::CorrectArm()
 
 	try
 	{
-		//FindScaledShapeModel(ho_Image, hv_ModelID[i], HTuple(0).TupleRad(), HTuple(360).TupleRad(),
-		//	ScaleMin, ScaleMax, MinScore, NumMatches, MaxOverlap,
-		//	"least_squares", (HTuple(5).Append(1)), Greediness,
-		//	&hv_Row, &hv_Column, &hv_Angle, &hv_Scale, &hv_Score);
+		
 		double d_x = 0, d_y = 0;
 
 
@@ -400,41 +455,44 @@ DWORD WINAPI CameraThreadProc(LPVOID lpParam)
 	HObject  ho_ImageReduce, ho_ImageReduce1;
 	HTuple  hv_CamParVirtualFixed, hv_CamParOriginal;
 	
+	hv_CamParOriginal.Clear();
+	hv_CamParOriginal[0] = 0.00652862;
+	hv_CamParOriginal[1] = -9224.01;
+	hv_CamParOriginal[2] = 8.30004e-006;
+	hv_CamParOriginal[3] = 8.3e-006;
+	hv_CamParOriginal[4] = 323.226;
+	hv_CamParOriginal[5] = 226.988;
+	hv_CamParOriginal[6] = 640;
+	hv_CamParOriginal[7] = 480;
+	hv_CamParVirtualFixed = hv_CamParOriginal;
+	hv_CamParVirtualFixed[1] = 0;
+	GenRadialDistortionMap(&ho_MapFixed, hv_CamParOriginal, hv_CamParVirtualFixed, "bilinear");
+
 	while (1 && dlg->m_bStart)
 	{
-		GrabImageAsync(&dlg->ho_Image, dlg->hv_AcqHandle, -1);
-
-		hv_CamParOriginal.Clear();
-		hv_CamParOriginal[0] = 0.00652862;
-		hv_CamParOriginal[1] = -9224.01;
-		hv_CamParOriginal[2] = 8.30004e-006;
-		hv_CamParOriginal[3] = 8.3e-006;
-		hv_CamParOriginal[4] = 323.226;
-		hv_CamParOriginal[5] = 226.988;
-		hv_CamParOriginal[6] = 640;
-		hv_CamParOriginal[7] = 480;
-		hv_CamParVirtualFixed = hv_CamParOriginal;
-		hv_CamParVirtualFixed[1] = 0;
-		GenRadialDistortionMap(&ho_MapFixed, hv_CamParOriginal, hv_CamParVirtualFixed,"bilinear");
-		MapImage(dlg->ho_Image, ho_MapFixed, &dlg->ho_Image);//纠正相机畸变
-
-		GaussFilter(dlg->ho_Image, &ho_Gauss, 5);
+		try
+		{
+			GrabImageAsync(&dlg->ho_Image, dlg->hv_AcqHandle, -1);
+			MapImage(dlg->ho_Image, ho_MapFixed, &dlg->ho_Image); //纠正相机畸变
+			GaussFilter(dlg->ho_Image, &ho_Gauss, 5);
 	
-		GenRectangle1(&ho_ROI, 58.3, 61.5, 438.3, 511.1);
-		ReduceDomain(ho_Gauss, ho_ROI, &ho_ImageReduce);
+			GenRectangle1(&ho_ROI, 58.3, 61.5, 438.3, 511.1);
+			ReduceDomain(ho_Gauss, ho_ROI, &ho_ImageReduce);
 
-		Threshold(ho_ImageReduce, &ho_Region, 145, 255);
-		OpeningCircle(ho_Region, &ho_RegionOpening, 1.5);
-		ClosingCircle(ho_RegionOpening, &ho_RegionClosing, 1.5);
+			Threshold(ho_ImageReduce, &ho_Region, 145, 255);
+			OpeningCircle(ho_Region, &ho_RegionOpening, 1.5);
+			ClosingCircle(ho_RegionOpening, &ho_RegionClosing, 1.5);
 
-		Connection(ho_RegionClosing, &ho_ConnectedRegions);
-		ReduceDomain(ho_ImageReduce, ho_ConnectedRegions, &ho_ImageReduce1);
+			Connection(ho_RegionClosing, &ho_ConnectedRegions);
+			ReduceDomain(ho_ImageReduce, ho_ConnectedRegions, &ho_ImageReduce1);
+			WriteImage((dlg->ho_Image), "jpg", 0, "./temp/cmr-temp.jpg");
+		}
+		catch (...)
+		{
+
+		}
 
 		SetPart(dlg->hv_WindowHandle, 0, 0, dlg->hl_height, dlg->hl_width);
-
-		cmrimgLock.lock();
-		WriteImage((dlg->ho_Image), "jpg", 0, "./temp/cmr-temp.jpg");
-		cmrimgLock.unlock();
 
 		if (!dlg->m_bDrawBoundary || dlg->m_bBoundaryChange)
 		{
@@ -489,11 +547,3 @@ LRESULT CCameraDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	return CDialogEx::WindowProc(message, wParam, lParam);
 }
 
-
-void CCameraDlg::OnPaint()
-{
-	CPaintDC dc(this); // device context for painting
-					   // TODO: 在此处添加消息处理程序代码
-					   // 不为绘图消息调用 CDialogEx::OnPaint()
-
-}

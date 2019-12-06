@@ -520,7 +520,7 @@ void CArmControlDlg::OnBnClickedButtonZsub1()
 
 void CArmControlDlg::OnBnClickedButtonGozero()
 {
-	GoTo(0, 0, 0);
+	SegGoTo(0, 0, 0);
 }
 
 

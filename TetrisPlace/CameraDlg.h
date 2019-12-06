@@ -59,6 +59,8 @@ public:
 	void CorrectArm();
 	void UpdateBoardDlg();
 	void DrawTetrisOnBoard(int type, Position * pos);
+	void SaveImage();
+	void DrawBoundary();
 
 private:
 	int GetGridX(int type, int r, double col);
@@ -68,7 +70,6 @@ private:
 	int * m_xBoundary;
 	int * m_yBoundary;
 public:
-	void DrawBoundary();
 	BOOL m_bDistinguish;
 	BOOL m_bGrab;
 	BOOL m_bStart;
@@ -93,7 +94,6 @@ public:
 
 	void UpdateInfo(int supreme);
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-	afx_msg void OnPaint();
 };
 
 DWORD WINAPI CameraThreadProc(LPVOID lpParam);

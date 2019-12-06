@@ -9,7 +9,6 @@
 
 // CServerDlg 对话框
 
-extern mutex cmrimgLock;
 
 IMPLEMENT_DYNAMIC(CServerDlg, CDialogEx)
 
@@ -87,9 +86,7 @@ void CServerDlg::ev_handler(struct mg_connection * nc, int ev, void * ev_data)
 		{
 			if (CConnectDlg::instance && CConnectDlg::instance->m_bCameraOpen)
 			{
-				cmrimgLock.lock();
 				mg_http_serve_file(nc, hm, "./temp/cmr-temp.jpg", mg_mk_str("image/jpeg"), mg_mk_str(""));
-				cmrimgLock.unlock();
 			}
 			else
 			{
@@ -104,6 +101,10 @@ void CServerDlg::ev_handler(struct mg_connection * nc, int ev, void * ev_data)
 		else if (mg_vcmp(&hm->uri, "/index.js") == 0)
 		{
 			mg_http_serve_file(nc, hm, "./http/index.js", mg_mk_str("text/javascript"), mg_mk_str(""));
+		}
+		else if (mg_vcmp(&hm->uri, "/jquery.min.js") == 0)
+		{
+			mg_http_serve_file(nc, hm, "./http/jquery.min.js", mg_mk_str("text/javascript"), mg_mk_str(""));
 		}
 		else if (mg_vcmp(&hm->uri, "/param") == 0)
 		{
@@ -125,6 +126,18 @@ void CServerDlg::ev_handler(struct mg_connection * nc, int ev, void * ev_data)
 			else
 			{
 				mg_printf(nc, "%s", "HTTP/1.1 502 SERIAL NOT CONNECT\r\nTransfer-Encoding: chunked\r\n\r\n");
+				mg_send_http_chunk(nc, "", 0);
+			}
+		}
+		else if (mg_vcmp(&hm->uri, "/run") == 0)
+		{
+			mg_vcmp(&hm->message, "1234");
+			if (mg_vcmp(&hm->method, "POST"))
+			{
+			}
+			else
+			{
+				mg_printf(nc, "%s", "HTTP/1.1 403 FORBIDDEN\r\nTransfer-Encoding: chunked\r\n\r\n");
 				mg_send_http_chunk(nc, "", 0);
 			}
 		}

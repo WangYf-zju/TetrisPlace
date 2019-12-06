@@ -153,6 +153,8 @@
 #define IDC_TAB                         1122
 #define IDC_EDIT_PORT                   1123
 #define IDC_EDIT_SERVER                 1124
+#define IDC_BUTTON                      1125
+#define IDC_BUTTON_CODE                 1125
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -168,14 +170,16 @@
 #define ID_32783                        32783
 #define ID_                             32784
 #define ID_MENU_DISCAMERA               32785
+#define ID_MENU                         32786
+#define ID_MENU_SCREENSHOT              32787
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        160
-#define _APS_NEXT_COMMAND_VALUE         32786
-#define _APS_NEXT_CONTROL_VALUE         1125
+#define _APS_NEXT_COMMAND_VALUE         32788
+#define _APS_NEXT_CONTROL_VALUE         1126
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

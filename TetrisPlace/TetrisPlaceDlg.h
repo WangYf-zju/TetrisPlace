@@ -70,4 +70,5 @@ public:
 	afx_msg void OnMenuArmset();
 	afx_msg void OnStnDblclickEmergency();
 	afx_msg void OnMenuDiscamera();
+	afx_msg void OnMenuScreenshot();
 };

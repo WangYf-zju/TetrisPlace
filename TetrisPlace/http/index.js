@@ -9,6 +9,7 @@
 			};
 			$('#title1').click(function(){$('#camera').slideToggle(500,FinishSlideCamera);});
 			$('#title2').click(function(){$('#parameter').slideToggle(500,FinishSlideParam);});
+			$('#title3').click(function(){$('#debug').slideToggle(500);});
 		});
 
 		var FinishSlideCamera = function() {

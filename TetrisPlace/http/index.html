@@ -12,7 +12,7 @@
 		.icon{width: 5vw; height: 5vw; vertical-align: middle;}
 		#foot{font-size: 2vw;}
 	</style>
-	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script src="./jquery.min.js"></script>
 </head>
 <body>
 	<div id="headline">机器人俄罗斯方块管理系统</div>
@@ -70,7 +70,10 @@
 		<div class="dropdown">机械臂调试</div>
 	</div>
 	<div id="debug" style="display: none;">
-		
+		<form method="POST" action="./run" onsubmit="return true;">
+			输入动态验证码：<input type="text" name="code">
+			<input type="submit" name="" value="Run">
+		</form>
 	</div>		
 	<div id="title4">
 		<div class="dropdown">

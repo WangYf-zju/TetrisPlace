@@ -139,6 +139,7 @@ void WzSerialPort::close()
 	if (this && m_bOpen)
 	{
 		HANDLE hCom = *(HANDLE*)pHandle;
+		PurgeComm(hCom, PURGE_TXCLEAR | PURGE_RXCLEAR);//清空串口缓冲区
 		CloseHandle(hCom);
 		m_bOpen = false;
 	}
@@ -179,7 +180,7 @@ int WzSerialPort::send(const void *buf,int len)
 
 			//创建一个用于OVERLAPPED的事件处理，不会真正用到，但系统要求这么做
 			memset(&m_osWrite, 0, sizeof(m_osWrite));
-			m_osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, _T("WriteEvent"));
+			m_osWrite.hEvent = CreateEvent(NULL, TRUE, FALSE, "WriteEvent");
 
 			ClearCommError(hCom, &dwErrorFlags, &comStat); //清除通讯错误，获得设备当前状态
 			BOOL bWriteStat = WriteFile(hCom, //串口句柄

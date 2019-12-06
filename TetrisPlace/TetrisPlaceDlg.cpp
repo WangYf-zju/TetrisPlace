@@ -74,6 +74,7 @@ BEGIN_MESSAGE_MAP(CTetrisPlaceDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_ARMSET, &CTetrisPlaceDlg::OnMenuArmset)
 	ON_STN_DBLCLK(IDC_EMERGENCY, &CTetrisPlaceDlg::OnStnDblclickEmergency)
 	ON_COMMAND(ID_MENU_DISCAMERA, &CTetrisPlaceDlg::OnMenuDiscamera)
+	ON_COMMAND(ID_MENU_SCREENSHOT, &CTetrisPlaceDlg::OnMenuScreenshot)
 END_MESSAGE_MAP()
 
 
@@ -335,4 +336,10 @@ void CTetrisPlaceDlg::OnMenuArmset()
 void CTetrisPlaceDlg::OnMenuDiscamera()
 {
 	CConnectDlg::instance->DisconnectCamera();
+}
+
+
+void CTetrisPlaceDlg::OnMenuScreenshot()
+{
+	CCameraDlg::instance->SaveImage();
 }

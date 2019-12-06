@@ -1,8 +1,8 @@
 #pragma once
 
 #include "third-party/WzSerialPort.h"
-#define GRAB_Z	15.0
-#define DISGRAB_Z 40.0
+#define GRAB_Z	20.0
+#define DISGRAB_Z 30.0
 #define MOVE_Z	45.0
 #define ARM_SPEED 12 // degree per second
 #define STEERING_SPEED 180

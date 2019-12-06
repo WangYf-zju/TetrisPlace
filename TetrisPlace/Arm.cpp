@@ -51,9 +51,12 @@ void Arm::InitArm()
 	m_steerAngle = 0;
 	try
 	{
-		char initBuff[100] =
-			"M84\nG95\nM1004 R0\nM2005\nM1006\n";
-		m_w->send(initBuff, strlen(initBuff));
+		char initBuff1[100] =
+			"M84\nM1004 R0\nM2005\nM1006\n";
+		m_w->send(initBuff1, strlen(initBuff1));
+		Sleep(1000);
+		char initBuff2[10] = "G95\n";
+		m_w->send(initBuff2, strlen(initBuff2));
 	}
 	catch (...)
 	{
@@ -65,7 +68,8 @@ void Arm::InitArm()
 void Arm::Grab()
 {
 	OpenPump();
-	double duration = GoTo(m_cCoor[X], m_cCoor[Y], GRAB_Z);
+	double duration = GoTo(m_cCoor[X], m_cCoor[Y],
+		GRAB_Z - sqrt(m_cCoor[X] * m_cCoor[X] + m_cCoor[Y] * m_cCoor[Y]) / 25);
 	Sleep((int)duration);
 }
 
@@ -101,6 +105,11 @@ void Arm::Grab(double x, double y, double des_x, double des_y, double r, int sym
 	if (dSteerAngle > 180)dSteerAngle -= 360;
 	else if (dSteerAngle < -180)dSteerAngle += 360;
 
+	//if (dSteerAngle > 150 || dSteerAngle < -150)
+	//	dSteerAngle *= 1.08;
+	else if (dSteerAngle > 120 || dSteerAngle < -120)
+		dSteerAngle *= 1.04;
+	
 	if (dSteerAngle < 0) duration = SteerEngineTo(180);
 	else duration = SteerEngineTo(0);
 	if (duration > 0)
